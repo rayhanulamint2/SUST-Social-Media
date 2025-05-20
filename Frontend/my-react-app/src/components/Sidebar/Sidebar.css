@@ -1,0 +1,75 @@
+.sidebar {
+  width: 220px;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  height: 100vh;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.sidebar-profile-icon {
+  font-size: 2rem;
+  color: #444;
+}
+
+.sidebar-username {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.tag-search-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.tag-icon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+  color: #555;
+}
+
+.tag-search-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.sidebar-link:hover {
+  background-color: #e6f0ff;
+}
+
+.link-icon {
+  font-size: 1.2rem;
+  color: #0073e6;
+}
