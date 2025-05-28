@@ -11,13 +11,7 @@ import {
   FaNodeJs,
   FaBrain,
 } from "react-icons/fa";
-import {
-  SiMongodb,
-  SiMysql,
-  SiJet,
-  SiAmazon,
-  SiGooglecloud,
-} from "react-icons/si";
+import { SiMongodb, SiJet, SiAmazon, SiGooglecloud } from "react-icons/si";
 
 const features = [
   {
@@ -54,115 +48,101 @@ const features = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-x-hidden font-sans">
+      {/* Soft blurred background glows */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute -top-32 -left-32 w-[700px] h-[700px] bg-gradient-to-br from-blue-500/20 via-indigo-500/10 to-purple-500/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 right-0 w-[500px] h-[400px] bg-gradient-to-tr from-purple-500/20 via-blue-500/10 to-indigo-500/10 rounded-full blur-[100px] translate-y-[-50%]" />
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+      </div>
+
+      {/* Glassy Navigation Bar */}
+      <nav className="fixed left-1/2 top-8 z-20 -translate-x-1/2 w-[90vw] max-w-5xl rounded-full bg-gray-900/80 backdrop-blur-xl border border-blue-400/10 shadow-lg flex items-center justify-between px-8 py-3">
+        <div className="flex items-center gap-3">
+          <div className="w-5 h-5 rounded-full bg-blue-500" />
+          <span className="text-xl font-bold text-white tracking-wide">
+            SUSTverse
+          </span>
+        </div>
+        <div className="hidden md:flex space-x-8 text-base font-medium">
+          <a
+            href="#features"
+            className="text-gray-300 hover:text-white transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#audience"
+            className="text-gray-300 hover:text-white transition-colors"
+          >
+            Community
+          </a>
+          <a
+            href="#tech"
+            className="text-gray-300 hover:text-white transition-colors"
+          >
+            Technology
+          </a>
+          <a
+            href="#contact"
+            className="text-gray-300 hover:text-white transition-colors"
+          >
+            Contact
+          </a>
+        </div>
+        <div className="flex gap-4">
+          <a
+            href="/login"
+            className="text-white bg-gradient-to-r from-blue-500 to-indigo-600 px-5 py-2 rounded-xl shadow hover:from-blue-600 hover:to-indigo-700 transition-all font-semibold"
+          >
+            Login
+          </a>
+          <a
+            href="/signup"
+            className="text-white bg-gradient-to-r from-blue-500 to-indigo-600 px-5 py-2 rounded-xl shadow hover:from-blue-600 hover:to-indigo-700 transition-all font-semibold"
+          >
+            Join
+          </a>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <header className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 w-full">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-          <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-purple-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-gradient-to-tr from-purple-500/10 via-blue-500/5 to-indigo-500/5 rounded-full blur-2xl"></div>
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 max-w-6xl mx-auto mt-32 mb-16 rounded-[2.5rem] shadow-2xl border border-blue-400/10 overflow-hidden bg-gray-900/80 backdrop-blur-2xl"
+        style={{
+          background:
+            "linear-gradient(120deg,rgba(30,41,59,0.93) 80%,rgba(60,60,80,0.7) 100%)",
+          boxShadow: "0 8px 32px 0 rgba(31,38,135,0.37)",
+        }}
+      >
+        {/* Blurred background image */}
+        <div className="absolute inset-0 pointer-events-none">
+          <img
+            src="src/assets/sust_gate.jpg"
+            alt="SUST Gate"
+            className="w-full h-full object-cover object-center blur-[8px] scale-105 opacity-80"
+            style={{ filter: "blur(12px) brightness(0.7)" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-950/90 via-gray-900/80 to-gray-950/90" />
         </div>
 
-        <nav className="relative z-10 py-8 w-full">
-          <div className="flex justify-between items-center px-8">
-            <motion.h1
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-extrabold tracking-tight text-white"
-            >
-              SUSTVerse
-            </motion.h1>
-            <div className="hidden md:flex space-x-8 text-lg font-medium">
-              <a
-                href="#features"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Features
-              </a>
-              <a
-                href="#audience"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Community
-              </a>
-              <a
-                href="#tech"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Technology
-              </a>
-              <a
-                href="#contact"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Contact
-              </a>
-            </div>
-          </div>
-        </nav>
-
-        <div className="relative z-10 w-full px-4 md:px-12 py-20 flex flex-col md:flex-row items-center justify-center gap-12">
-          {/* Image Section */}
-          <div className="w-full md:w-1/2 flex justify-center">
-            <div className="relative rounded-2xl overflow-hidden shadow-xl border border-blue-300 bg-white/80">
-              <img
-                src="src/assets/sust_gate.jpg"
-                alt="SUST Main Gate"
-                className="w-full h-80 md:h-96 object-cover object-center grayscale-[20%] brightness-95 hover:grayscale-0 hover:brightness-100 transition-all duration-500"
-                style={{
-                  objectPosition: "center 60%",
-                }}
-              />
-              {/* Overlay for theme */}
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-700/40 via-transparent to-transparent pointer-events-none"></div>
-              {/* Decorative accent */}
-              <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white/80 to-transparent"></div>
-              {/* Subtle border highlight */}
-              <div className="absolute inset-0 rounded-2xl border-2 border-blue-400/10 pointer-events-none"></div>
-            </div>
-          </div>
-          {/* Writings Section */}
+        {/* Hero Content */}
+        <div className="relative z-10 w-full px-6 md:px-16 py-24 flex flex-col md:flex-row items-center justify-center gap-12">
+          {/* Left: Large Title and CTA */}
           <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start text-center md:text-left">
             <span className="uppercase tracking-widest text-xs md:text-sm text-blue-400 font-semibold mb-3">
               Welcome to SUSTVerse
             </span>
-            <h1 className="text-4xl md:text-5xl font-black mb-5 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 drop-shadow-xl">
-              Your Gateway to Campus Life
+            <h1 className="text-5xl md:text-6xl font-black mb-6 leading-tight text-white/90 drop-shadow-xl tracking-tight">
+              <span className="text-white/90">Your Gateway</span>
+              <span className="text-gray-400/80"> to Campus Life</span>
             </h1>
-            {/* <p className="text-lg md:text-xl mb-7 text-gray-200 max-w-lg font-normal leading-relaxed">
-              Step through the iconic gates of SUST and experience a smarter,
-              <br className="hidden md:block" />
-              more connected university journey.
-              <span className="block mt-3 text-blue-200 font-medium">
-                SUSTVerse brings your campus community, resources, and
-                opportunities together in one modern platform.
-              </span>
-            </p> */}
-            <div className="flex flex-col gap-2 mb-8 w-full max-w-md">
-              <div className="flex items-center gap-2 justify-center md:justify-start">
-                <span className="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
-                <span className="text-blue-200 font-semibold">Connect</span>
-                <span className="text-gray-300">
-                  with peers, alumni, and faculty
-                </span>
-              </div>
-              <div className="flex items-center gap-2 justify-center md:justify-start">
-                <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
-                <span className="text-indigo-200 font-semibold">
-                  Collaborate
-                </span>
-                <span className="text-gray-300">
-                  on ideas, events, and opportunities
-                </span>
-              </div>
-              <div className="flex items-center gap-2 justify-center md:justify-start">
-                <span className="inline-block w-2 h-2 rounded-full bg-purple-500"></span>
-                <span className="text-purple-200 font-semibold">Thrive</span>
-                <span className="text-gray-300">
-                  in a unified digital experience
-                </span>
-              </div>
-            </div>
+            <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-lg">
+              Connect, collaborate, and thrive in a unified digital experience
+              for SUST students, alumni, and faculty.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-2 w-full max-w-md justify-center md:justify-start">
               <a
                 href="#features"
@@ -178,17 +158,48 @@ export default function LandingPage() {
               </a>
             </div>
           </div>
+          {/* Right: Glassy Feature Preview */}
+          <div className="w-full md:w-1/2 flex flex-col gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {features.slice(0, 4).map((feature) => (
+                <div
+                  key={feature.title}
+                  className="group bg-gray-800/60 backdrop-blur-xl p-6 rounded-2xl border border-gray-700/50 hover:border-blue-500/50 transition-colors duration-300 shadow"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gray-700/50 flex items-center justify-center group-hover:bg-gray-700/70 transition-colors">
+                      {feature.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-1">
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-300 text-xs">{feature.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 text-right w-full">
+              <a
+                href="#features"
+                className="text-blue-400 hover:underline text-sm font-medium"
+              >
+                See all features &rarr;
+              </a>
+            </div>
+          </div>
         </div>
-      </header>
+      </motion.section>
 
       {/* Features Section */}
       <section
         id="features"
-        className="py-32 bg-gray-900 relative overflow-hidden w-full"
+        className="py-32 bg-transparent relative overflow-hidden w-full"
       >
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)]"></div>
-          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.1),transparent_50%)]"></div>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.10),transparent_50%)]"></div>
+          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.10),transparent_50%)]"></div>
         </div>
         <div className="relative w-full">
           <motion.div
@@ -205,7 +216,6 @@ export default function LandingPage() {
               experience
             </p>
           </motion.div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-8">
             {features.map((feature, index) => (
               <motion.div
@@ -214,7 +224,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="group bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 hover:border-blue-500/50 transition-colors duration-300"
+                className="group bg-gray-800/60 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 hover:border-blue-500/50 transition-colors duration-300 shadow-lg"
               >
                 <div className="relative text-center">
                   <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gray-700/50 flex items-center justify-center group-hover:bg-gray-700/70 transition-colors">
@@ -342,11 +352,11 @@ export default function LandingPage() {
                 icon: <FaNodeJs className="w-8 h-8 text-green-400" />,
               },
               {
-                title: "Database: MySQL/MongoDB",
+                title: "Database: MongoDB",
                 desc: "Efficient data management with MySQL and MongoDB for different use cases.",
                 icon: (
                   <div className="flex gap-2">
-                    <SiMysql className="w-8 h-8 text-blue-400" />
+                    {/* <SiMysql className="w-8 h-8 text-blue-400" /> */}
                     <SiMongodb className="w-8 h-8 text-green-400" />
                   </div>
                 ),
@@ -398,9 +408,9 @@ export default function LandingPage() {
       {/* Call to Action Section */}
       <section className="py-32 bg-gray-900 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)]"></div>
-          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.1),transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)]" />
+          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.1),transparent_50%)]" />
         </div>
         <div className="py-16 w-full">
           <motion.div
@@ -418,8 +428,8 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="#contact"
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors shadow-lg"
+                href="/login"
+                className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02] focus:scale-[0.98]"
               >
                 Get Started
               </a>
@@ -439,7 +449,7 @@ export default function LandingPage() {
         id="contact"
         className="py-32 bg-gray-900 relative overflow-hidden w-full"
       >
-        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white text-center">
           Let's Build Something Amazing Together!
         </h2>
         {/* Background Elements */}
@@ -644,11 +654,11 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 border-t border-gray-800 w-full">
-        <div className="py-16 w-full">
+        <div className="py-16 w-full text-center">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 w-full px-8">
             {/* Brand Section */}
             <div className="space-y-4 text-center">
-              <h2 className="text-2xl font-bold text-white">SUSTVerse</h2>
+              <h2 className="text-2xl font-bold text-white">SUSTverse</h2>
               <p className="text-gray-400 max-w-md mx-auto my-5">
                 The digital campus of Shahjalal University of Science and
                 Technology, connecting students, alumni, and faculty.
@@ -722,7 +732,7 @@ export default function LandingPage() {
             </div>
 
             {/* Quick Links */}
-            <div>
+            <div className="text-center">
               <h3 className="text-lg font-semibold text-white mb-4">
                 Quick Links
               </h3>
