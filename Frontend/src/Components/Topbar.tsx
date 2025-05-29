@@ -1,4 +1,10 @@
-import { FaHome, FaCalendarAlt, FaBell, FaUserCircle, FaSearch } from "react-icons/fa";
+import {
+  FaHome,
+  FaCalendarAlt,
+  FaBell,
+  FaUserCircle,
+  FaSearch,
+} from "react-icons/fa";
 
 export default function Topbar() {
   return (
@@ -7,9 +13,13 @@ export default function Topbar() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow">
-            <span className="text-white text-xl font-bold font-mono select-none">SV</span>
+            <span className="text-white text-xl font-bold font-mono select-none">
+              SV
+            </span>
           </div>
-          <span className="text-white text-xl font-bold tracking-wide font-sans select-none">SUSTverse</span>
+          <span className="text-white text-xl font-bold tracking-wide font-sans select-none">
+            SUSTverse
+          </span>
         </div>
         {/* Searchbar */}
         <div className="flex-1 mx-6 max-w-md">
