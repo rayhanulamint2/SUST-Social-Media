@@ -1,6 +1,8 @@
 import Topbar from "./Topbar";
 import Sidebar from "./Sidebar";
 import Chatbot from "./Chatbot";
+import PostCreationSection from "./PostCreationSection";
+import PostFeed from "./PostFeed";
 
 export default function Homepage() {
   return (
@@ -8,8 +10,10 @@ export default function Homepage() {
       <Topbar />
       <Sidebar />
       <Chatbot />
-      <div className="pt-16 max-w-6xl mx-auto px-4">
-        {/* Your homepage content goes here */}
+      <div className="pt-10 max-w-8xl mx-auto px-4">
+        <PostCreationSection />
+        <PostFeed />
+        {/* You can add more homepage content here */}
       </div>
     </div>
   );
