@@ -3,7 +3,7 @@ import { FaHome, FaCalendarAlt, FaBell, FaUserCircle, FaSearch } from "react-ico
 export default function Topbar({ onNav }: { onNav?: (nav: "home" | "events") => void }) {
   return (
     <header className="fixed top-0 left-0 w-full z-30 bg-gray-900/80 backdrop-blur-xl border-b border-blue-400/10 shadow-lg">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-2">
+      <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-2">
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow">
