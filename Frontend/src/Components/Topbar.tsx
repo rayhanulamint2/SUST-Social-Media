@@ -12,12 +12,12 @@ export default function Topbar({ onNav }: { onNav?: (nav: "home" | "events") => 
           <span className="text-white text-xl font-bold tracking-wide font-sans select-none">SUSTverse</span>
         </div>
         {/* Searchbar */}
-        <div className="flex-1 mx-6 max-w-md">
+        <div className="flex-1 mx-6">
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 text-base" />
             <input
               type="text"
-              placeholder="Search SUSTverse..."
+              placeholder="Search in SUSTverse..."
               className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 outline-none text-sm shadow"
             />
           </div>
