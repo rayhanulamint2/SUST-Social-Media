@@ -1,15 +1,30 @@
-import { FaHome, FaCalendarAlt, FaBell, FaUserCircle, FaSearch } from "react-icons/fa";
+import {
+  FaHome,
+  FaCalendarAlt,
+  FaBell,
+  FaUserCircle,
+  FaSearch,
+} from "react-icons/fa";
 
-export default function Topbar({ onNav }: { onNav?: (nav: "home" | "events") => void }) {
+type TopbarProps = {
+  onNav?: (nav: "home" | "events") => void;
+  onNotices?: () => void;
+};
+
+export default function Topbar({ onNav, onNotices }: TopbarProps) {
   return (
     <header className="fixed top-0 left-0 w-full z-30 bg-gray-900/80 backdrop-blur-xl border-b border-blue-400/10 shadow-lg">
       <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-2">
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow">
-            <span className="text-white text-xl font-bold font-mono select-none">SV</span>
+            <span className="text-white text-xl font-bold font-mono select-none">
+              SV
+            </span>
           </div>
-          <span className="text-white text-xl font-bold tracking-wide font-sans select-none">SUSTverse</span>
+          <span className="text-white text-xl font-bold tracking-wide font-sans select-none">
+            SUSTverse
+          </span>
         </div>
         {/* Searchbar */}
         <div className="flex-1 mx-6">
@@ -43,6 +58,7 @@ export default function Topbar({ onNav }: { onNav?: (nav: "home" | "events") => 
           <button
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/70 hover:bg-purple-500/80 text-white font-semibold transition-colors"
             title="Notices"
+            onClick={() => onNotices && onNotices()}
           >
             <FaBell className="text-lg" />
             <span className="hidden sm:inline">Notices</span>
