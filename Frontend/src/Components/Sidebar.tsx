@@ -17,11 +17,18 @@ const topics = [
   { name: "Nature", icon: <FaLeaf className="text-green-400" /> },
   { name: "Travel", icon: <FaGlobe className="text-indigo-400" /> },
   { name: "Career", icon: <FaSuitcase className="text-yellow-400" /> },
-  { name: "Workshop", icon: <FaChalkboardTeacher className="text-purple-400" /> },
+  {
+    name: "Workshop",
+    icon: <FaChalkboardTeacher className="text-purple-400" />,
+  },
   { name: "Paper Publication", icon: <FaFileAlt className="text-pink-400" /> },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({
+  onComplaintBox,
+}: {
+  onComplaintBox?: () => void;
+}) {
   // Dummy user data
   const user = {
     name: "Khalid",
@@ -56,7 +63,10 @@ export default function Sidebar() {
         </button>
 
         {/* Complaint Box */}
-        <button className="flex items-center gap-3 px-6 py-4 border-b border-blue-400/10 hover:bg-red-500/10 transition-colors text-white text-base font-medium w-full text-left">
+        <button
+          onClick={onComplaintBox}
+          className="flex items-center gap-3 px-6 py-4 border-b border-blue-400/10 hover:bg-red-500/10 transition-colors text-white text-base font-medium w-full text-left"
+        >
           <FaExclamationCircle className="text-red-400" />
           Complaint Box
         </button>
@@ -83,7 +93,9 @@ export default function Sidebar() {
             className="w-12 h-12 rounded-full border-2 border-blue-500 object-cover"
           />
           <div className="flex flex-col items-start">
-            <span className="text-white font-semibold text-lg">{user.name}</span>
+            <span className="text-white font-semibold text-lg">
+              {user.name}
+            </span>
             <span className="text-blue-400 text-xs flex items-center gap-1">
               <FaUserCircle /> Profile
             </span>

@@ -6,11 +6,12 @@ import PostCreationSection from "./PostCreationSection";
 import PostFeed from "./PostFeed";
 import EventFeed from "./EventFeed";
 import NoticesPopup from "./NoticesPopup";
-
+import ComplaintBox from "./ComplaintBox";
 
 export default function Homepage() {
   const [mainFeed, setMainFeed] = useState<"home" | "events">("home");
   const [showNotices, setShowNotices] = useState(false);
+  const [showComplaintBox, setShowComplaintBox] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 pl-0 lg:pl-[20rem] pr-0 lg:pr-[24rem]">
@@ -18,7 +19,7 @@ export default function Homepage() {
         onNav={(nav) => setMainFeed(nav)}
         onNotices={() => setShowNotices(true)}
       />
-      <Sidebar />
+      <Sidebar onComplaintBox={() => setShowComplaintBox(true)} />
       <Chatbot />
       <div className="pt-10 max-w-8xl mx-auto px-4">
         <PostCreationSection />
@@ -28,6 +29,10 @@ export default function Homepage() {
         open={showNotices}
         onClose={() => setShowNotices(false)}
         userDepartment="CSE"
+      />
+      <ComplaintBox
+        open={showComplaintBox}
+        onClose={() => setShowComplaintBox(false)}
       />
     </div>
   );
