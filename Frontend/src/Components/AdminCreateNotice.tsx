@@ -89,3 +89,51 @@ export default function AdminCreateNotice() {
                             title="End Date"
                         />
                     </div>
+                    <div className="flex-1">
+                        <label className="block text-blue-300 font-semibold mb-1">
+                            End Time
+                        </label>
+                        <input
+                            type="time"
+                            className="w-full px-4 py-2 rounded-lg bg-gray-800 text-blue-100 border border-blue-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                            value={endTime}
+                            onChange={(e) => setEndTime(e.target.value)}
+                            placeholder="Select end time"
+                            title="End Time"
+                        />
+                    </div>
+                </div>
+                {/* Add Document */}
+                <div>
+                    <label className="block text-blue-300 font-semibold mb-1">
+                        Add Document
+                    </label>
+                    <button
+                        type="button"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition-all"
+                        onClick={() => fileInputRef.current?.click()}
+                    >
+                        <FaFileUpload />
+                        {docName ? docName : "Upload Document"}
+                    </button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        onChange={handleFileChange}
+                        placeholder="Upload document"
+                        title="Upload document"
+                    />
+                </div>
+                {/* Save Notice */}
+                <button
+                    className="mt-4 px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center gap-2 justify-center"
+                    onClick={handleSave}
+                >
+                    <FaSave />
+                    Save Notice
+                </button>
+            </div>
+        </div>
+    );
+}
