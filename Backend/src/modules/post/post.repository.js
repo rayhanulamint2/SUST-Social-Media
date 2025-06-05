@@ -30,4 +30,21 @@ const deleteByID = async(id) => {
         console.log('there are an error in server end');
     }
 }
-module.exports = {newPostCreation, findPost, deleteByID}
+
+const postUpdate = async(id, updateData) => {
+    try {
+        console.log('Updating post with ID:', id);
+        console.log('Update data:', updateData);
+        const updatedPost = await Post.findByIdAndUpdate(id, updateData, { new: true });
+        if (!updatedPost) {
+            throw new Error('Post not found');
+        }
+        console.log('Post updated successfully');
+        console.log(updatedPost);
+        return updatedPost;
+    } catch (error) {
+        console.log('there are an error in server end');
+        console.error(error);
+    }
+}
+module.exports = {newPostCreation, findPost, deleteByID, postUpdate}

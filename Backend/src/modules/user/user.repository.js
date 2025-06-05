@@ -21,4 +21,5 @@ const findUser = async(email)=>{
         console.log('there are an error in server end')
     }
 }
+
 module.exports = {newUserCreation, findUser}
