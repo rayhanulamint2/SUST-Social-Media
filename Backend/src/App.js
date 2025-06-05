@@ -7,18 +7,22 @@ const app = express();
 app.use(express.json());
 
 app.use(cors());
-// mongoose.connect('mongodb://localhost:27017/mydatabase', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// });
+mongoose.connect('mongodb+srv://rayhanulamint2:Mp7i9UGGkbBLhmmn@cluster0.i20gg40.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+  });
 
-app.post('/api/login', (req, res) => {
+
+app.post('/login', (req, res) => {
   const { username, password } = req.body;
   // Handle login logic
   res.json({ message: 'Login successful' });
 });
 
-app.post('/api/signup', (req, res) => {
+app.post('/signup', (req, res) => {
   const { username, email, password } = req.body;
   // Handle signup logic
   res.json({ message: 'Signup successful' });
