@@ -3,7 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userHandler = require('./modules/user/user.controller');
-
+const postHandler = require('./modules/post/post.controller');
 const app = express();
 app.use(express.json());
 
@@ -18,6 +18,7 @@ mongoose.connect('mongodb+srv://rayhanulamint2:Mp7i9UGGkbBLhmmn@cluster0.i20gg40
 
 
 app.use('/user', userHandler);
+app.use('/post', postHandler);
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;

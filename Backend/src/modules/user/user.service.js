@@ -1,9 +1,6 @@
 // core business logic define
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
-const userSchema = require('./user.model')
-const User = new mongoose.model('User',userSchema);
 const {newUserCreation, findUser} = require('./user.repository')
 
 const signup = async(req,res) => {
