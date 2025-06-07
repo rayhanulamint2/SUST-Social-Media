@@ -92,7 +92,7 @@ const updatePost = async(req, res) => {
         };
         
         const updatedPost = await postUpdate(req.params.id, postData);
-        
+        // post updateded
         res.status(200).json({
             message: 'Post updated successfully',
             post: updatedPost
