@@ -1,0 +1,16 @@
+const express = require('express');
+const router = express.Router();
+const {createNotice,deleteNotice, updateNotice, findingNotice} = require('./notice.service')
+
+// Route to create a new notice
+router.post('/create', createNotice);
+// Route to delete a notice by ID
+router.post('/delete/:id', deleteNotice);
+// Route to update a notice by ID
+router.post('/update/:id', updateNotice);
+// Route to find a notice by ID
+router.get('/:id', findingNotice);
+
+
+
+module.exports = router

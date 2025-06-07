@@ -12,6 +12,7 @@ const createPost = async(req, res) => {
                 ? req.body.tags
                 : [req.body.tags].filter(Boolean),
             isDepartmentPost: req.body.isDepartmentPost,
+            department: req.body.department || '', // Ensure department is included
             upVotes: 0,
             downVotes: 0,
             comment: [],
@@ -32,7 +33,8 @@ const createPost = async(req, res) => {
                 upVotes: newPost.upVotes,
                 downVotes: newPost.downVotes,
                 comment: newPost.comment,
-                createdAt: newPost.createdAt
+                createdAt: newPost.createdAt,
+                department: newPost.department || '' // Ensure department is included
             }
         });
     } catch (error) {
@@ -88,11 +90,12 @@ const updatePost = async(req, res) => {
             downVotes: req.body.downVotes || 0,
             comment: req.body.comment || [],
             // Ensure createdAt is not updated
-            createdAt: post.createdAt
+            createdAt: post.createdAt,
+            department: req.body.department || post.department // Ensure department is included
         };
         
         const updatedPost = await postUpdate(req.params.id, postData);
-        
+        // post updated
         res.status(200).json({
             message: 'Post updated successfully',
             post: updatedPost

@@ -51,6 +51,9 @@ const postSchema = new mongoose.Schema({
     isDepartmentPost: {
         type: Boolean,
         required: true
+    },
+    department: {
+        type: String
     }
 })
 module.exports = postSchema
