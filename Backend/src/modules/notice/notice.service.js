@@ -1,4 +1,4 @@
-const {newNoticeCreation, findNotice,deleteNoticeById, noticeUpdate} = require('./post.repository')    
+const {newNoticeCreation, findNotice,deleteNoticeByID, noticeUpdate} = require('./notice.repository')    
 
 const createNotice = async(req, res) => {
     try{
@@ -80,11 +80,6 @@ const updateNotice = async(req, res) => {
             isDepartmentPost: req.body.isDepartmentPost,
             department: req.body.department || ''
         };
-        // Ensure createdAt is not updated
-    } catch (error) {
-        console.error(error);
-    }
-    try {
         const updatedNotice = await noticeUpdate(req.params.id, noticeData);
         // notice updated
         res.status(200).json({
