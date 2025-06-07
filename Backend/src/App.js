@@ -7,6 +7,7 @@ const postHandler = require('./modules/post/post.controller');
 const eventHandler = require('./modules/event/event.controller');
 const noticeHandler = require('./modules/notice/notice.controller');
 const adminHandler = require('./modules/admin/admin.controller');
+const complainHandler = require('./modules/complainBox/complainBox.controller');
 const app = express();
 app.use(express.json());
 
@@ -25,6 +26,7 @@ app.use('/post', postHandler);
 app.use('/event', eventHandler);
 app.use('/notice', noticeHandler);
 app.use('/admin', adminHandler);
+app.use('/complain', complainHandler);
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
