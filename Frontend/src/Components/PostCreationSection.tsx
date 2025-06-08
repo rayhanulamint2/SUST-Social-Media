@@ -11,11 +11,12 @@ const TAGS = [
 ];
 
 export default function PostCreationSection() {
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   // Dummy user data
   const user = {
-    name: "Khalid",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    department: "CSE",
+    name: mainUser[0]?.name || "Khalid",
+    avatar: mainUser[0]?.avatar || "https://randomuser.me/api/portraits/men/32.jpg",
+    department: mainUser[0]?.department || "CSE",
   };
 
   const [showPopup, setShowPopup] = useState(false);
