@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { motion } from "framer-motion";
+import http from "../http";
+import { useEffect} from "react";
 import {
   FaUserCircle,
   FaLock,
@@ -43,6 +45,14 @@ export default function Signup() {
   const [session, setSession] = useState("");
   const [roles, setRoles] = useState<string[]>(["student"]);
   const navigate = useNavigate();
+
+  const [data, setData] = useState("");
+  useEffect(() => {
+    http.get("/").then((response) => {
+      console.log("API is working:", response.data);
+      setData(response.data);
+    });
+  }, []);
 
   // Role selection logic
   const handleRoleChange = (role: string) => {
