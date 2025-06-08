@@ -2,18 +2,33 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUserCircle, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Add this import
+import http from "../http"; // Adjust the import path as necessary
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); // Initialize navigate
-
+  const [data, setData] = useState(""); // State to hold API response data
   // Placeholder for login handler
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-  };
+    console.log("Login button clicked");
 
+    const payload = {
+      email: email,
+      password: password
+    };
+
+    try {
+      const response = await http.post("user/login", payload);
+      console.log("API is working:", response.data);
+      setData(response.data);
+      navigate("/home"); // Navigate to home on successful login
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login failed. Please check your credentials.");
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative">
       {/* Decorative Background */}
