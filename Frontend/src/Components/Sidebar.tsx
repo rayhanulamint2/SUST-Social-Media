@@ -24,11 +24,12 @@ const topics = [
   { name: "Paper Publication", icon: <FaFileAlt className="text-pink-400" /> },
 ];
 
-export default function Sidebar({
-  onComplaintBox,
-}: {
+type SidebarProps = {
   onComplaintBox?: () => void;
-}) {
+  onProfile?: () => void; // <-- add
+};
+
+export default function Sidebar({ onComplaintBox, onProfile }: SidebarProps) {
   // Dummy user data
   const user = {
     name: "Khalid",
@@ -86,7 +87,10 @@ export default function Sidebar({
 
       {/* Profile Section at Bottom */}
       <div>
-        <button className="flex items-center gap-3 px-6 py-5 bg-gradient-to-r from-gray-900/80 to-gray-800/80 rounded-br-3xl hover:bg-blue-900/20 transition-colors w-full">
+        <button
+          onClick={onProfile}
+          className="flex items-center gap-3 px-6 py-5 bg-gradient-to-r from-gray-900/80 to-gray-800/80 rounded-br-3xl hover:bg-blue-900/20 transition-colors w-full"
+        >
           <img
             src={user.avatar}
             alt="Profile"
