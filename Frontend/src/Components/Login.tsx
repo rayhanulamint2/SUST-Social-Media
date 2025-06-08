@@ -23,6 +23,8 @@ export default function Login() {
       const response = await http.post("user/login", payload);
       console.log("API is working:", response.data);
       setData(response.data);
+      localStorage.setItem("token", response.data.access_token); // Store token in localStorage
+      localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user data in localStorage
       navigate("/home"); // Navigate to home on successful login
     } catch (error) {
       console.error("Login failed:", error);

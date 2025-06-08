@@ -1,7 +1,6 @@
 import { use, useState } from "react";
 import { motion } from "framer-motion";
 import http from "../http";
-import { useEffect} from "react";
 import {
   FaUserCircle,
   FaLock,
@@ -47,12 +46,7 @@ export default function Signup() {
   const navigate = useNavigate();
 
   const [data, setData] = useState("");
-  useEffect(() => {
-    http.get("/").then((response) => {
-      console.log("API is working:", response.data);
-      setData(response.data);
-    });
-  }, []);
+  
 
   // Role selection logic
   const handleRoleChange = (role: string) => {
@@ -83,10 +77,32 @@ export default function Signup() {
     }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement signup logic
+  const handleSignup = async (e: React.FormEvent) => {
+  e.preventDefault();
+  console.log("Register button clicked");
+
+  const payload = {
+    name: name,
+    regNo: regNo,
+    email: email,
+    password: password,
+    department: department,
+    session: session,
+    roles: roles
   };
+  console.log("Payload:", payload);
+
+  try {
+    const response = await http.post("user/signup", payload);
+    console.log("Registration successful:", response.data);
+    setData(response.data);
+    navigate("/login"); // Navigate to home or login page after successful registration
+  } catch (error) {
+    console.error("Registration failed:", error);
+    alert("Registration failed. Please try again.");
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative">
