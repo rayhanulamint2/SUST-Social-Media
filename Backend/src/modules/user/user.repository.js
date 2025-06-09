@@ -22,4 +22,27 @@ const findUser = async(email)=>{
     }
 }
 
-module.exports = {newUserCreation, findUser}
+const userUpdate = async(id, updateData) => {
+    try {
+        console.log('Updating user with ID:', id);
+        console.log('Update data:', updateData);
+        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+        if (!updatedUser) {
+            throw new Error('User not found');
+        }
+        return updatedUser;
+    } catch (error) {
+        console.log('there are an error in server end');
+    }
+};
+
+const findUserById = async(id) => {
+    try {
+        const user = await User.findById(id);
+        return user;
+    } catch (error) {
+        console.log('there are an error in server end');
+    }
+};
+
+module.exports = {newUserCreation, findUser, userUpdate, findUserById}
