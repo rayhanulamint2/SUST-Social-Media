@@ -1,7 +1,7 @@
 // core business logic define
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {newUserCreation, findUser, userUpdate} = require('./user.repository')
+const {newUserCreation, findUser, userUpdate, findUserById} = require('./user.repository')
 
 const signup = async(req,res) => {
     try{
@@ -92,5 +92,18 @@ const updateUser = async(req, res) => {
     }
 };
 
+const findUserDetails = async(req,res)=>{
+    try{
+        const user = await findUserById(req.params.id)
+        res.status(200).json({
+                    "user": user
+                })
+        return user
+    }
+    catch(error){
+        console.log('there are an error in server end')
+    }
+}
 
-module.exports = {signup,login,updateUser}
+
+module.exports = {signup,login,updateUser, findUserDetails}

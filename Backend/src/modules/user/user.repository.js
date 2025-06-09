@@ -36,4 +36,13 @@ const userUpdate = async(id, updateData) => {
     }
 };
 
-module.exports = {newUserCreation, findUser, userUpdate}
+const findUserById = async(id) => {
+    try {
+        const user = await User.findById(id);
+        return user;
+    } catch (error) {
+        console.log('there are an error in server end');
+    }
+};
+
+module.exports = {newUserCreation, findUser, userUpdate, findUserById}
