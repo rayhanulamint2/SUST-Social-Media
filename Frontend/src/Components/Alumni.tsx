@@ -77,38 +77,41 @@ export default function Alumni({ userDept = "CSE" }: { userDept?: string }) {
   };
 
   return (
-    <div className="w-full min-h-[60vh] bg-gradient-to-br from-[#232526]/60 via-[#414345]/60 to-[#232526]/60 rounded-2xl shadow-xl p-6">
+    <div
+      className="w-full max-w-2xl mx-auto bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 rounded-2xl shadow-xl border border-blue-900/30"
+      style={{ minHeight: "320px" }}
+    >
       {/* Top Controls */}
-      <div className="flex flex-wrap items-center justify-between mb-6 gap-2">
+      <div className="flex flex-wrap items-center justify-between px-6 pt-6 gap-2">
         <div className="flex gap-2">
           <button
             className={`flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-base shadow transition-all
               ${
                 view === "university"
-                  ? "bg-gradient-to-r from-pink-500 to-indigo-500 text-white scale-105"
+                  ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white scale-105"
                   : "bg-gray-800/80 text-blue-200 hover:bg-blue-900/40"
               }`}
             onClick={() => setView("university")}
           >
-            <FaUsers className="text-pink-400" />
+            <FaUsers className="text-blue-300" />
             University Alumni
           </button>
           <button
             className={`flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-base shadow transition-all
               ${
                 view === "department"
-                  ? "bg-gradient-to-r from-blue-500 to-green-400 text-white scale-105"
+                  ? "bg-gradient-to-r from-cyan-600 to-blue-500 text-white scale-105"
                   : "bg-gray-800/80 text-blue-200 hover:bg-blue-900/40"
               }`}
             onClick={() => setView("department")}
           >
-            <FaUserGraduate className="text-green-400" />
+            <FaUserGraduate className="text-cyan-300" />
             Department Alumni
           </button>
         </div>
         <div className="relative">
           <button
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-pink-400 text-white font-semibold shadow hover:from-yellow-500 hover:to-pink-500 transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 text-white font-semibold shadow hover:from-blue-500 hover:to-cyan-500 transition-all"
             onClick={() => setShowSort((s) => !s)}
             title="Sort"
           >
@@ -136,36 +139,38 @@ export default function Alumni({ userDept = "CSE" }: { userDept?: string }) {
         </div>
       </div>
       {/* Alumni Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filtered.map((alum) => (
-          <div
-            key={alum.id}
-            className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-5 flex flex-col items-center gap-3"
-          >
-            <img
-              src={alum.avatar}
-              alt={alum.name}
-              className="w-20 h-20 rounded-full object-cover border-4 border-pink-400 shadow"
-            />
-            <div className="text-lg font-bold text-white text-center">
-              {alum.name}
-            </div>
-            <div className="text-blue-300 text-base">{alum.department}</div>
-            <div className="text-blue-200 text-sm">{alum.session}</div>
-            <button
-              className={`mt-2 px-4 py-2 rounded-full font-semibold flex items-center gap-2 shadow transition-all
-                ${
-                  followed[alum.id]
-                    ? "bg-gradient-to-r from-green-400 to-blue-500 text-white"
-                    : "bg-gradient-to-r from-pink-500 to-indigo-500 text-white hover:from-pink-600 hover:to-indigo-600"
-                }`}
-              onClick={() => handleFollow(alum.id)}
+      <div className="px-6 pb-6 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {filtered.map((alum) => (
+            <div
+              key={alum.id}
+              className="bg-gradient-to-br from-blue-950/80 to-blue-900/80 border border-blue-900/30 rounded-2xl shadow-lg p-5 flex flex-col items-center gap-3"
             >
-              <FaUserPlus />
-              {followed[alum.id] ? "Following" : "Follow"}
-            </button>
-          </div>
-        ))}
+              <img
+                src={alum.avatar}
+                alt={alum.name}
+                className="w-20 h-20 rounded-full object-cover border-4 border-blue-400 shadow"
+              />
+              <div className="text-lg font-bold text-white text-center">
+                {alum.name}
+              </div>
+              <div className="text-blue-200 text-base">{alum.department}</div>
+              <div className="text-blue-300 text-sm">{alum.session}</div>
+              <button
+                className={`mt-2 px-4 py-2 rounded-full font-semibold flex items-center gap-2 shadow transition-all
+                  ${
+                    followed[alum.id]
+                      ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-white"
+                      : "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-700 hover:to-cyan-600"
+                  }`}
+                onClick={() => handleFollow(alum.id)}
+              >
+                <FaUserPlus />
+                {followed[alum.id] ? "Following" : "Follow"}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
