@@ -31,9 +31,11 @@ type SidebarProps = {
 
 export default function Sidebar({ onComplaintBox, onProfile }: SidebarProps) {
   // Dummy user data
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log("Main User:", mainUser);
   const user = {
-    name: "Khalid",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    name: mainUser[0].name || "Khalid",
+    avatar: mainUser[0].avatar || "https://randomuser.me/api/portraits/men/32.jpg",
   };
 
   return (
