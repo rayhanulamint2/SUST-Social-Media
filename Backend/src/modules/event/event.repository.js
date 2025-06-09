@@ -47,4 +47,13 @@ const eventUpdate = async(id, updateData) => {
         console.error(error);
     }
 }
-module.exports = {newEventCreation, findEvent, deleteEventByID, eventUpdate}
+const findAllEvents = async () => {
+    try {
+        const events = await Event.find();
+        return events;
+    } catch (error) {
+        console.log('there are an error in server end');
+    }
+}
+
+module.exports = {newEventCreation, findEvent, deleteEventByID, eventUpdate, findAllEvents}

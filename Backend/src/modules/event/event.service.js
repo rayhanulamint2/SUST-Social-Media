@@ -1,4 +1,4 @@
-const {newEventCreation, findEvent, deleteEventByID, eventUpdate} = require('./event.repository')    
+const {newEventCreation, findEvent, deleteEventByID, eventUpdate, findAllEvents} = require('./event.repository')    
 
 const createEvent = async(req, res) => {
     try{
@@ -128,5 +128,24 @@ const findingEvent = async(req, res) => {
         });
     }
 };
+const findingAllEvents = async(req, res) => {
+    try {
+        const events = await findAllEvents();
+        if (!events || events.length === 0) {
+            return res.status(404).json({
+                error: 'No events found'
+            });
+        }
+        res.status(200).json({
+            events: events
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Failed to retrieve events'
+        });
+    }
+};
 
-module.exports = {createEvent, deleteEvent, updateEvent, findingEvent};
+module.exports = {createEvent, deleteEvent, updateEvent, findingEvent, findingAllEvents};

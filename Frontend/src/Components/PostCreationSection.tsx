@@ -13,6 +13,7 @@ const TAGS = [
 
 export default function PostCreationSection() {
   const [data, setData] = useState(""); // State to hold API response data
+  const [eventData, setEventData] = useState(""); // State to hold event API response data
   // Retrieve user data from localStorage 
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   // Dummy user data
@@ -100,15 +101,43 @@ export default function PostCreationSection() {
   }
 };
 
-  const handleEvent = () => {
+  const handleEvent = async () => {
     // Handle event submission logic here
+    console.log("Create Event button clicked");
+    const startDateTime = new Date(`${eventDate}T${eventTime}`);
+
+    const payload = {
+      creator: mainUser[0]?._id || "unknown", // User ID from state or context
+      title: eventName, // Must be a string, required
+      content: eventDesc, // Must be a string, required
+      startDate: startDateTime, // Should be a valid Date
+      endDate: startDateTime, // Should be a valid Date
+      image: eventImage || "", // Optional image path or filename
+      tags: eventTags || [], // Optional array of strings
+      isDepartmentPost: "false", // Must be boolean
+      department: mainUser[0]?.department || "CSE", // Optional department
+      createdAt: new Date().toISOString(), // Optional, defaults to now in schema
+    };
+
+    console.log("Payload:", payload);
+
+    try {
+      const response = await http.post("event/create", payload); // Adjust endpoint if necessary
+      console.log("Event created successfully:", response.data);
+      setEventData(response.data); // Update your state with event response
+      handleClose(); // Optionally close modal or reset form
+    } catch (error) {
+      console.error("Event creation failed:", error);
+      alert("Failed to create the event. Please check your inputs.");
+    }
   };
-  // Reset all fields when closing popup
-  const handleClose = () => {
-    setShowPopup(false);
-    setMode("post");
-    setPostText("");
-    setPostTags([]);
+
+// Reset all fields when closing popup
+const handleClose = () => {
+  setShowPopup(false);
+  setMode("post");
+  setPostText("");
+  setPostTags([]);
     setPostImage(null);
     setEventName("");
     setEventDesc("");
@@ -275,8 +304,6 @@ export default function PostCreationSection() {
                 onSubmit={(e) => {
                   e.preventDefault();
                   handleEvent();
-                  // handle event submit here
-                  handleClose();
                 }}
               >
                 <div className="flex items-center gap-3">

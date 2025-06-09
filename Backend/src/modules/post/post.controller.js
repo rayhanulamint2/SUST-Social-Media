@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createPost,deletePost, updatePost, findingPost} = require('./post.service')
+const {createPost,deletePost, updatePost, findingPost, findingAllPosts} = require('./post.service')
 
 // Route to create a new post
 router.post('/create', createPost);
@@ -10,7 +10,7 @@ router.post('/delete/:id', deletePost);
 router.post('/update/:id', updatePost);
 // Route to find a post by ID
 router.get('/:id', findingPost);
-
-
+// Route to find all posts
+router.get('/', findingAllPosts);
 
 module.exports = router
