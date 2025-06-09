@@ -21,6 +21,9 @@ export default function PostCreationSection() {
   const [showPopup, setShowPopup] = useState(false);
   const [mode, setMode] = useState<"post" | "event">("post");
 
+  // New: Scope selection state
+  const [scope, setScope] = useState<"department" | "university">("department");
+
   // Post states
   const [postText, setPostText] = useState("");
   const [postTags, setPostTags] = useState<string[]>([]);
@@ -117,7 +120,7 @@ export default function PostCreationSection() {
               <FaTimes />
             </button>
             {/* Toggle Buttons */}
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-2 mb-4">
               <button
                 className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
                   mode === "post"
@@ -139,6 +142,31 @@ export default function PostCreationSection() {
                 New Event
               </button>
             </div>
+            {/* Scope Selection */}
+            <div className="flex gap-2 mb-6">
+              <button
+                type="button"
+                className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
+                  scope === "department"
+                    ? "bg-green-600 text-white shadow"
+                    : "bg-gray-800/80 text-green-300 hover:bg-green-900/40"
+                }`}
+                onClick={() => setScope("department")}
+              >
+                Department {mode === "event" ? "Event" : "Post"}
+              </button>
+              <button
+                type="button"
+                className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
+                  scope === "university"
+                    ? "bg-pink-600 text-white shadow"
+                    : "bg-gray-800/80 text-pink-300 hover:bg-pink-900/40"
+                }`}
+                onClick={() => setScope("university")}
+              >
+                University {mode === "event" ? "Event" : "Post"}
+              </button>
+            </div>
 
             {/* Post Form */}
             {mode === "post" && (
@@ -146,7 +174,7 @@ export default function PostCreationSection() {
                 className="flex flex-col gap-4"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  // handle post submit here
+                  // handle post submit here, use `scope` value as needed
                   handleClose();
                 }}
               >
@@ -238,7 +266,7 @@ export default function PostCreationSection() {
                 className="flex flex-col gap-4"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  // handle event submit here
+                  // handle event submit here, use `scope` value as needed
                   handleClose();
                 }}
               >
