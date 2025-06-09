@@ -47,4 +47,14 @@ const postUpdate = async(id, updateData) => {
         console.error(error);
     }
 }
-module.exports = {newPostCreation, findPost, deleteByID, postUpdate}
+
+const findAllPosts = async () => {
+    try {
+        const posts = await Post.find();
+        return posts;
+    } catch (error) {
+        console.log('there are an error in server end');
+    }
+}
+
+module.exports = {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts}
