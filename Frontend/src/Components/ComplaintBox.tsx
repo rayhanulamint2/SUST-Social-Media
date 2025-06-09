@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { FaTimes, FaImage, FaCheckCircle } from "react-icons/fa";
+import { FaTimes, FaImage } from "react-icons/fa";
 
 // Replace these with actual user data from context/auth if available
 const user = {
@@ -7,7 +7,66 @@ const user = {
   hall: "Shahporan Hall",
 };
 
-const COMPLAINT_TYPES = [user.department, user.hall, "Administration"];
+const CONTEXT_OPTIONS = [
+  "Not Specified",
+  "FES",
+  "ARC",
+  "CEP",
+  "CEE",
+  "CSE",
+  "EEE",
+  "FET",
+  "IPE",
+  "MEE",
+  "PME",
+  "SWE",
+  "BMB",
+  "GEB",
+  "Business Administration",
+  "Chemistry",
+  "Mathematics",
+  "Physics",
+  "Statistics",
+  "GEE",
+  "OCG",
+  "ANP",
+  "BNG",
+  "ECO",
+  "ENG",
+  "PSS",
+  "PAD",
+  "SCW",
+  "SOC",
+  "Academic Building A",
+  "Academic Building B",
+  "Academic Building C",
+  "Academic Building D",
+  "Academic Building E",
+  "D Building Extension",
+  "SUST IICT",
+  "SUST Library",
+  "SUST Central Mosque",
+  "SUST Central Cafeteria",
+  "Administration Building",
+  "Controller Building",
+  "Post Office",
+  "SUST Bank",
+  "Foodcourt",
+  "SUST Medical Center",
+  "SUST Central Field",
+  "SUST Handball Field",
+  "SUST Basketball Court",
+  "SUST Shaheed Minar",
+  "SUST Golchottor",
+  "SUST Central Auditorium",
+  "SUST Mini Auditorium",
+  "Shahporan Hall",
+  "Second Hall",
+  "Syed Mujtaba Ali Hall",
+  "First ladies hall",
+  "Begum Sirajunnesa Chowdhury hall",
+  "Begum Fajilatunnesa mujib hall",
+];
 
 export default function ComplaintBox({
   open,
@@ -16,7 +75,9 @@ export default function ComplaintBox({
   open: boolean;
   onClose: () => void;
 }) {
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedContext, setSelectedContext] = useState<string>(
+    user.department
+  );
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
@@ -24,12 +85,6 @@ export default function ComplaintBox({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!open) return null;
-
-  const handleTypeToggle = (type: string) => {
-    setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,19 +97,8 @@ export default function ComplaintBox({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle complaint submission here
+    // Handle complaint submission here, use selectedContext as the context
     onClose();
-  };
-
-  // Handle keyboard events for accessibility
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLButtonElement>,
-    type: string
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleTypeToggle(type);
-    }
   };
 
   return (
@@ -74,45 +118,32 @@ export default function ComplaintBox({
           <h2 className="text-3xl font-bold text-blue-200 mb-1 tracking-wide drop-shadow">
             SUSTverse Complaint Box
           </h2>
-          <p className="text-blue-300 text-sm mb-2">Raise your concern to the right authority</p>
+          <p className="text-blue-300 text-sm mb-2">
+            Raise your concern to the right authority
+          </p>
         </div>
         <form className="flex flex-col gap-6 px-8 pb-8" onSubmit={handleSubmit}>
-          {/* Complaint Types - Pill Buttons */}
+          {/* Complaint Context Dropdown */}
           <div>
-            <div
-              id="complaint-type-label"
-              className="text-blue-300 text-xs mb-2 font-semibold"
+            <label
+              htmlFor="complaint-context"
+              className="block text-blue-300 text-xs mb-2 font-semibold"
             >
               Complaint Context
-            </div>
-            <div className="flex gap-3 flex-wrap">
-              {COMPLAINT_TYPES.map((type) => {
-                const selected = selectedTypes.includes(type);
-                return (
-                  <button
-                    type="button"
-                    key={type}
-                    role="checkbox"
-                    aria-checked={selected}
-                    aria-labelledby="complaint-type-label"
-                    className={`flex items-center gap-2 px-6 py-2 rounded-full font-semibold border transition-colors text-base shadow-sm
-                      ${
-                        selected
-                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600 shadow-lg"
-                          : "bg-gray-800/80 text-blue-200 border-blue-400 hover:bg-blue-900/40"
-                      }`}
-                    onClick={() => handleTypeToggle(type)}
-                    onKeyDown={(e) => handleKeyDown(e, type)}
-                    title={type}
-                  >
-                    {selected && (
-                      <FaCheckCircle className="text-green-300 text-lg" />
-                    )}
-                    {type}
-                  </button>
-                );
-              })}
-            </div>
+            </label>
+            <select
+              id="complaint-context"
+              value={selectedContext}
+              onChange={(e) => setSelectedContext(e.target.value)}
+              className="w-full max-w-xs px-4 py-2 rounded-lg bg-gray-800 text-blue-100 border border-blue-700 focus:ring-2 focus:ring-blue-500 outline-none"
+              required
+            >
+              {CONTEXT_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </div>
           {/* Date and Time */}
           <div className="flex gap-4">
