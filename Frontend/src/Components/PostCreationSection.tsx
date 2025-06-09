@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { FaImage, FaTimes } from "react-icons/fa";
+import http from "../http"; // Adjust the import path as necessary
 
 const TAGS = [
   "Adventure",
@@ -11,15 +12,22 @@ const TAGS = [
 ];
 
 export default function PostCreationSection() {
+  const [data, setData] = useState(""); // State to hold API response data
+  const [eventData, setEventData] = useState(""); // State to hold event API response data
+  // Retrieve user data from localStorage 
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   // Dummy user data
   const user = {
-    name: "Khalid",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    department: "CSE",
+    name: mainUser[0]?.name || "Khalid",
+    avatar: mainUser[0]?.avatar || "https://randomuser.me/api/portraits/men/32.jpg",
+    department: mainUser[0]?.department || "CSE",
   };
 
   const [showPopup, setShowPopup] = useState(false);
   const [mode, setMode] = useState<"post" | "event">("post");
+
+  // New: Scope selection state
+  const [scope, setScope] = useState<"department" | "university">("department");
 
   // Post states
   const [postText, setPostText] = useState("");
@@ -67,12 +75,72 @@ export default function PostCreationSection() {
     }
   };
 
-  // Reset all fields when closing popup
-  const handleClose = () => {
-    setShowPopup(false);
-    setMode("post");
-    setPostText("");
-    setPostTags([]);
+  const handlePost = async () => {
+  console.log("Create Post button clicked");
+
+  const payload = {
+    creator: mainUser[0]?._id || "unknown", // Should be defined in state or props
+    content: postText,
+    image: postImage, // Ensure this is a valid image path or handle file upload
+    tags: postTags, // Should be an array of strings
+    isDepartmentPost: 'false',
+    department: mainUser[0]?.department || "CSE", // Default to CSE if not available
+    upVotes: 0,
+    downVotes: 0,
+    comment: [],
+    createdAt: new Date().toISOString(),
+  };
+
+  console.log("Payload:", payload);
+
+  try {
+    const response = await http.post("post/create", payload); // Update endpoint as needed
+    console.log("Post created successfully:", response.data);
+    setData(response.data);
+    handleClose(); // Close modal or reset form after post
+  } catch (error) {
+    console.error("Post creation failed:", error);
+    alert("Failed to create the post. Please try again.");
+  }
+};
+
+  const handleEvent = async () => {
+    // Handle event submission logic here
+    console.log("Create Event button clicked");
+    const startDateTime = new Date(`${eventDate}T${eventTime}`);
+
+    const payload = {
+      creator: mainUser[0]?._id || "unknown", // User ID from state or context
+      title: eventName, // Must be a string, required
+      content: eventDesc, // Must be a string, required
+      startDate: startDateTime, // Should be a valid Date
+      endDate: startDateTime, // Should be a valid Date
+      image: eventImage || "", // Optional image path or filename
+      tags: eventTags || [], // Optional array of strings
+      isDepartmentPost: "false", // Must be boolean
+      department: mainUser[0]?.department || "CSE", // Optional department
+      createdAt: new Date().toISOString(), // Optional, defaults to now in schema
+    };
+
+    console.log("Payload:", payload);
+
+    try {
+      const response = await http.post("event/create", payload); // Adjust endpoint if necessary
+      console.log("Event created successfully:", response.data);
+      setEventData(response.data); // Update your state with event response
+      handleClose(); // Optionally close modal or reset form
+    } catch (error) {
+      console.error("Event creation failed:", error);
+      alert("Failed to create the event. Please check your inputs.");
+    }
+  };
+
+// Reset all fields when closing popup
+const handleClose = () => {
+  setShowPopup(false);
+  setMode("post");
+  setPostText("");
+  setPostTags([]);
     setPostImage(null);
     setEventName("");
     setEventDesc("");
@@ -117,7 +185,7 @@ export default function PostCreationSection() {
               <FaTimes />
             </button>
             {/* Toggle Buttons */}
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-2 mb-4">
               <button
                 className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
                   mode === "post"
@@ -139,6 +207,31 @@ export default function PostCreationSection() {
                 New Event
               </button>
             </div>
+            {/* Scope Selection */}
+            <div className="flex gap-2 mb-6">
+              <button
+                type="button"
+                className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
+                  scope === "department"
+                    ? "bg-green-600 text-white shadow"
+                    : "bg-gray-800/80 text-green-300 hover:bg-green-900/40"
+                }`}
+                onClick={() => setScope("department")}
+              >
+                Department {mode === "event" ? "Event" : "Post"}
+              </button>
+              <button
+                type="button"
+                className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
+                  scope === "university"
+                    ? "bg-pink-600 text-white shadow"
+                    : "bg-gray-800/80 text-pink-300 hover:bg-pink-900/40"
+                }`}
+                onClick={() => setScope("university")}
+              >
+                University {mode === "event" ? "Event" : "Post"}
+              </button>
+            </div>
 
             {/* Post Form */}
             {mode === "post" && (
@@ -147,7 +240,7 @@ export default function PostCreationSection() {
                 onSubmit={(e) => {
                   e.preventDefault();
                   // handle post submit here
-                  handleClose();
+                  handlePost();
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -238,8 +331,8 @@ export default function PostCreationSection() {
                 className="flex flex-col gap-4"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  // handle event submit here
-                  handleClose();
+                  handleEvent();
+
                 }}
               >
                 <div className="flex items-center gap-3">

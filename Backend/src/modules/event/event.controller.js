@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createEvent,deleteEvent, updateEvent, findingEvent} = require('./event.service')
+const {createEvent,deleteEvent, updateEvent, findingEvent, findingAllEvents} = require('./event.service')
 
 // Route to create a new event
 router.post('/create', createEvent);
@@ -10,6 +10,8 @@ router.post('/delete/:id', deleteEvent);
 router.post('/update/:id', updateEvent);
 // Route to find an event by ID
 router.get('/:id', findingEvent);
+// Route to find all events
+router.get('/', findingAllEvents);
 
 
 
