@@ -2,16 +2,16 @@ import {
   FaHome,
   FaCalendarAlt,
   FaBell,
-  FaUserCircle,
   FaSearch,
 } from "react-icons/fa";
 
 type TopbarProps = {
   onNav?: (nav: "home" | "events") => void;
   onNotices?: () => void;
+  onProfile?: () => void; // <-- add
 };
 
-export default function Topbar({ onNav, onNotices }: TopbarProps) {
+export default function Topbar({ onNav, onNotices, onProfile }: TopbarProps) {
   return (
     <header className="fixed top-0 left-0 w-full z-30 bg-gray-900/80 backdrop-blur-xl border-b border-blue-400/10 shadow-lg">
       <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-2">
@@ -64,10 +64,16 @@ export default function Topbar({ onNav, onNotices }: TopbarProps) {
             <span className="hidden sm:inline">Notices</span>
           </button>
           <button
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/70 hover:bg-blue-400/80 text-white font-semibold transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/70 hover:bg-green-500/80 text-white font-semibold transition-colors"
             title="Profile"
+            onClick={onProfile} // <-- call onProfile
           >
-            <FaUserCircle className="text-lg" />
+            {/* Replace with user's avatar if available */}
+            <img
+              src="https://randomuser.me/api/portraits/men/32.jpg"
+              alt="Profile"
+              className="w-8 h-8 rounded-full object-cover border-2 border-blue-500"
+            />
             <span className="hidden sm:inline">Profile</span>
           </button>
         </nav>
