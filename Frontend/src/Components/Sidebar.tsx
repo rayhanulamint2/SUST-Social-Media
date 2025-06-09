@@ -5,11 +5,11 @@ import {
   FaSuitcase,
   FaChalkboardTeacher,
   FaFileAlt,
-  FaUsers,
   FaExclamationCircle,
   FaComments,
   FaQuestionCircle,
   FaMountain,
+  FaUserGraduate, // <-- import for alumni icon
 } from "react-icons/fa";
 
 const topics = [
@@ -27,9 +27,14 @@ const topics = [
 type SidebarProps = {
   onComplaintBox?: () => void;
   onProfile?: () => void; // <-- add
+  onAlumni?: () => void; // <-- add
 };
 
-export default function Sidebar({ onComplaintBox, onProfile }: SidebarProps) {
+export default function Sidebar({
+  onComplaintBox,
+  onProfile,
+  onAlumni,
+}: SidebarProps) {
   // Dummy user data
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   console.log("Main User:", mainUser);
@@ -60,8 +65,11 @@ export default function Sidebar({ onComplaintBox, onProfile }: SidebarProps) {
         </div>
 
         {/* Alumni Button */}
-        <button className="flex items-center gap-3 px-6 py-4 border-b border-blue-400/10 hover:bg-blue-500/10 transition-colors text-white text-base font-medium w-full text-left">
-          <FaUsers className="text-emerald-400" />
+        <button
+          className="w-full px-4 py-3 rounded-xl flex items-center gap-3 text-lg font-semibold text-blue-300 hover:bg-blue-900/40 transition"
+          onClick={onAlumni}
+        >
+          <FaUserGraduate className="text-pink-400" /> {/* <-- colorful icon */}
           Alumni
         </button>
 
