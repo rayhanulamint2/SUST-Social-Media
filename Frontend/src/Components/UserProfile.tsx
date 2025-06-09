@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   FaArrowLeft,
   FaUserCircle,
@@ -86,6 +86,59 @@ const user = {
         },
       ],
     },
+    {
+      id: 3,
+      text: "Congratulations to all the freshers for joining SUST! Orientation program starts next week.",
+      time: "1 day ago",
+      tags: ["Announcement", "Freshers"],
+      photo:
+        "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80",
+      upvotes: 20,
+      downvotes: 0,
+      saved: true,
+      comments: [
+        {
+          id: 1,
+          user: {
+            name: "Tanvir",
+            avatar: "https://randomuser.me/api/portraits/men/50.jpg",
+          },
+          text: "Welcome everyone!",
+          time: "23 hours ago",
+        },
+      ],
+    },
+    {
+      id: 4,
+      text: "Hackathon registration is open now. Form teams and register before 15th June.",
+      time: "3 days ago",
+      tags: ["Hackathon", "Competition"],
+      photo:
+        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80",
+      upvotes: 30,
+      downvotes: 2,
+      saved: false,
+      comments: [
+        {
+          id: 1,
+          user: {
+            name: "Mitu",
+            avatar: "https://randomuser.me/api/portraits/women/55.jpg",
+          },
+          text: "Looking for a team!",
+          time: "2 days ago",
+        },
+        {
+          id: 2,
+          user: {
+            name: "Shuvo",
+            avatar: "https://randomuser.me/api/portraits/men/60.jpg",
+          },
+          text: "Let's win this!",
+          time: "1 day ago",
+        },
+      ],
+    },
   ],
   saved: [
     {
@@ -107,6 +160,73 @@ const user = {
           },
           text: "Thanks for sharing!",
           time: "Just now",
+        },
+      ],
+    },
+    {
+      id: 3,
+      text: "Congratulations to all the freshers for joining SUST! Orientation program starts next week.",
+      time: "1 day ago",
+      tags: ["Announcement", "Freshers"],
+      photo:
+        "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80",
+      upvotes: 20,
+      downvotes: 0,
+      saved: true,
+      comments: [
+        {
+          id: 1,
+          user: {
+            name: "Tanvir",
+            avatar: "https://randomuser.me/api/portraits/men/50.jpg",
+          },
+          text: "Welcome everyone!",
+          time: "23 hours ago",
+        },
+      ],
+    },
+    {
+      id: 5,
+      text: "SUST Annual Tech Fest is coming soon! Stay tuned for more updates and registration info.",
+      time: "4 days ago",
+      tags: ["Event", "TechFest"],
+      photo:
+        "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+      upvotes: 25,
+      downvotes: 1,
+      saved: true,
+      comments: [
+        {
+          id: 1,
+          user: {
+            name: "Rafi",
+            avatar: "https://randomuser.me/api/portraits/men/70.jpg",
+          },
+          text: "Can't wait for the fest!",
+          time: "3 days ago",
+        },
+      ],
+    },
+    // Example event as a saved item (if you want to show events in saved)
+    {
+      id: 101,
+      text: "SUST Career Fair 2025 is scheduled for July 10. Meet top recruiters and attend career workshops.",
+      time: "2 days ago",
+      tags: ["Event", "CareerFair"],
+      photo:
+        "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
+      upvotes: 40,
+      downvotes: 0,
+      saved: true,
+      comments: [
+        {
+          id: 1,
+          user: {
+            name: "Sultana",
+            avatar: "https://randomuser.me/api/portraits/women/80.jpg",
+          },
+          text: "Will there be resume reviews?",
+          time: "1 day ago",
         },
       ],
     },
@@ -188,6 +308,22 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
     date: "",
     link: "",
   });
+  const [postMenuIdx, setPostMenuIdx] = useState<number | null>(null);
+  const [editPostIdx, setEditPostIdx] = useState<number | null>(null);
+  const [editPost, setEditPost] = useState({
+    text: "",
+    tags: [] as string[],
+    photo: "",
+  });
+  const [savedMenuIdx, setSavedMenuIdx] = useState<number | null>(null);
+  const [editSavedIdx, setEditSavedIdx] = useState<number | null>(null);
+  const [editSaved, setEditSaved] = useState({
+    text: "",
+    tags: [] as string[],
+    photo: "",
+  });
+  const postMenuRef = useRef<HTMLDivElement>(null);
+  const savedMenuRef = useRef<HTMLDivElement>(null);
 
   const isMe = true;
 
@@ -585,223 +721,445 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
         );
       case "posts":
         return (
-          <div className="space-y-6 max-h-[70vh] overflow-y-auto">
+          <div className="flex flex-col gap-6 h-full">
             {user.posts.length === 0 ? (
               <div className="text-gray-400 text-center py-10">
                 No posts yet.
               </div>
             ) : (
-              user.posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
+              user.posts.map((post, idx) =>
+                editPostIdx === idx ? (
+                  <div
+                    key={post.id}
+                    className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
+                  >
+                    <textarea
+                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
+                      value={editPost.text}
+                      onChange={(e) =>
+                        setEditPost({ ...editPost, text: e.target.value })
+                      }
+                      placeholder="Edit your post"
+                      title="Edit post text"
                     />
-                    <div>
-                      <div className="text-white font-semibold text-base">
-                        {user.name}
-                      </div>
-                      <div className="text-xs text-gray-400">{post.time}</div>
+                    <input
+                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
+                      value={editPost.photo}
+                      onChange={(e) =>
+                        setEditPost({ ...editPost, photo: e.target.value })
+                      }
+                      placeholder="Photo URL"
+                    />
+                    <input
+                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
+                      value={editPost.tags.join(",")}
+                      onChange={(e) =>
+                        setEditPost({
+                          ...editPost,
+                          tags: e.target.value.split(",").map((t) => t.trim()),
+                        })
+                      }
+                      placeholder="Tags (comma separated)"
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
+                        onClick={() => {
+                          const updated = [...user.posts];
+                          updated[idx] = {
+                            ...updated[idx],
+                            text: editPost.text,
+                            photo: editPost.photo,
+                            tags: editPost.tags,
+                          };
+                          user.posts = updated;
+                          setEditPostIdx(null);
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="flex-1 py-2 rounded-full bg-gray-700 text-white font-bold shadow-lg hover:bg-gray-800 transition-colors"
+                        onClick={() => setEditPostIdx(null)}
+                      >
+                        Cancel
+                      </button>
                     </div>
-                    <div className="flex-1" />
-                    <div className="flex gap-1">
+                  </div>
+                ) : (
+                  <div
+                    key={post.id}
+                    className="relative bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
+                  >
+                    {/* Three Dots Menu */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <button
+                        className="p-2 rounded-full hover:bg-blue-900/40 transition"
+                        onClick={() =>
+                          setPostMenuIdx(postMenuIdx === idx ? null : idx)
+                        }
+                        title="Options"
+                      >
+                        <svg
+                          className="w-6 h-6 text-blue-200"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <circle cx="4" cy="10" r="2" />
+                          <circle cx="10" cy="10" r="2" />
+                          <circle cx="16" cy="10" r="2" />
+                        </svg>
+                      </button>
+                      {postMenuIdx === idx && (
+                        <div
+                          ref={postMenuRef}
+                          className="absolute right-0 mt-2 w-32 bg-gray-900 border border-blue-700 rounded-xl shadow-lg flex flex-col z-20"
+                        >
+                          <button
+                            className="px-4 py-2 text-blue-200 hover:bg-blue-800/60 rounded-t-xl flex items-center gap-2"
+                            onClick={() => {
+                              setEditPostIdx(idx);
+                              setEditPost({
+                                text: post.text,
+                                tags: post.tags,
+                                photo: post.photo || "",
+                              });
+                              setPostMenuIdx(null);
+                            }}
+                          >
+                            <FaEdit /> Edit
+                          </button>
+                          <button
+                            className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-b-xl flex items-center gap-2"
+                            onClick={() => {
+                              user.posts.splice(idx, 1);
+                              setPostMenuIdx(null);
+                              // Force update if needed (if using state, update state instead)
+                            }}
+                          >
+                            <FaTrash /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {/* Post Content */}
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
+                      />
+                      <div>
+                        <div className="text-white font-semibold text-base">
+                          {user.name}
+                        </div>
+                        <div className="text-xs text-gray-400">{post.time}</div>
+                      </div>
+                      <div className="flex-1" />
+                    </div>
+                    <div className="text-gray-200 text-base">{post.text}</div>
+                    {/* TAGS BELOW CAPTION */}
+                    <div className="flex gap-1 flex-wrap mb-1">
                       {post.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="bg-blue-800/60 text-blue-300 text-xs font-medium px-2 py-0.5 rounded-full ml-1"
+                          className="bg-blue-800/60 text-blue-300 text-xs font-medium px-2 py-0.5 rounded-full"
                         >
                           #{tag}
                         </span>
                       ))}
                     </div>
-                  </div>
-                  <div className="text-gray-200 text-base">{post.text}</div>
-                  {post.photo && (
-                    <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
-                      <img
-                        src={post.photo}
-                        alt="Post"
-                        className="w-full object-cover max-h-72"
-                      />
-                    </div>
-                  )}
-                  <div className="flex items-center gap-6 mt-2">
-                    <div className="flex items-center gap-1 text-blue-300">
-                      <svg
-                        className="w-5 h-5 fill-blue-400"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955l6.561.955l-4.756 4.635l1.122 6.545z" />
-                      </svg>
-                      <span>{post.upvotes}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-red-300">
-                      <svg className="w-5 h-5 fill-red-400" viewBox="0 0 20 20">
-                        <path d="M10 5l5.878-3.09l-1.122 6.545L19.512 13.09l-6.561.955L10 20l-2.951-5.955l-6.561-.955l4.756-4.635L10 5z" />
-                      </svg>
-                      <span>{post.downvotes}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-400">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M17 8h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h2" />
-                        <polyline points="12 15 12 3"></polyline>
-                        <polyline points="8 7 12 3 16 7"></polyline>
-                      </svg>
-                      <span>Comments</span>
-                    </div>
-                  </div>
-                  {/* Comments Section */}
-                  {post.comments && post.comments.length > 0 && (
-                    <div className="mt-4 space-y-3">
-                      {post.comments.map((comment) => (
-                        <div
-                          key={comment.id}
-                          className="flex items-start gap-3"
+                    {post.photo && (
+                      <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
+                        <img
+                          src={post.photo}
+                          alt="Post"
+                          className="w-full object-cover max-h-72"
+                        />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-6 mt-2">
+                      <div className="flex items-center gap-1 text-blue-300">
+                        <svg
+                          className="w-5 h-5 fill-blue-400"
+                          viewBox="0 0 20 20"
                         >
-                          <img
-                            src={comment.user.avatar}
-                            alt={comment.user.name}
-                            className="w-8 h-8 rounded-full object-cover border border-blue-400"
-                          />
-                          <div>
-                            <div className="text-blue-200 font-semibold text-sm">
-                              {comment.user.name}
-                              <span className="ml-2 text-xs text-gray-400">
-                                {comment.time}
-                              </span>
-                            </div>
-                            <div className="text-gray-300 text-sm">
-                              {comment.text}
+                          <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955l6.561.955l-4.756 4.635l1.122 6.545z" />
+                        </svg>
+                        <span>{post.upvotes}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-red-300">
+                        <svg
+                          className="w-5 h-5 fill-red-400"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10 5l5.878-3.09l-1.122 6.545L19.512 13.09l-6.561.955L10 20l-2.951-5.955l-6.561-.955l4.756-4.635L10 5z" />
+                        </svg>
+                        <span>{post.downvotes}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-400">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M17 8h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h2" />
+                          <polyline points="12 15 12 3"></polyline>
+                          <polyline points="8 7 12 3 16 7"></polyline>
+                        </svg>
+                        <span>Comments</span>
+                      </div>
+                    </div>
+                    {/* Comments Section */}
+                    {post.comments && post.comments.length > 0 && (
+                      <div className="mt-4 space-y-3">
+                        {post.comments.map((comment) => (
+                          <div
+                            key={comment.id}
+                            className="flex items-start gap-3"
+                          >
+                            <img
+                              src={comment.user.avatar}
+                              alt={comment.user.name}
+                              className="w-8 h-8 rounded-full object-cover border border-blue-400"
+                            />
+                            <div>
+                              <div className="text-blue-200 font-semibold text-sm">
+                                {comment.user.name}
+                                <span className="ml-2 text-xs text-gray-400">
+                                  {comment.time}
+                                </span>
+                              </div>
+                              <div className="text-gray-300 text-sm">
+                                {comment.text}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              )
             )}
           </div>
         );
       case "saved":
         return (
-          <div className="space-y-6 max-h-[70vh] overflow-y-auto">
+          <div className="flex flex-col gap-6 h-full">
             {user.saved.length === 0 ? (
               <div className="text-gray-400 text-center py-10">
                 No saved posts or events.
               </div>
             ) : (
-              user.saved.map((post) => (
-                <div
-                  key={post.id}
-                  className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
+              user.saved.map((post, idx) =>
+                editSavedIdx === idx ? (
+                  <div
+                    key={post.id}
+                    className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
+                  >
+                    <textarea
+                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
+                      value={editSaved.text}
+                      onChange={(e) =>
+                        setEditSaved({ ...editSaved, text: e.target.value })
+                      }
+                      placeholder="Edit your post"
+                      title="Edit post text"
                     />
-                    <div>
-                      <div className="text-white font-semibold text-base">
-                        {user.name}
-                      </div>
-                      <div className="text-xs text-gray-400">{post.time}</div>
+                    <input
+                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
+                      value={editSaved.photo}
+                      onChange={(e) =>
+                        setEditSaved({ ...editSaved, photo: e.target.value })
+                      }
+                      placeholder="Photo URL"
+                    />
+                    <input
+                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
+                      value={editSaved.tags.join(",")}
+                      onChange={(e) =>
+                        setEditSaved({
+                          ...editSaved,
+                          tags: e.target.value.split(",").map((t) => t.trim()),
+                        })
+                      }
+                      placeholder="Tags (comma separated)"
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
+                        onClick={() => {
+                          const updated = [...user.saved];
+                          updated[idx] = {
+                            ...updated[idx],
+                            text: editSaved.text,
+                            photo: editSaved.photo,
+                            tags: editSaved.tags,
+                          };
+                          user.saved = updated;
+                          setEditSavedIdx(null);
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="flex-1 py-2 rounded-full bg-gray-700 text-white font-bold shadow-lg hover:bg-gray-800 transition-colors"
+                        onClick={() => setEditSavedIdx(null)}
+                      >
+                        Cancel
+                      </button>
                     </div>
-                    <div className="flex-1" />
-                    <div className="flex gap-1">
+                  </div>
+                ) : (
+                  <div
+                    key={post.id}
+                    className="relative bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
+                  >
+                    {/* Three Dots Menu */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <button
+                        className="p-2 rounded-full hover:bg-blue-900/40 transition"
+                        onClick={() =>
+                          setSavedMenuIdx(savedMenuIdx === idx ? null : idx)
+                        }
+                        title="Options"
+                      >
+                        <svg
+                          className="w-6 h-6 text-blue-200"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <circle cx="4" cy="10" r="2" />
+                          <circle cx="10" cy="10" r="2" />
+                          <circle cx="16" cy="10" r="2" />
+                        </svg>
+                      </button>
+                      {savedMenuIdx === idx && (
+                        <div
+                          ref={savedMenuRef}
+                          className="absolute right-0 mt-2 w-32 bg-gray-900 border border-blue-700 rounded-xl shadow-lg flex flex-col z-20"
+                        >
+                          <button
+                            className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-xl flex items-center gap-2"
+                            onClick={() => {
+                              // Remove from saved
+                              const updated = user.saved.filter(
+                                (_, i) => i !== idx
+                              );
+                              user.saved = updated;
+                              setSavedMenuIdx(null);
+                              // If using state for saved, call setSaved(updated) instead
+                            }}
+                          >
+                            <FaTrash /> Unsave
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {/* Post Content */}
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
+                      />
+                      <div>
+                        <div className="text-white font-semibold text-base">
+                          {user.name}
+                        </div>
+                        <div className="text-xs text-gray-400">{post.time}</div>
+                      </div>
+                      <div className="flex-1" />
+                    </div>
+                    <div className="text-gray-200 text-base">{post.text}</div>
+                    {/* TAGS BELOW CAPTION */}
+                    <div className="flex gap-1 flex-wrap mb-1">
                       {post.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="bg-blue-800/60 text-blue-300 text-xs font-medium px-2 py-0.5 rounded-full ml-1"
+                          className="bg-blue-800/60 text-blue-300 text-xs font-medium px-2 py-0.5 rounded-full"
                         >
                           #{tag}
                         </span>
                       ))}
                     </div>
-                  </div>
-                  <div className="text-gray-200 text-base">{post.text}</div>
-                  {post.photo && (
-                    <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
-                      <img
-                        src={post.photo}
-                        alt="Saved"
-                        className="w-full object-cover max-h-72"
-                      />
-                    </div>
-                  )}
-                  <div className="flex items-center gap-6 mt-2">
-                    <div className="flex items-center gap-1 text-blue-300">
-                      <svg
-                        className="w-5 h-5 fill-blue-400"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955l6.561.955l-4.756 4.635l1.122 6.545z" />
-                      </svg>
-                      <span>{post.upvotes}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-red-300">
-                      <svg className="w-5 h-5 fill-red-400" viewBox="0 0 20 20">
-                        <path d="M10 5l5.878-3.09l-1.122 6.545L19.512 13.09l-6.561.955L10 20l-2.951-5.955l-6.561-.955l4.756-4.635L10 5z" />
-                      </svg>
-                      <span>{post.downvotes}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-400">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M17 8h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h2" />
-                        <polyline points="12 15 12 3"></polyline>
-                        <polyline points="8 7 12 3 16 7"></polyline>
-                      </svg>
-                      <span>Comments</span>
-                    </div>
-                  </div>
-                  {/* Comments Section */}
-                  {post.comments && post.comments.length > 0 && (
-                    <div className="mt-4 space-y-3">
-                      {post.comments.map((comment) => (
-                        <div
-                          key={comment.id}
-                          className="flex items-start gap-3"
+                    {post.photo && (
+                      <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
+                        <img
+                          src={post.photo}
+                          alt="Saved"
+                          className="w-full object-cover max-h-72"
+                        />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-6 mt-2">
+                      <div className="flex items-center gap-1 text-blue-300">
+                        <svg
+                          className="w-5 h-5 fill-blue-400"
+                          viewBox="0 0 20 20"
                         >
-                          <img
-                            src={comment.user.avatar}
-                            alt={comment.user.name}
-                            className="w-8 h-8 rounded-full object-cover border border-blue-400"
-                          />
-                          <div>
-                            <div className="text-blue-200 font-semibold text-sm">
-                              {comment.user.name}
-                              <span className="ml-2 text-xs text-gray-400">
-                                {comment.time}
-                              </span>
-                            </div>
-                            <div className="text-gray-300 text-sm">
-                              {comment.text}
+                          <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955l6.561.955l-4.756 4.635l1.122 6.545z" />
+                        </svg>
+                        <span>{post.upvotes}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-red-300">
+                        <svg
+                          className="w-5 h-5 fill-red-400"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10 5l5.878-3.09l-1.122 6.545L19.512 13.09l-6.561.955L10 20l-2.951-5.955l-6.561-.955l4.756-4.635L10 5z" />
+                        </svg>
+                        <span>{post.downvotes}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-400">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M17 8h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h2" />
+                          <polyline points="12 15 12 3"></polyline>
+                          <polyline points="8 7 12 3 16 7"></polyline>
+                        </svg>
+                        <span>Comments</span>
+                      </div>
+                    </div>
+                    {/* Comments Section */}
+                    {post.comments && post.comments.length > 0 && (
+                      <div className="mt-4 space-y-3">
+                        {post.comments.map((comment) => (
+                          <div
+                            key={comment.id}
+                            className="flex items-start gap-3"
+                          >
+                            <img
+                              src={comment.user.avatar}
+                              alt={comment.user.name}
+                              className="w-8 h-8 rounded-full object-cover border border-blue-400"
+                            />
+                            <div>
+                              <div className="text-blue-200 font-semibold text-sm">
+                                {comment.user.name}
+                                <span className="ml-2 text-xs text-gray-400">
+                                  {comment.time}
+                                </span>
+                              </div>
+                              <div className="text-gray-300 text-sm">
+                                {comment.text}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              )
             )}
           </div>
         );
@@ -1468,12 +1826,14 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             <PostCreationSection />
           </div>
         </div>
-        {/* Section Content */}
-        <main className="flex-1 p-4 md:p-10 w-full">
-          <div className="max-w-3xl mx-auto">{renderSection()}</div>
+        {/* Section Content - Make scrollable and fill all available height */}
+        <main className="flex-1 w-full h-0 min-h-0 overflow-y-auto px-0 md:px-6 py-4">
+          <div className="max-w-3xl mx-auto h-full flex flex-col">
+            {renderSection()}
+          </div>
         </main>
       </div>
-      {/* Right Side Chatbot (30%) */}
+      {/* Right Side Chatbot */}
       <div className="w-[30vw] min-w-[260px] max-w-[385px] h-screen flex flex-col bg-gradient-to-b from-blue-950 via-gray-900 to-blue-900 shadow-2xl fixed right-0 top-0 z-20 border-l border-blue-900/40">
         <Chatbot />
       </div>
