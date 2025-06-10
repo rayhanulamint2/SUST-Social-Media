@@ -24,23 +24,26 @@ const topics = [
   { name: "Paper Publication", icon: <FaFileAlt className="text-pink-400" /> },
 ];
 
-type SidebarProps = {
-  onComplaintBox?: () => void;
-  onProfile?: () => void; // <-- add
-  onAlumni?: () => void; // <-- add
-};
+interface SidebarProps {
+  onComplaintBox: () => void;
+  onProfile: () => void;
+  onAlumni: () => void;
+  onChat: () => void;
+  // add other props here if needed
+}
 
 export default function Sidebar({
   onComplaintBox,
   onProfile,
   onAlumni,
+  onChat,
 }: SidebarProps) {
-  // Dummy user data
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   console.log("Main User:", mainUser);
   const user = {
     name: mainUser[0].name || "Khalid",
-    avatar: mainUser[0].avatar || "https://randomuser.me/api/portraits/men/32.jpg",
+    avatar:
+      mainUser[0].avatar || "https://randomuser.me/api/portraits/men/32.jpg",
   };
 
   return (
@@ -83,7 +86,10 @@ export default function Sidebar({
         </button>
 
         {/* Chat */}
-        <button className="flex items-center gap-3 px-6 py-4 border-b border-blue-400/10 hover:bg-indigo-500/10 transition-colors text-white text-base font-medium w-full text-left">
+        <button
+          onClick={onChat}
+          className="flex items-center gap-3 px-6 py-4 border-b border-blue-400/10 hover:bg-indigo-500/10 transition-colors text-white text-base font-medium w-full text-left"
+        >
           <FaComments className="text-indigo-400" />
           Chat
         </button>
