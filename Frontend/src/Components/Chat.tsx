@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 
 // Dummy data for demonstration
-const GROUPS = [
+const INITIAL_GROUPS = [
   {
     id: "g1",
     name: "CSE 18 Batch",
@@ -32,7 +32,7 @@ const GROUPS = [
   },
 ];
 
-const DIRECTS = [
+const INITIAL_DIRECTS = [
   {
     id: "d1",
     name: "Ayesha Rahman",
@@ -53,41 +53,74 @@ const DIRECTS = [
   },
 ];
 
+// Dummy people list for search & group creation
+const PEOPLE = [
+  { id: "p1", name: "Ayesha Rahman" },
+  { id: "p2", name: "Tanvir Ahmed" },
+  { id: "p3", name: "Rafiul Islam" },
+  { id: "p4", name: "Sadia Noor" },
+];
+
 export default function Chat() {
   // State for selected chat (group or direct)
+  const [groups, setGroups] = useState(INITIAL_GROUPS);
+  const [directs] = useState(INITIAL_DIRECTS);
   const [selected, setSelected] = useState<{
     type: "group" | "direct";
     id: string;
-  } | null>(GROUPS.length > 0 ? { type: "group", id: GROUPS[0].id } : null);
+  } | null>(groups.length > 0 ? { type: "group", id: groups[0].id } : null);
+
+  // Message and file state
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Popups state
   const [showGroupMenu, setShowGroupMenu] = useState(false);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showEditNamePopup, setShowEditNamePopup] = useState(false);
   const [showEditPhotoPopup, setShowEditPhotoPopup] = useState(false);
+  const [showCreateGroupPopup, setShowCreateGroupPopup] = useState(false);
+
+  // Group name/photo edit state
   const [editGroupName, setEditGroupName] = useState("");
   const [editGroupPhoto, setEditGroupPhoto] = useState<File | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Dummy people list for search
-  const PEOPLE = [
-    { id: "p1", name: "Ayesha Rahman" },
-    { id: "p2", name: "Tanvir Ahmed" },
-    { id: "p3", name: "Rafiul Islam" },
-    { id: "p4", name: "Sadia Noor" },
-  ];
+  // Search for add people in group, and create group
+  const [searchTerm, setSearchTerm] = useState("");
+  const [createGroupSearch, setCreateGroupSearch] = useState("");
+
+  // Create group form state
+  const [newGroupName, setNewGroupName] = useState("");
+  const [newGroupPhoto, setNewGroupPhoto] = useState<File | null>(null);
+  const [newGroupPhotoURL, setNewGroupPhotoURL] = useState<string | null>(null);
+  const [newGroupMembers, setNewGroupMembers] = useState<string[]>([]);
 
   // Find selected chat data
   const chatData =
     selected?.type === "group"
-      ? GROUPS.find((g) => g.id === selected.id)
-      : DIRECTS.find((d) => d.id === selected?.id);
+      ? groups.find((g) => g.id === selected.id)
+      : directs.find((d) => d.id === selected?.id);
 
   // Handle sending message (dummy)
   const handleSend = () => {
-    if (!message.trim() && !file) return;
-    // Here you would send the message/file to backend
+    if ((!message.trim() && !file) || !chatData) return;
+    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    if (selected?.type === "group") {
+      setGroups((prev) =>
+        prev.map((group) =>
+          group.id === selected.id
+            ? {
+                ...group,
+                messages: [
+                  ...group.messages,
+                  { from: "You", text: file ? file.name : message, time },
+                ],
+              }
+            : group
+        )
+      );
+    }
     setMessage("");
     setFile(null);
   };
@@ -99,19 +132,52 @@ export default function Chat() {
     }
   };
 
-  // Filtered people for add popup
+  // Filtered people for add people popup
   const filteredPeople = PEOPLE.filter((p) =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Dummy leave group handler
+  // Leave group with system message
   const handleLeaveGroup = () => {
     setShowGroupMenu(false);
-    alert("You have left the group.");
-    // Here you would remove the group from GROUPS and update selected
+    if (!selected) return;
+
+    const group = groups.find((g) => g.id === selected.id);
+    if (group) {
+      // Add a system message before removing the group from the list
+      const updatedGroups = groups.map((g) =>
+        g.id === group.id
+          ? {
+              ...g,
+              messages: [
+                ...g.messages,
+                {
+                  from: "system",
+                  text: "You have left the group.",
+                  time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                },
+              ],
+            }
+          : g
+      );
+
+      // Remove the group from the sidebar
+      const filteredGroups = updatedGroups.filter((g) => g.id !== group.id);
+
+      setGroups(filteredGroups);
+
+      // If there are other groups, select the first one. If not, select a direct or null
+      if (filteredGroups.length > 0) {
+        setSelected({ type: "group", id: filteredGroups[0].id });
+      } else if (directs.length > 0) {
+        setSelected({ type: "direct", id: directs[0].id });
+      } else {
+        setSelected(null);
+      }
+    }
   };
 
-  // Dummy edit group name handler
+  // Edit group name handlers
   const handleEditGroupName = () => {
     setShowGroupMenu(false);
     setEditGroupName(chatData?.name || "");
@@ -120,11 +186,16 @@ export default function Chat() {
   const handleEditGroupNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowEditNamePopup(false);
-    alert(`Group name changed to: ${editGroupName}`);
-    // Here you would update the group name in your backend/data
+    setGroups((prev) =>
+      prev.map((group) =>
+        group.id === selected?.id && selected?.type === "group"
+          ? { ...group, name: editGroupName }
+          : group
+      )
+    );
   };
 
-  // Dummy edit group photo handler
+  // Edit group photo handlers
   const handleEditGroupPhoto = () => {
     setShowGroupMenu(false);
     setShowEditPhotoPopup(true);
@@ -132,8 +203,81 @@ export default function Chat() {
   const handleEditGroupPhotoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowEditPhotoPopup(false);
-    alert("Group photo updated!");
-    // Here you would update the group photo in your backend/data
+    if (editGroupPhoto && selected?.type === "group") {
+      const url = URL.createObjectURL(editGroupPhoto);
+      setGroups((prev) =>
+        prev.map((group) =>
+          group.id === selected.id
+            ? { ...group, avatar: url }
+            : group
+        )
+      );
+      setEditGroupPhoto(null);
+    }
+  };
+
+  // --- Create Group Logic ---
+  const handleOpenCreateGroup = () => {
+    setShowCreateGroupPopup(true);
+    setNewGroupName("");
+    setNewGroupPhoto(null);
+    setNewGroupPhotoURL(null);
+    setNewGroupMembers([]);
+    setCreateGroupSearch("");
+  };
+
+  const handleCloseCreateGroup = () => {
+    setShowCreateGroupPopup(false);
+    setNewGroupPhotoURL(null);
+    setNewGroupPhoto(null);
+    setNewGroupMembers([]);
+    setNewGroupName("");
+    setCreateGroupSearch("");
+  };
+
+  const handleNewGroupPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewGroupPhoto(e.target.files[0]);
+      setNewGroupPhotoURL(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  // Toggle member in new group creation
+  const handleToggleMember = (id: string) => {
+    setNewGroupMembers((prev) =>
+      prev.includes(id) ? prev.filter((mid) => mid !== id) : [...prev, id]
+    );
+  };
+
+  // Filtered people for create group member adding
+  const filteredCreateGroupPeople = PEOPLE.filter(
+    (p) =>
+      p.name.toLowerCase().includes(createGroupSearch.toLowerCase()) &&
+      !newGroupMembers.includes(p.id)
+  );
+
+  // Handle create group submit
+  const handleCreateGroup = (e: React.FormEvent) => {
+    e.preventDefault();
+    // You'd call backend here. We'll just update local state.
+    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const newGroup = {
+      id: "g" + (groups.length + 1),
+      name: newGroupName,
+      avatar: newGroupPhotoURL
+        ? newGroupPhotoURL
+        : "https://randomuser.me/api/portraits/lego/1.jpg",
+      messages: [
+        {
+          from: "system",
+          text: "Group created.",
+          time,
+        },
+      ],
+    };
+    setGroups((prev) => [...prev, newGroup]);
+    setSelected({ type: "group", id: newGroup.id });
+    handleCloseCreateGroup();
   };
 
   return (
@@ -154,12 +298,13 @@ export default function Chat() {
             <button
               className="text-blue-400 hover:text-blue-300 p-1 rounded-full"
               title="Add group"
+              onClick={handleOpenCreateGroup}
             >
               <FaPlus />
             </button>
           </div>
           <ul className="mb-4">
-            {GROUPS.map((group) => (
+            {groups.map((group) => (
               <li
                 key={group.id}
                 className={`flex items-center gap-3 px-6 py-3 cursor-pointer hover:bg-blue-900/20 transition rounded-lg ${
@@ -185,7 +330,7 @@ export default function Chat() {
             </span>
           </div>
           <ul>
-            {DIRECTS.map((person) => (
+            {directs.map((person) => (
               <li
                 key={person.id}
                 className={`flex items-center gap-3 px-6 py-3 cursor-pointer hover:bg-blue-900/20 transition rounded-lg ${
@@ -403,13 +548,19 @@ export default function Chat() {
               <div
                 key={idx}
                 className={`flex ${
-                  msg.from === "You" ? "justify-end" : "justify-start"
+                  msg.from === "You"
+                    ? "justify-end"
+                    : msg.from === "system"
+                    ? "justify-center"
+                    : "justify-start"
                 }`}
               >
                 <div
                   className={`px-4 py-2 rounded-2xl max-w-lg ${
                     msg.from === "You"
                       ? "bg-blue-700 text-white"
+                      : msg.from === "system"
+                      ? "bg-gray-700 text-blue-200 italic"
                       : "bg-gray-800 text-blue-100"
                   }`}
                 >
@@ -473,6 +624,120 @@ export default function Chat() {
           </form>
         )}
       </main>
+
+      {/* ---- CREATE GROUP POPUP ---- */}
+      {showCreateGroupPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <form
+            className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-6 relative"
+            onSubmit={handleCreateGroup}
+          >
+            <button
+              className="absolute top-3 right-3 text-blue-300 hover:text-red-400 text-lg"
+              onClick={handleCloseCreateGroup}
+              type="button"
+              title="Close"
+            >
+              <FaTimes />
+            </button>
+            <h3 className="text-xl font-bold text-blue-200 mb-4">
+              Create New Group
+            </h3>
+            {/* Group Name */}
+            <label className="block text-blue-100 font-semibold mb-2">
+              Group Name
+            </label>
+            <input
+              type="text"
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+              className="w-full px-4 py-2 mb-4 rounded-lg bg-gray-800 border border-blue-900/30 text-blue-100 focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Enter group name"
+              required
+            />
+            {/* Group Photo */}
+            <label className="block text-blue-100 font-semibold mb-2">
+              Group Photo
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleNewGroupPhotoChange}
+              className="mb-2"
+              title="Upload group photo"
+            />
+            {newGroupPhotoURL && (
+              <img
+                src={newGroupPhotoURL}
+                alt="Preview"
+                className="w-20 h-20 object-cover rounded-full border-2 border-blue-400 mb-4"
+              />
+            )}
+            {/* Members */}
+            <label className="block text-blue-100 font-semibold mb-2">
+              Members
+            </label>
+            <input
+              type="text"
+              value={createGroupSearch}
+              onChange={(e) => setCreateGroupSearch(e.target.value)}
+              placeholder="Search members..."
+              className="w-full px-4 py-2 mb-2 rounded-lg bg-gray-800 border border-blue-900/30 text-blue-100 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <ul className="max-h-32 overflow-y-auto mb-4">
+              {filteredCreateGroupPeople.length === 0 && (
+                <li className="text-blue-300 px-2 py-1">No people found.</li>
+              )}
+              {filteredCreateGroupPeople.map((person) => (
+                <li
+                  key={person.id}
+                  className="flex items-center justify-between px-2 py-1 hover:bg-blue-900/20 rounded-lg"
+                >
+                  <span className="text-blue-100">{person.name}</span>
+                  <button
+                    type="button"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-lg text-xs"
+                    onClick={() => handleToggleMember(person.id)}
+                  >
+                    Add
+                  </button>
+                </li>
+              ))}
+            </ul>
+            {newGroupMembers.length > 0 && (
+              <div className="mb-4">
+                <span className="text-blue-200 font-semibold mr-2">Selected:</span>
+                {newGroupMembers.map((id) => {
+                  const person = PEOPLE.find((p) => p.id === id);
+                  return (
+                    <span
+                      key={id}
+                      className="inline-block bg-blue-700 text-white px-2 py-1 rounded-full text-xs mr-2 mb-2"
+                    >
+                      {person?.name || id}
+                      <button
+                        type="button"
+                        className="ml-1 text-blue-300 hover:text-red-400"
+                        onClick={() => handleToggleMember(id)}
+                        title="Remove"
+                      >
+                        <FaTimes className="inline" />
+                      </button>
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold mt-2 disabled:bg-blue-900"
+              disabled={!newGroupName.trim() || newGroupMembers.length === 0}
+            >
+              Create Group
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
