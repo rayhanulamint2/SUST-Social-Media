@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import http from "../http"; // Adjust the import path as necessary
+import { formatDistanceToNow } from 'date-fns';
 import {
   FaArrowUp,
   FaArrowDown,
@@ -8,169 +10,197 @@ import {
   FaPaperPlane,
 } from "react-icons/fa";
 
-const dummyPosts = [
-  // University Feed
+const dummyComments: Comment[] = [
   {
-    id: 1,
-    type: "university",
-    user: {
-      name: "Khalid",
+    userId: {
+      _id: "664a1f5e23a9ef2b1a9ef223",
+      name: "Alice Johnson",
       avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     },
-    time: "2 hours ago",
-    tags: ["Workshop", "Career"],
-    text: "Excited to announce a new workshop on AI and Machine Learning! Join us this Friday.",
-    photo:
-      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
-    upvotes: 12,
-    downvotes: 1,
-    saved: false,
+    commentText: "This is awesome! Looking forward to it.",
+    createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2 minutes ago
   },
   {
-    id: 2,
-    type: "university",
-    user: {
-      name: "Rafiq Hasan",
-      avatar: "https://randomuser.me/api/portraits/men/45.jpg",
+    userId: {
+      _id: "664a1f5e23a9ef2b1a9ef456",
+      name: "Bob Smith",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     },
-    time: "30 minutes ago",
-    tags: ["Adventure", "Travel"],
-    text: "Throwback to our last campus hiking trip. Who's joining next time?",
-    photo:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-    upvotes: 8,
-    downvotes: 0,
-    saved: false,
-  },
-  {
-    id: 3,
-    type: "university",
-    user: {
-      name: "Maliha Rahman",
-      avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-    },
-    time: "10 minutes ago",
-    tags: ["Nature", "Photography"],
-    text: "Captured this beautiful sunset at the campus lake yesterday. Nature is truly mesmerizing!",
-    photo:
-      "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-    upvotes: 15,
-    downvotes: 0,
-    saved: false,
-  },
-  {
-    id: 4,
-    type: "university",
-    user: {
-      name: "SUST Alumni Association",
-      avatar: "https://randomuser.me/api/portraits/men/50.jpg",
-    },
-    time: "3 hours ago",
-    tags: ["Alumni", "Career"],
-    text: "Alumni meet-up scheduled for next month! Register now to reconnect with your batchmates.",
-    photo: "",
-    upvotes: 25,
-    downvotes: 2,
-    saved: true,
-  },
-  // Department Feed
-  {
-    id: 5,
-    type: "department",
-    user: {
-      name: "Sarah Alam",
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    },
-    time: "1 hour ago",
-    tags: ["Paper Publication"],
-    text: "Our department just published a new research paper in Nature! Congratulations to the team.",
-    photo: "",
-    upvotes: 20,
-    downvotes: 0,
-    saved: true,
-  },
-  {
-    id: 6,
-    type: "department",
-    user: {
-      name: "Dr. Mahmudul Hasan",
-      avatar: "https://randomuser.me/api/portraits/men/60.jpg",
-    },
-    time: "20 minutes ago",
-    tags: ["Workshop"],
-    text: "Reminder: The Data Science workshop starts at 3 PM in Room 204. Don't miss it!",
-    photo: "",
-    upvotes: 7,
-    downvotes: 0,
-    saved: false,
-  },
-  {
-    id: 7,
-    type: "department",
-    user: {
-      name: "Farzana Sultana",
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-    },
-    time: "5 minutes ago",
-    tags: ["Career", "Internship"],
-    text: "Internship opportunity at a leading tech company for CSE students. Check your email for details.",
-    photo:
-      "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80",
-    upvotes: 13,
-    downvotes: 1,
-    saved: false,
-  },
-  {
-    id: 8,
-    type: "department",
-    user: {
-      name: "CSE Club",
-      avatar: "https://randomuser.me/api/portraits/men/70.jpg",
-    },
-    time: "just now",
-    tags: ["Workshop", "Club"],
-    text: "Join our coding bootcamp this weekend! Beginners are welcome.",
-    photo: "",
-    upvotes: 10,
-    downvotes: 0,
-    saved: false,
+    commentText: "Congrats to the team!",
+    createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
   },
 ];
 
-const dummyComments = [
+const dummyPosts: Post[] = [
   {
-    user: {
-      name: "Ayesha Siddiqua",
-      avatar: "https://randomuser.me/api/portraits/women/72.jpg",
+    _id: "6650f6debc11f0a2f8b12345",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef111",
+      name: "Dr. A. I. Mentor",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     },
-    text: "This is awesome! Looking forward to it.",
-    time: "2m ago",
+    content: "Excited to announce a new workshop on AI and Machine Learning! Join us this Friday.",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    upVotes: 12,
+    downVotes: 1,
+    comment: dummyComments,
+    tags: ["Workshop", "Career"],
+    feedType: "university",
   },
   {
-    user: {
-      name: "Tanvir Ahmed",
-      avatar: "https://randomuser.me/api/portraits/men/77.jpg",
+    _id: "6650f6debc11f0a2f8b12346",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef112",
+      name: "Emily Trekker",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     },
-    text: "Congrats to the team!",
-    time: "5m ago",
+    content: "Throwback to our last campus hiking trip. Who's joining next time?",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+    createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+    upVotes: 8,
+    downVotes: 0,
+    comment: [],
+    tags: ["Adventure", "Travel"],
+    feedType: "university",
+  },
+  {
+    _id: "6650f6debc11f0a2f8b12347",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef113",
+      name: "Liam Walker",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    content: "Captured this beautiful sunset at the campus lake yesterday. Nature is truly mesmerizing!",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+    upVotes: 15,
+    downVotes: 0,
+    comment: [],
+    tags: ["Nature", "Photography"],
+    feedType: "university",
+  },
+  {
+    _id: "6650f6debc11f0a2f8b12348",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef114",
+      name: "Sophie Alumni",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    content: "Alumni meet-up scheduled for next month! Register now to reconnect with your batchmates.",
+    image: "",
+    createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    upVotes: 25,
+    downVotes: 2,
+    comment: [],
+    tags: ["Alumni", "Career"],
+    feedType: "university",
+  },
+  {
+    _id: "6650f6debc11f0a2f8b12349",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef115",
+      name: "Dr. R. Search",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    content: "Our department just published a new research paper in Nature! Congratulations to the team.",
+    image: "",
+    createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+    upVotes: 20,
+    downVotes: 0,
+    comment: dummyComments,
+    tags: ["Paper Publication"],
+    feedType: "department",
+    department: "CSE",
+  },
+  {
+    _id: "6650f6debc11f0a2f8b12350",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef116",
+      name: "Prof. Data",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    content: "Reminder: The Data Science workshop starts at 3 PM in Room 204. Don't miss it!",
+    image: "",
+    createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
+    upVotes: 7,
+    downVotes: 0,
+    comment: [],
+    tags: ["Workshop"],
+    feedType: "department",
+    department: "CSE",
+  },
+  {
+    _id: "6650f6debc11f0a2f8b12351",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef117",
+      name: "Intern Bot",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    content: "Internship opportunity at a leading tech company for CSE students. Check your email for details.",
+    image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80",
+    createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    upVotes: 13,
+    downVotes: 1,
+    comment: [],
+    tags: ["Career", "Internship"],
+    feedType: "department",
+    department: "CSE",
+  },
+  {
+    _id: "6650f6debc11f0a2f8b12352",
+    creator: {
+      _id: "664a1f5e23a9ef2b1a9ef118",
+      name: "Bootcamp Coach",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    content: "Join our coding bootcamp this weekend! Beginners are welcome.",
+    image: "",
+    createdAt: new Date().toISOString(),
+    upVotes: 10,
+    downVotes: 0,
+    comment: [],
+    tags: ["Workshop", "Club"],
+    feedType: "department",
+    department: "CSE",
   },
 ];
+
+
+
+type Creator = {
+  _id: string;
+  name: string;
+  avatar: string;
+};
+
+type CommentUser = {
+  _id: string;
+  name: string;
+  avatar: string;
+};
+
+type Comment = {
+  userId: CommentUser; // or you can define a PopulatedUser type if userId gets populated too
+  commentText: string;
+  createdAt: string; // ISO string
+};
 
 type Post = {
-  id: number;
-  type: string;
-  user: {
-    name: string;
-    avatar: string;
-  };
-  time: string;
+  _id: string;
+  creator: Creator; // handles both populated and unpopulated states
+  content: string;
+  image: string;
+  createdAt: string;
+  upVotes: number;
+  downVotes: number;
+  comment: Comment[];
   tags: string[];
-  text: string;
-  photo: string;
-  upvotes: number;
-  downvotes: number;
-  saved: boolean;
+  feedType: 'university' | 'department';
+  department?: string;
 };
+
+
 
 type PostCardProps = {
   post: Post;
@@ -181,22 +211,23 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState(dummyComments);
   const [commentInput, setCommentInput] = useState("");
+  const [saved, setSaved] = useState(false);
 
   const handleSendComment = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!commentInput.trim()) return;
-    setComments([
-      ...comments,
-      {
-        user: {
-          name: "You",
-          avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-        },
-        text: commentInput,
-        time: "Just now",
-      },
-    ]);
-    setCommentInput("");
+    // if (!commentInput.trim()) return;
+    // setComments([
+    //   ...comments,
+    //   {
+    //     user: {
+    //       name: "You",
+    //       avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+    //     },
+    //     text: commentInput,
+    //     time: "Just now",
+    //   },
+    // ]);
+    // setCommentInput("");
   };
 
   return (
@@ -204,15 +235,15 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
       {/* Header */}
       <div className="flex items-center gap-3">
         <img
-          src={post.user.avatar}
-          alt={post.user.name}
+          src={post.creator?.avatar || "https://randomuser.me/api/portraits/men/32.jpg"}
+          alt={post.creator?.name || "Anonymous"}
           className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
         />
         <div>
           <div className="text-white font-semibold text-base">
-            {post.user.name}
+            {post.creator?.name || "Anonymous"}
           </div>
-          <div className="text-xs text-gray-400">{post.time}</div>
+          <div className="text-xs text-gray-400">{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</div>
         </div>
         <div className="flex-1" />
         <div className="flex gap-1">
@@ -227,12 +258,12 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
         </div>
       </div>
       {/* Text */}
-      <div className="text-gray-200 text-base">{post.text}</div>
+      <div className="text-gray-200 text-base">{post.content}</div>
       {/* Photo */}
-      {post.photo && (
+      {post.image && (
         <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
           <img
-            src={post.photo}
+            src={post.image}
             alt="Post"
             className="w-full object-cover max-h-72"
           />
@@ -247,7 +278,7 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
           >
             <FaArrowUp />
           </button>
-          <span className="text-gray-300 text-sm">{post.upvotes}</span>
+          <span className="text-gray-300 text-sm">{post.upVotes}</span>
           <button
             className="p-2 rounded-full hover:bg-red-600/30 transition-colors text-red-400"
             title="Downvote"
@@ -265,9 +296,9 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
         <button
           className="ml-auto p-2 rounded-full hover:bg-yellow-500/30 transition-colors text-yellow-400"
           onClick={onToggleSave}
-          title={post.saved ? "Unsave" : "Save"}
+          title={saved ? "Unsave" : "Save"}
         >
-          {post.saved ? (
+          {saved ? (
             <FaBookmark className="text-yellow-400" />
           ) : (
             <FaRegBookmark />
@@ -281,18 +312,18 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
             {comments.map((c, idx) => (
               <div key={idx} className="flex items-start gap-3 mb-3">
                 <img
-                  src={c.user.avatar}
-                  alt={c.user.name}
+                  src={c.userId.avatar}
+                  alt={c.userId.name}
                   className="w-8 h-8 rounded-full object-cover border border-blue-400"
                 />
                 <div>
                   <div className="text-sm text-white font-semibold">
-                    {c.user.name}{" "}
+                    {c.userId.name}{" "}
                     <span className="text-xs text-gray-400 font-normal ml-2">
-                      {c.time}
+                      {c.createdAt}
                     </span>
                   </div>
-                  <div className="text-gray-200 text-sm">{c.text}</div>
+                  <div className="text-gray-200 text-sm">{c.commentText}</div>
                 </div>
               </div>
             ))}
@@ -325,13 +356,28 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
 export default function PostFeed() {
   const [feedType, setFeedType] = useState("university");
   const [posts, setPosts] = useState(dummyPosts);
+  const [saved, setSaved] = useState<string[]>([]);
+  const [data, setData] = useState<Post[]>([]);
+  const fetchPosts = async () => {
+    try {
+      const response = await http.get("/post");
+      setPosts(response.data.posts);
+      console.log("Posts fetched successfully:", response.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
+  React.useEffect(() => {
+    fetchPosts();
+  }, []);
+  // console.log(" djflksjdfj", Array.isArray(posts)); // should return true
 
-  const filteredPosts = posts.filter((p) => p.type === feedType);
+  const filteredPosts = posts.filter((p) => p.feedType === feedType);
 
-  const handleToggleSave = (id: number): void => {
+  const handleToggleSave = (id: string): void => {
     setPosts((prev: Post[]) =>
       prev.map((post: Post) =>
-        post.id === id ? { ...post, saved: !post.saved } : post
+        post._id === id ? { ...post, saved: !saved } : post
       )
     );
   };
@@ -376,9 +422,9 @@ export default function PostFeed() {
         ) : (
           filteredPosts.map((post) => (
             <PostCard
-              key={post.id}
+              key={post._id}
               post={post}
-              onToggleSave={() => handleToggleSave(post.id)}
+              onToggleSave={() => handleToggleSave(post._id)}
             />
           ))
         )}

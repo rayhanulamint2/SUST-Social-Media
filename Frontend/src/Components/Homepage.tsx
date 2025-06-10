@@ -8,12 +8,13 @@ import EventFeed from "./EventFeed";
 import NoticesPopup from "./NoticesPopup";
 import ComplaintBox from "./ComplaintBox";
 import UserProfile from "./UserProfile";
-import Alumni from "./Alumni"; // <-- import Alumni
+import Alumni from "./Alumni";
+import Chat from "./Chat"; // <-- import Chat
 
 export default function Homepage() {
-  const [mainFeed, setMainFeed] = useState<"home" | "events" | "alumni">(
-    "home"
-  );
+  const [mainFeed, setMainFeed] = useState<
+    "home" | "events" | "alumni" | "chat"
+  >("home");
   const [showNotices, setShowNotices] = useState(false);
   const [showComplaintBox, setShowComplaintBox] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -33,17 +34,24 @@ export default function Homepage() {
       <Sidebar
         onComplaintBox={() => setShowComplaintBox(true)}
         onProfile={() => setShowProfile(true)}
-        onAlumni={() => setMainFeed("alumni")} // <-- add this line
+        onAlumni={() => setMainFeed("alumni")}
+        onChat={() => setMainFeed(mainFeed === "chat" ? "home" : "chat")} // <-- add this line
       />
       <Chatbot />
       <div className="pt-10 max-w-8xl mx-auto px-4">
-        <PostCreationSection />
-        {mainFeed === "alumni" ? (
-          <Alumni userDept="CSE" />
-        ) : mainFeed === "home" ? (
-          <PostFeed />
+        {mainFeed === "chat" ? (
+          <Chat />
         ) : (
-          <EventFeed />
+          <>
+            <PostCreationSection />
+            {mainFeed === "alumni" ? (
+              <Alumni userDept="CSE" />
+            ) : mainFeed === "home" ? (
+              <PostFeed />
+            ) : (
+              <EventFeed />
+            )}
+          </>
         )}
       </div>
       <NoticesPopup
