@@ -58,6 +58,8 @@ SUSTverse addresses these challenges through:
 - Comment, react, and view trending topics
 - Filter and search content easily
 
+![Home Page](Frontend\src\assets\Homepage.png)
+
 ### 🎉 Event Page
 - List upcoming and past events with full details
 - Support for paid promotions and admin approvals
@@ -109,7 +111,6 @@ SUSTverse addresses these challenges through:
 
 ## ⚙️ Installation & Setup
 
-```bash
 # Clone the repository
 git clone https://github.com/yourusername/sustverse.git
 cd sustverse
@@ -121,3 +122,27 @@ npm install
 npm run dev
 
 # Create .env file from .env.example and configure your environment variables
+
+
+## 🖼️ Screenshots
+
+> 📸 Add actual screenshots in the `./assets/screenshots/` directory and update paths below.
+
+
+### 📢 Notice Board
+![Notice Board](Frontend\src\assets\sust_gate.jpg)
+
+### 🎓 Alumni Directory
+![Alumni Directory](Frontend\src\assets\sust_gate.jpg)
+
+### 🤖 AI Chatbot
+![Chatbot](Frontend\src\assets\sust_gate.jpg)
+
+## 👥 Contributors
+
+| Name | GitHub Profile | Email |
+|------|----------------|-------|
+| **Rayhanul Amin Tanvir** | [@rayhanulamint2](https://github.com/rayhanulamint2) | rayhanulamint2@gmail.com |
+| **Khalid Bin Selim** | [@KhalidBinSelim](https://github.com/KhalidBinSelim) | khalidbinselim@gmail.com |
+| **Iqbal Mahmood Sajid** | [@IM-Sajid](https://github.com/IM-Sajid) | imsajid428@gmail.com |
+
