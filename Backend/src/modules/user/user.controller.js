@@ -6,7 +6,7 @@ router.post('/signup', signup);
 
 router.post('/login', login);
 
-router.post('/update/:id', updateUser);
+router.put('/update/:id', updateUser);
 
 router.get('/:id', findUserDetails);
 

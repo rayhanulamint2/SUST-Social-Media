@@ -12,7 +12,7 @@ const createEvent = async(req, res) => {
             tags: Array.isArray(req.body.tags)
                 ? req.body.tags
                 : [req.body.tags].filter(Boolean),
-            isDepartmentPost: req.body.isDepartmentPost,
+            feedType: req.body.feedType || 'university', // Default to 'university' if not provided
             department: req.body.department || '', // Ensure department is included
             startDate: req.body.startDate,
             endDate: req.body.endDate,
@@ -86,7 +86,7 @@ const updateEvent = async(req, res) => {
             tags: Array.isArray(req.body.tags)
                 ? req.body.tags
                 : [req.body.tags].filter(Boolean),
-            isDepartmentPost: req.body.isDepartmentPost,
+            feedType: req.body.feedType || 'university', // Default to 'university' if not provided
             startDate: req.body.startDate,
             endDate: req.body.endDate,
             comment: req.body.comment || [],

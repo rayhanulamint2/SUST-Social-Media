@@ -48,9 +48,10 @@ const postSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
-    isDepartmentPost: {
-        type: Boolean,
-        required: true
+    feedType: {
+        type: String,
+        enum: ['university', 'department'],
+        default: 'university'
     },
     department: {
         type: String

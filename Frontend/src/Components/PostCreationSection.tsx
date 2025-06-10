@@ -84,7 +84,7 @@ export default function PostCreationSection() {
       content: postText,
       image: postImage,
       tags: postTags,
-      isDepartmentPost: isDepartment, // <-- use checkbox value
+      feedType: isDepartment ? "department" : "university", // Use checkbox value
       department: mainUser[0]?.department || "CSE",
       upVotes: 0,
       downVotes: 0,
@@ -118,7 +118,7 @@ export default function PostCreationSection() {
       endDate: startDateTime,
       image: eventImage || "",
       tags: eventTags || [],
-      isDepartmentPost: isDepartment, // <-- use checkbox value
+      feedType: isDepartment ? "department" : "university", // Use checkbox value
       department: mainUser[0]?.department || "CSE",
       createdAt: new Date().toISOString(),
     };
