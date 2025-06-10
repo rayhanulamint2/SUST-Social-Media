@@ -48,12 +48,17 @@ const eventUpdate = async(id, updateData) => {
     }
 }
 const findAllEvents = async () => {
-    try {
-        const events = await Event.find();
-        return events;
-    } catch (error) {
-        console.log('there are an error in server end');
-    }
-}
+  try {
+    const events = await Event.find()
+      .populate({ path: 'creator', select: 'name avatar' })
+      .populate({ path: 'comment.userId', select: 'name avatar' })
+      .sort({ createdAt: -1 });
+
+    return events;
+  } catch (error) {
+    console.error('Server error:', error);
+    return [];
+  }
+};
 
 module.exports = {newEventCreation, findEvent, deleteEventByID, eventUpdate, findAllEvents}
