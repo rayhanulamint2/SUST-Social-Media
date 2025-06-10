@@ -21,13 +21,13 @@
 
 ---
 
-## 📌 Project Overview
+# 📌 Project Overview
 
 **SUSTverse** is a full-stack platform built for the Shahjalal University of Science and Technology (SUST) to create a connected, transparent, and interactive digital ecosystem. It centralizes event coordination, notice distribution, alumni networking, anonymous feedback, and 24/7 information access — all in one place.
 
 ---
 
-## ❗ Problem Statement
+# ❗ Problem Statement
 
 Currently, communication at SUST is fragmented across social media, printed notices, and informal channels. This leads to:
 
@@ -39,7 +39,7 @@ Currently, communication at SUST is fragmented across social media, printed noti
 
 ---
 
-## ✅ Proposed Solution
+# ✅ Proposed Solution
 
 SUSTverse addresses these challenges through:
 
@@ -51,42 +51,42 @@ SUSTverse addresses these challenges through:
 
 ---
 
-## 🧩 Key Features
+# 🧩 Key Features
 
-### 🏠 Home Page
+## 🏠 Home Page
 - Post campus news, discussions, and media
 - Comment, react, and view trending topics
 - Filter and search content easily
 
 ![Home Page](Frontend\src\assets\Homepage.png)
 
-### 🎉 Event Page
+## 🎉 Event Page
 - List upcoming and past events with full details
 - Support for paid promotions and admin approvals
 - Calendar link integration
 
-### 📢 Notice Board
+## 📢 Notice Board
 - Department-specific boards with admin-only publishing
 - Real-time notifications and searchable archive
 
-### 🎓 Alumni Section
+## 🎓 Alumni Section
 - Alumni directory with search and connection tools
 - Messaging system and experience sharing
 - Internship and job advice posts
 
-### 🧾 Anonymous Complaint Box
+## 🧾 Anonymous Complaint Box
 - Submit complaints confidentially
 - Track progress of submitted issues
 - Admin tools for analytics and reporting
 
-### 🤖 AI Chatbot (24/7 Support)
+## 🤖 AI Chatbot (24/7 Support)
 - Natural language answers to FAQs and queries
 - Multilingual support (English & Bangla)
 - Personalized suggestions and policy updates
 
 ---
 
-## ⚙️ Technology Stack
+# ⚙️ Technology Stack
 
 | Layer           | Technology                             | Description                                 |
 |----------------|-----------------------------------------|---------------------------------------------|
@@ -99,9 +99,11 @@ SUSTverse addresses these challenges through:
 
 
 ![Technology Stack](Frontend\src\assets\TechnologyStack.png)
+
 ---
 
-## 📱 Future Enhancements
+
+# 📱 Future Enhancements
 
 - 🔄 Real-time chat system
 - 📊 Survey and feedback module
@@ -111,41 +113,44 @@ SUSTverse addresses these challenges through:
 
 ---
 
-## ⚙️ Installation & Setup
 
-<details>
-<summary>📦 Click to expand setup instructions</summary>
 
-<br>
 
-### 🔧 Prerequisites
+# ⚙️ Installation & Setup
+
+
+## 🔧 Prerequisites
+
 Make sure you have the following installed:
+
 - [Node.js](https://nodejs.org/) (v18 or later)
 - [npm](https://www.npmjs.com/)
 - [Git](https://git-scm.com/)
-- A running instance of **MongoDB** or **MySQL** (as configured)
+- A running instance of **MongoDB** or **MySQL**
 
 ---
 
-### 🚀 Quick Start
 
-# 1️⃣ Clone the repository
+
+
+
+# 🚀 Quick Start
+
+## 1️⃣ Clone the repository
 git clone https://github.com/yourusername/sustverse.git
 cd sustverse
 
-# 2️⃣ Install dependencies
+## 2️⃣ Install dependencies
 npm install
 
-# 3️⃣ Run the development server
+## 3️⃣ Run the development server
 npm run dev
 
 
-# Create .env file from .env.example and configure your environment variables
 
 
-## 🖼️ Screenshots
 
-> 📸 Add actual screenshots in the `./assets/screenshots/` directory and update paths below.
+# 🖼️ Screenshots
 
 ### Home Page
 ![Home Page](Frontend\src\assets\Homepage.png)
@@ -153,6 +158,10 @@ npm run dev
 
 ### Technology Stack
 ![Technology Stack](Frontend\src\assets\TechnologyStack.png)
+
+
+
+
 
 
 ## 👥 Contributors
