@@ -121,6 +121,8 @@ export default function PostCreationSection() {
       feedType: isDepartment ? "department" : "university", // Use checkbox value
       department: mainUser[0]?.department || "CSE",
       createdAt: new Date().toISOString(),
+      participationLink: eventLink || "",
+      place: "Central Auditorium", // Default place, can be changed
     };
 
     console.log("Payload:", payload);

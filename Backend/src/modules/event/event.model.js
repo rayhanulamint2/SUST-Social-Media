@@ -14,6 +14,24 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    comment: {
+        type: [{
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+                required: true
+            },
+            commentText: {
+                type: String,
+                required: true
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            }
+        }],
+        default: []
+    },
     startDate: {
         type: Date,
         required: true
@@ -41,6 +59,18 @@ const eventSchema = new mongoose.Schema({
     },
     department: {
         type: String
+    },
+    participationLink: {
+        type: String,
+        default: ''
+    },
+    place: {
+        type: String,
+        default: ''
+    },
+    interested: {
+        type: Number,
+        default: 0
     }
 })
 module.exports = eventSchema

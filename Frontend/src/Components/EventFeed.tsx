@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import http from "../http"; // Adjust the import path as necessary
 import {
   FaRegCommentDots,
   FaRegBookmark,
@@ -11,109 +12,181 @@ import {
   FaLink,
 } from "react-icons/fa";
 
-const dummyEvents = [
+const dummyEvents: Event[] = [
   {
-    id: 1,
-    type: "overall",
-    name: "SUST Tech Fest 2025",
-    createdBy: {
+    _id: "event1",
+    creator: {
+      _id: "user1",
       name: "SUST CSE Club",
-      avatar: "https://randomuser.me/api/portraits/men/70.jpg",
+      avatar: "https://randomuser.me/api/portraits/men/70.jpg"
     },
-    description:
-      "Join the biggest tech festival of the year! Workshops, hackathons, and more.",
-    date: "June 20, 2025",
-    place: "SUST Auditorium",
+    title: "SUST Tech Fest 2025",
+    content: "Join the biggest tech festival of the year! Workshops, hackathons, and more.",
+    comment: [
+      {
+        userId: {
+          _id: "commenter1",
+          name: "Ayesha Siddiqua",
+          avatar: "https://randomuser.me/api/portraits/women/72.jpg"
+        },
+        commentText: "This event sounds amazing!",
+        createdAt: new Date().toISOString()
+      },
+      {
+        userId: {
+          _id: "commenter2",
+          name: "Tanvir Ahmed",
+          avatar: "https://randomuser.me/api/portraits/men/77.jpg"
+        },
+        commentText: "Can't wait to join!",
+        createdAt: new Date().toISOString()
+      }
+    ],
+    startDate: "2025-06-20T10:00:00Z",
+    endDate: "2025-06-20T18:00:00Z",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
+    createdAt: "2025-06-01T08:00:00Z",
     tags: ["Tech", "Workshop", "Hackathon"],
-    interested: 120,
-    participationLink: "https://susttechfest.com/register",
-    image:
-      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
-    saved: false,
-    isInterested: false,
-    shareLink: "https://sustverse.com/events/1",
+    feedType: "university",
+    place: "CSE Department Hall",
+    participationLink: "https://example.com/alumni-meetup",
   },
   {
-    id: 2,
-    type: "department",
-    name: "Physics Seminar: Quantum Computing",
-    createdBy: {
+    _id: "event2",
+    creator: {
+      _id: "user2",
       name: "Physics Department",
-      avatar: "https://randomuser.me/api/portraits/men/50.jpg",
+      avatar: "https://randomuser.me/api/portraits/men/50.jpg"
     },
-    description: "A seminar on the basics and future of quantum computing.",
-    date: "June 25, 2025",
-    place: "Room 204, Physics Dept.",
+    title: "Physics Seminar: Quantum Computing",
+    content: "A seminar on the basics and future of quantum computing.",
+    comment: [],
+    startDate: "2025-06-25T14:00:00Z",
+    endDate: "2025-06-25T16:00:00Z",
+    image: "",
+    createdAt: "2025-06-05T09:30:00Z",
     tags: ["Seminar", "Quantum", "Physics"],
-    interested: 45,
-    participationLink: "https://sustverse.com/events/physics-quantum",
-    image: "",
-    saved: true,
-    isInterested: true,
-    shareLink: "https://sustverse.com/events/2",
+    feedType: "university",
+    department: "Physics",
+    place: "CSE Department Hall",
+    participationLink: "https://example.com/alumni-meetup",
   },
   {
-    id: 3,
-    type: "overall",
-    name: "Nature Photography Walk",
-    createdBy: {
+    _id: "event3",
+    creator: {
+      _id: "user3",
       name: "SUST Nature Club",
-      avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+      avatar: "https://randomuser.me/api/portraits/women/65.jpg"
     },
-    description: "Capture the beauty of SUST campus with fellow nature lovers.",
-    date: "July 2, 2025",
-    place: "SUST Lake",
+    title: "Nature Photography Walk",
+    content: "Capture the beauty of SUST campus with fellow nature lovers.",
+    comment: [],
+    startDate: "2025-07-02T08:00:00Z",
+    endDate: "2025-07-02T12:00:00Z",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    createdAt: "2025-06-08T11:45:00Z",
     tags: ["Photography", "Nature", "Walk"],
-    interested: 60,
-    participationLink: "https://sustnatureclub.com/events/walk",
-    image:
-      "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-    saved: false,
-    isInterested: false,
-    shareLink: "https://sustverse.com/events/3",
+    feedType: "university",
+    place: "CSE Department Hall",
+    participationLink: "https://example.com/alumni-meetup",
   },
   {
-    id: 4,
-    type: "department",
-    name: "CSE Alumni Meetup",
-    createdBy: {
+    _id: "event4",
+    creator: {
+      _id: "user4",
       name: "CSE Alumni Association",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
     },
-    description:
-      "Reconnect with CSE alumni and current students. Networking and fun!",
-    date: "July 10, 2025",
-    place: "CSE Seminar Room",
-    tags: ["Alumni", "Networking"],
-    interested: 80,
-    participationLink: "https://sustcsealumni.com/meetup",
+    title: "CSE Alumni Meetup",
+    content: "Reconnect with CSE alumni and current students. Networking and fun!",
+    comment: [],
+    startDate: "2025-07-10T16:00:00Z",
+    endDate: "2025-07-10T20:00:00Z",
     image: "",
-    saved: false,
-    isInterested: false,
-    shareLink: "https://sustverse.com/events/4",
-  },
+    createdAt: "2025-06-09T13:00:00Z",
+    tags: ["Alumni", "Networking"],
+    feedType: "department",
+    department: "CSE",
+    place: "CSE Department Hall",
+    participationLink: "https://example.com/alumni-meetup",
+  }
 ];
-
-const dummyComments = [
+const dummyComments: EventComment[] = [
   {
-    user: {
+    userId: {
+      _id: "commenter1",
       name: "Ayesha Siddiqua",
-      avatar: "https://randomuser.me/api/portraits/women/72.jpg",
+      avatar: "https://randomuser.me/api/portraits/women/72.jpg"
     },
-    text: "This event sounds amazing!",
-    time: "2m ago",
+    commentText: "This event sounds amazing!",
+    createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString() // 2 minutes ago
   },
   {
-    user: {
+    userId: {
+      _id: "commenter2",
       name: "Tanvir Ahmed",
-      avatar: "https://randomuser.me/api/portraits/men/77.jpg",
+      avatar: "https://randomuser.me/api/portraits/men/77.jpg"
     },
-    text: "Can't wait to join!",
-    time: "5m ago",
+    commentText: "Can't wait to join!",
+    createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString() // 5 minutes ago
   },
+  {
+    userId: {
+      _id: "commenter3",
+      name: "Fatema Noor",
+      avatar: "https://randomuser.me/api/portraits/women/61.jpg"
+    },
+    commentText: "Where can I find the schedule?",
+    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString() // 10 minutes ago
+  },
+  {
+    userId: {
+      _id: "commenter4",
+      name: "Md. Rafiul Islam",
+      avatar: "https://randomuser.me/api/portraits/men/41.jpg"
+    },
+    commentText: "Perfect opportunity to network!",
+    createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString() // 15 minutes ago
+  }
 ];
 
-type Event = (typeof dummyEvents)[0];
+
+type EventCreator = {
+  _id: string;
+  name: string;
+  avatar: string;
+};
+
+type EventCommentUser = {
+  _id: string;
+  name: string;
+  avatar: string;
+};
+
+type EventComment = {
+  userId: EventCommentUser;
+  commentText: string;
+  createdAt: string; // ISO date string
+};
+
+type Event = {
+  _id: string;
+  creator: EventCreator;
+  title: string;
+  content: string;
+  comment: EventComment[];
+  startDate: string; // ISO date string
+  endDate: string;   // ISO date string
+  image: string;
+  createdAt: string; // ISO date string
+  tags: string[];
+  feedType: 'university' | 'department';
+  department?: string;
+  place?: string; // Optional place for the event
+  participationLink?: string; // Optional link for event participation\
+  interested?: number; // Number of interested users
+};
+
 
 function EventCard({
   event,
@@ -127,36 +200,59 @@ function EventCard({
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState(dummyComments);
   const [commentInput, setCommentInput] = useState("");
+  const [saved, setSaved] = useState(false);
+  const [isInterested, setIsInterested] = useState(false);
+  const shareLink = `https://example.com/event/${event._id}`;
 
   const handleSendComment = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!commentInput.trim()) return;
-    setComments([
-      ...comments,
-      {
-        user: {
-          name: "You",
-          avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-        },
-        text: commentInput,
-        time: "Just now",
-      },
-    ]);
-    setCommentInput("");
+    // if (!commentInput.trim()) return;
+    // setComments([
+    //   ...comments,
+    //   {
+    //     user: {
+    //       name: "You",
+    //       avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+    //     },
+    //     text: commentInput,
+    //     time: "Just now",
+    //   },
+    // ]);
+    // setCommentInput("");
   };
+  const formatEventDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const daySuffix =
+      day % 10 === 1 && day !== 11
+        ? "st"
+        : day % 10 === 2 && day !== 12
+        ? "nd"
+        : day % 10 === 3 && day !== 13
+        ? "rd"
+        : "th";
+    const month = date.toLocaleString("default", { month: "long" });
+    const year = date.getFullYear();
+    const time = date.toLocaleString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return `Date: ${day}${daySuffix} ${month}, ${year} Time: ${time}`;
+  }
 
   return (
     <div className="bg-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-5 mb-6 flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center gap-3">
         <img
-          src={event.createdBy.avatar}
-          alt={event.createdBy.name}
+          src={event.creator?.avatar || "https://randomuser.me/api/portraits/men/32.jpg"}
+          alt={event.creator?.name || "Anonymous"}
           className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
         />
         <div>
           <div className="text-white font-semibold text-base">
-            {event.createdBy.name}
+            {event?.creator?.name || "Anonymous"}
           </div>
           <div className="text-xs text-gray-400">Created this event</div>
         </div>
@@ -164,10 +260,10 @@ function EventCard({
         <button
           className="p-2 rounded-full hover:bg-yellow-500/30 transition-colors text-yellow-400"
           onClick={onToggleSave}
-          title={event.saved ? "Unsave" : "Save"}
-          aria-label={event.saved ? "Unsave event" : "Save event"}
+          title={saved ? "Unsave" : "Save"}
+          aria-label={saved ? "Unsave event" : "Save event"}
         >
-          {event.saved ? (
+          {saved ? (
             <FaBookmark className="text-yellow-400" />
           ) : (
             <FaRegBookmark />
@@ -175,13 +271,13 @@ function EventCard({
         </button>
       </div>
       {/* Event Name */}
-      <div className="text-xl font-bold text-blue-300">{event.name}</div>
+      <div className="text-xl font-bold text-blue-300">{event.title}</div>
       {/* Description */}
-      <div className="text-gray-200 text-base">{event.description}</div>
+      <div className="text-gray-200 text-base">{event.content}</div>
       {/* Date & Place */}
       <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
         <span className="flex items-center gap-1">
-          <FaCalendarAlt className="text-blue-400" /> {event.date}
+          <FaCalendarAlt className="text-blue-400" /> {formatEventDate(event.startDate)}
         </span>
         <span className="flex items-center gap-1">
           <FaMapMarkerAlt className="text-pink-400" /> {event.place}
@@ -213,14 +309,14 @@ function EventCard({
         <button
           className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-colors shadow-sm
             ${
-              event.isInterested
+              isInterested
                 ? "bg-green-600 text-white"
                 : "bg-gray-800/80 text-green-400 hover:bg-green-700/40"
             }`}
           onClick={onToggleInterested}
         >
           <FaUserPlus />
-          {event.isInterested ? "Interested" : "I'm Interested"}
+          {isInterested ? "Interested" : "I'm Interested"}
           <span className="ml-2 text-xs font-normal">{event.interested}</span>
         </button>
         <button
@@ -242,7 +338,7 @@ function EventCard({
         </a>
         <button
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
-          onClick={() => window.open(event.shareLink, "_blank")}
+          onClick={() => window.open(shareLink, "_blank")}
           title="Share Event"
         >
           <FaShareAlt />
@@ -256,18 +352,18 @@ function EventCard({
             {comments.map((c, idx) => (
               <div key={idx} className="flex items-start gap-3 mb-3">
                 <img
-                  src={c.user.avatar}
-                  alt={c.user.name}
+                  src={c.userId.avatar}
+                  alt={c.userId.name}
                   className="w-8 h-8 rounded-full object-cover border border-blue-400"
                 />
                 <div>
                   <div className="text-sm text-white font-semibold">
-                    {c.user.name}{" "}
+                    {c.userId.name}{" "}
                     <span className="text-xs text-gray-400 font-normal ml-2">
-                      {c.time}
+                      {c.createdAt}
                     </span>
                   </div>
-                  <div className="text-gray-200 text-sm">{c.text}</div>
+                  <div className="text-gray-200 text-sm">{c.commentText}</div>
                 </div>
               </div>
             ))}
@@ -299,33 +395,46 @@ function EventCard({
 }
 
 export default function EventFeed() {
-  const [feedType, setFeedType] = useState<"overall" | "department">("overall");
+  const [feedType, setFeedType] = useState<"university" | "department">("university");
   const [events, setEvents] = useState(dummyEvents);
+  const [saved, setSaved] = useState(false);
+  const fetchEvent = async () => {
+      try {
+        const response = await http.get("/event");
+        setEvents(response.data.events);
+        console.log("Events fetched successfully:", response.data);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+    React.useEffect(() => {
+      fetchEvent();
+    }, []);
 
-  const filteredEvents = events.filter((e) => e.type === feedType);
+  const filteredEvents = events.filter((e) => e.feedType === feedType);
 
-  const handleToggleSave = (id: number) => {
+  const handleToggleSave = (id: string) => {
     setEvents((prev) =>
       prev.map((event) =>
-        event.id === id ? { ...event, saved: !event.saved } : event
+        event._id === id ? { ...event, saved: !saved } : event
       )
     );
   };
 
-  const handleToggleInterested = (id: number) => {
-    setEvents((prev) =>
-      prev.map((event) =>
-        event.id === id
-          ? {
-              ...event,
-              isInterested: !event.isInterested,
-              interested: event.isInterested
-                ? event.interested - 1
-                : event.interested + 1,
-            }
-          : event
-      )
-    );
+  const handleToggleInterested = (id: string) => {
+    // setEvents((prev) =>
+    //   prev.map((event) =>
+    //     event.id === id
+    //       ? {
+    //           ...event,
+    //           isInterested: !event.isInterested,
+    //           interested: event.isInterested
+    //             ? event.interested - 1
+    //             : event.interested + 1,
+    //         }
+    //       : event
+    //   )
+    // );
   };
 
   return (
@@ -333,10 +442,10 @@ export default function EventFeed() {
       {/* Feed Switcher */}
       <div className="flex gap-4 mb-6 justify-center">
         <button
-          onClick={() => setFeedType("overall")}
+          onClick={() => setFeedType("university")}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm border
             ${
-              feedType === "overall"
+              feedType === "university"
                 ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-blue-500 scale-105 shadow-lg"
                 : "bg-gray-800/80 text-blue-300 border-transparent hover:bg-blue-900/40 hover:text-white"
             }
@@ -366,10 +475,10 @@ export default function EventFeed() {
         ) : (
           filteredEvents.map((event) => (
             <EventCard
-              key={event.id}
+              key={event._id}
               event={event}
-              onToggleSave={() => handleToggleSave(event.id)}
-              onToggleInterested={() => handleToggleInterested(event.id)}
+              onToggleSave={() => handleToggleSave(event._id)}
+              onToggleInterested={() => handleToggleInterested(event._id)}
             />
           ))
         )}
