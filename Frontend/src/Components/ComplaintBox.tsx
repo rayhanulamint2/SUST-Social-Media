@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
 import { FaTimes, FaImage } from "react-icons/fa";
+import http from "../http";
+import { create } from "framer-motion/client";
 
 // Replace these with actual user data from context/auth if available
 const user = {
@@ -84,7 +86,35 @@ export default function ComplaintBox({
   const [image, setImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const createComplaint = async () => {
+    try {
+      const complaintData = {
+        content: description,         // Maps to "content" in the schema
+        date: new Date(`${date}T${time}`), // Combine date and time into a JS Date object
+        image: image || "",           // Optional, fallback to empty string
+        department: selectedContext,  // Maps to "department"
+        // createdAt and solved will use defaults from schema
+      };
+
+      // Send complaint data to the server
+      await http.post("/complaint/create", complaintData);
+      alert("Complaint submitted successfully!");
+      onClose();
+    } catch (error) {
+      console.error("Error submitting complaint:", error);
+      alert("Failed to submit complaint. Please try again.");
+    }
+  }
+
   if (!open) return null;
+  const resetForm = () => {
+    setSelectedContext(user.department);
+    setDate("");
+    setTime("");
+    setDescription("");
+    setImage(null);
+  };
+
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -98,6 +128,8 @@ export default function ComplaintBox({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle complaint submission here, use selectedContext as the context
+    createComplaint();
+    resetForm();
     onClose();
   };
 

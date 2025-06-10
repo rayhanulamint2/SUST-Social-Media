@@ -26,7 +26,7 @@ app.use('/post', postHandler);
 app.use('/event', eventHandler);
 app.use('/notice', noticeHandler);
 app.use('/admin', adminHandler);
-app.use('/complain', complainHandler);
+app.use('/complaint', complainHandler);
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
