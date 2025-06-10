@@ -113,15 +113,32 @@ SUSTverse addresses these challenges through:
 
 ## ⚙️ Installation & Setup
 
-# Clone the repository
+<details>
+<summary>📦 Click to expand setup instructions</summary>
+
+<br>
+
+### 🔧 Prerequisites
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18 or later)
+- [npm](https://www.npmjs.com/)
+- [Git](https://git-scm.com/)
+- A running instance of **MongoDB** or **MySQL** (as configured)
+
+---
+
+### 🚀 Quick Start
+
+# 1️⃣ Clone the repository
 git clone https://github.com/yourusername/sustverse.git
 cd sustverse
 
-# Install dependencies
+# 2️⃣ Install dependencies
 npm install
 
-# Run the development server
+# 3️⃣ Run the development server
 npm run dev
+
 
 # Create .env file from .env.example and configure your environment variables
 
