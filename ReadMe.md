@@ -5,6 +5,7 @@
 ># Bringing students, alumni, and administrators together on one platform to streamline communication, manage events, and foster collaboration at SUST.
 
 ---
+<br><br>
 
 ## 📚 Table of Contents
 
@@ -20,12 +21,14 @@
 - [📄 License](#license)
 
 ---
+<br><br>
 
 # 📌 Project Overview
 
 **SUSTverse** is a full-stack platform built for the Shahjalal University of Science and Technology (SUST) to create a connected, transparent, and interactive digital ecosystem. It centralizes event coordination, notice distribution, alumni networking, anonymous feedback, and 24/7 information access — all in one place.
 
 ---
+<br><br>
 
 # ❗ Problem Statement
 
@@ -38,6 +41,7 @@ Currently, communication at SUST is fragmented across social media, printed noti
 - Missing anonymous feedback options
 
 ---
+<br><br>
 
 # ✅ Proposed Solution
 
@@ -50,6 +54,7 @@ SUSTverse addresses these challenges through:
 - An AI-powered chatbot for real-time, multilingual support
 
 ---
+<br><br>
 
 # 🧩 Key Features
 
@@ -57,8 +62,10 @@ SUSTverse addresses these challenges through:
 - Post campus news, discussions, and media
 - Comment, react, and view trending topics
 - Filter and search content easily
+<br>
 
 ![Home Page](Frontend\src\assets\Homepage.png)
+<br>
 
 ## 🎉 Event Page
 - List upcoming and past events with full details
@@ -85,6 +92,7 @@ SUSTverse addresses these challenges through:
 - Personalized suggestions and policy updates
 
 ---
+<br><br>
 
 # ⚙️ Technology Stack
 
@@ -96,10 +104,11 @@ SUSTverse addresses these challenges through:
 | Auth           | JWT (JSON Web Tokens)                   | Secure user login and session handling      |
 | Hosting        | AWS / Google Cloud (TBD)                | Cloud-based deployment                      |
 | AI Integration | OpenAI GPT / Custom LLM (via REST API)  | Smart chatbot with contextual responses     |
+<br>
 
 
 ![Technology Stack](Frontend\src\assets\TechnologyStack.png)
-
+<br><br>
 ---
 
 
@@ -112,6 +121,9 @@ SUSTverse addresses these challenges through:
 - 🔔 Push notifications
 
 ---
+<br>
+<br>
+<br>
 
 
 
@@ -129,6 +141,7 @@ Make sure you have the following installed:
 - A running instance of **MongoDB** or **MySQL**
 
 ---
+<br><br><br>
 
 
 
@@ -146,6 +159,7 @@ npm install
 ## 3️⃣ Run the development server
 npm run dev
 
+<br><br><br>
 
 
 
@@ -166,9 +180,35 @@ npm run dev
 
 ## 👥 Contributors
 
-| Name | GitHub Profile | Email |
-|------|----------------|-------|
-| **Rayhanul Amin Tanvir** | [@rayhanulamint2](https://github.com/rayhanulamint2) | rayhanulamint2@gmail.com |
-| **Khalid Bin Selim** | [@KhalidBinSelim](https://github.com/KhalidBinSelim) | khalidbinselim@gmail.com |
-| **Iqbal Mahmood Sajid** | [@IM-Sajid](https://github.com/IM-Sajid) | imsajid428@gmail.com |
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/rayhanulamint2">
+        <img src="https://github.com/rayhanulamint2.png" width="100px;" alt="Rayhanul Amin Tanvir"/>
+        <br />
+        <sub><b>Rayhanul Amin Tanvir</b></sub>
+      </a>
+      <br />
+      📧 rayhanulamint2@gmail.com
+    </td>
+    <td align="center">
+      <a href="https://github.com/KhalidBinSelim">
+        <img src="https://github.com/KhalidBinSelim.png" width="100px;" alt="Khalid Bin Selim"/>
+        <br />
+        <sub><b>Khalid Bin Selim</b></sub>
+      </a>
+      <br />
+      📧 khalidbinselim@gmail.com
+    </td>
+    <td align="center">
+      <a href="https://github.com/IM-Sajid">
+        <img src="https://github.com/IM-Sajid.png" width="100px;" alt="Iqbal Mahmood Sajid"/>
+        <br />
+        <sub><b>Iqbal Mahmood Sajid</b></sub>
+      </a>
+      <br />
+      📧 imsajid428@gmail.com
+    </td>
+  </tr>
+</table>
 
