@@ -49,12 +49,19 @@ const postUpdate = async(id, updateData) => {
 }
 
 const findAllPosts = async () => {
-    try {
-        const posts = await Post.find();
-        return posts;
-    } catch (error) {
-        console.log('there are an error in server end');
-    }
-}
+  try {
+    const posts = await Post.find()
+      .populate({ path: 'creator', select: 'name avatar' })
+      .populate({ path: 'comment.userId', select: 'name avatar' })
+      .sort({ createdAt: -1 });
+
+    return posts;
+  } catch (error) {
+    console.error('Server error:', error);
+    return [];
+  }
+};
+
+
 
 module.exports = {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts}

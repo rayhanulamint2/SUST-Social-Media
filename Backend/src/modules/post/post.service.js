@@ -11,7 +11,7 @@ const createPost = async(req, res) => {
             tags: Array.isArray(req.body.tags)
                 ? req.body.tags
                 : [req.body.tags].filter(Boolean),
-            isDepartmentPost: req.body.isDepartmentPost,
+            feedType: req.body.feedType || 'university', // Default to 'university' if not provided
             department: req.body.department || '', // Ensure department is included
             upVotes: 0,
             downVotes: 0,
@@ -85,7 +85,7 @@ const updatePost = async(req, res) => {
             tags: Array.isArray(req.body.tags)
                 ? req.body.tags
                 : [req.body.tags].filter(Boolean),
-            isDepartmentPost: req.body.isDepartmentPost,
+            feedType: req.body.feedType || post.feedType, // Use existing feedType if not provided
             upVotes: req.body.upVotes || 0,
             downVotes: req.body.downVotes || 0,
             comment: req.body.comment || [],
