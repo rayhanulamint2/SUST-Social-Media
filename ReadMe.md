@@ -1,153 +1,123 @@
-# 🌐 Project Overview: SUSTverse
+# 🌐 SUSTverse – A Unified Campus Communication Platform
 
-## 🎯 Project Purpose
+![SUSTverse Banner](Frontend\src\assets\sust_gate.jpg)
 
-**SUSTverse** is an all-in-one interactive digital platform designed to enhance communication, collaboration, and information sharing within the **Shahjalal University of Science and Technology (SUST)** community. This project aims to overcome the fragmentation currently present in campus-wide communication by offering a unified system that connects **students, alumni, and administrators** efficiently and transparently.
+># Bringing students, alumni, and administrators together on one platform to streamline communication, manage events, and foster collaboration at SUST.
+
+---
+
+## 📚 Table of Contents
+
+- [📌 Project Overview](#project-overview)
+- [❗ Problem Statement](#problem-statement)
+- [✅ Proposed Solution](#proposed-solution)
+- [🧩 Key Features](#key-features)
+- [⚙️ Technology Stack](#technology-stack)
+- [📱 Future Enhancements](#future-enhancements)
+- [⚙️ Installation & Setup](#installation--setup)
+- [🖼️ Screenshots](#screenshots)
+- [👥 Contributors](#contributors)
+- [📄 License](#license)
+
+---
+
+## 📌 Project Overview
+
+**SUSTverse** is a full-stack platform built for the Shahjalal University of Science and Technology (SUST) to create a connected, transparent, and interactive digital ecosystem. It centralizes event coordination, notice distribution, alumni networking, anonymous feedback, and 24/7 information access — all in one place.
 
 ---
 
 ## ❗ Problem Statement
 
-At SUST, communication and event management systems are currently disjointed and inefficient. Information is scattered across various social media platforms, physical notice boards, or informal student groups. This leads to:
+Currently, communication at SUST is fragmented across social media, printed notices, and informal channels. This leads to:
 
-- Poor accessibility of important updates and notices.
-- Lack of streamlined event coordination.
-- Missed opportunities for alumni-student interaction.
-- No centralized complaint-handling mechanism.
-- Communication gaps between administration and students.
-
-These issues highlight the urgent need for a centralized, secure, and user-friendly platform that can bring all stakeholders together and promote a cohesive university experience.
+- Inefficiency in managing events and notices
+- Lack of student-admin engagement
+- No centralized platform for alumni interaction
+- Zero support for real-time updates or FAQs
+- Missing anonymous feedback options
 
 ---
 
-## ✅ Our Solution: Introducing SUSTverse
+## ✅ Proposed Solution
 
-SUSTverse is designed to serve as a **centralized digital ecosystem** for the SUST community. It brings together multiple essential services under a single umbrella platform, promoting:
+SUSTverse addresses these challenges through:
 
-- **Transparency** – clear and consistent communication.
-- **Efficiency** – streamlined access to services and information.
-- **Collaboration** – interaction between students, alumni, and staff.
-
-The platform fosters connectivity through various modules such as event boards, AI-powered chatbot support, complaint boxes, and alumni networking tools.
-
----
-
-## 🧩 Key Features and Their Functions
-
-### 🏠 1. Home Page
-A dynamic space where users can:
-- Share campus news, thoughts, and discussions.
-- Post multimedia content (images, videos).
-- React and comment on posts to encourage engagement.
-- Access **Trending Topics** for visibility of popular discussions.
-- Utilize **search and filter options** to find relevant content easily.
-
-This acts as the university’s internal “social feed,” fostering a sense of community and continuous information flow.
+- Seamless communication between all university stakeholders
+- A centralized hub for events, notices, and announcements
+- A robust alumni network and messaging interface
+- Confidential complaint submission with progress tracking
+- An AI-powered chatbot for real-time, multilingual support
 
 ---
 
-### 🎉 2. Event Page
-An organized interface for:
-- Listing upcoming and past events with date, time, organizer info, and details.
-- Allowing student clubs or departments to submit event proposals through an **approval workflow**.
-- Featuring **paid event promotions** for higher visibility.
-- Syncing events with external calendars via link integration.
+## 🧩 Key Features
 
-This feature improves awareness and attendance for all kinds of academic, cultural, and social events.
+### 🏠 Home Page
+- Post campus news, discussions, and media
+- Comment, react, and view trending topics
+- Filter and search content easily
 
----
+### 🎉 Event Page
+- List upcoming and past events with full details
+- Support for paid promotions and admin approvals
+- Calendar link integration
 
-### 📢 3. Notice Board
-Each department gets its own digital board for:
-- Admin-controlled publishing of official notices.
-- Real-time notifications for newly posted content.
-- Archive system for previously published notices for easy access and reference.
+### 📢 Notice Board
+- Department-specific boards with admin-only publishing
+- Real-time notifications and searchable archive
 
-This replaces outdated physical notice boards and ensures timely dissemination of official updates.
+### 🎓 Alumni Section
+- Alumni directory with search and connection tools
+- Messaging system and experience sharing
+- Internship and job advice posts
 
----
+### 🧾 Anonymous Complaint Box
+- Submit complaints confidentially
+- Track progress of submitted issues
+- Admin tools for analytics and reporting
 
-### 🎓 4. Alumni Section
-Facilitates meaningful alumni-student engagement with:
-- A searchable alumni directory.
-- One-on-one messaging and **connection requests**.
-- A space for alumni to share:
-  - Job experiences.
-  - Internship opportunities.
-  - Career advice and mentorship.
-
-This strengthens the professional network of the university and bridges generational knowledge gaps.
-
----
-
-### 🧾 5. Anonymous Complaint Box
-A confidential system to submit and track complaints:
-- Students and staff can submit concerns without revealing identity.
-- Complaints are **categorized** (e.g., academic, facilities, harassment, etc.).
-- Users can view the **status** of their complaints (received, under review, resolved).
-- Admins can analyze trends and generate reports to identify systemic issues.
-
-This builds trust and ensures accountability within the administration.
-
----
-
-### 🤖 6. AI Chatbot (24/7 Support)
-An intelligent assistant built into the platform to:
-- Answer frequently asked questions (e.g., class schedules, rules, admission procedures).
-- Offer **multilingual support** (English and Bangla).
-- Provide **personalized suggestions** based on user queries.
-- Remain updated with the latest SUST policies and announcements.
-
-This reduces the administrative burden and provides round-the-clock help to users.
+### 🤖 AI Chatbot (24/7 Support)
+- Natural language answers to FAQs and queries
+- Multilingual support (English & Bangla)
+- Personalized suggestions and policy updates
 
 ---
 
 ## ⚙️ Technology Stack
 
-| Layer         | Tools/Technologies                              | Description                                                                 |
-|---------------|--------------------------------------------------|-----------------------------------------------------------------------------|
-| **Frontend**  | React.js + Material-UI                           | Modern, responsive UI components for an engaging user interface.           |
-| **Backend**   | Node.js + Express.js                             | Scalable and efficient server-side logic and APIs.                         |
-| **Database**  | MySQL / MongoDB Atlas                            | Flexible options for structured or unstructured data management.           |
-| **Authentication** | JWT (JSON Web Tokens)                      | Secure, token-based authentication for user sessions and role control.     |
-| **Hosting**   | AWS or Google Cloud (TBD)                        | Reliable cloud infrastructure for performance and scalability.             |
-| **AI Chatbot**| OpenAI GPT or Custom-trained LLM via REST API    | Intelligent, natural language chatbot to improve accessibility.            |
+| Layer           | Technology                             | Description                                 |
+|----------------|-----------------------------------------|---------------------------------------------|
+| Frontend       | React.js, Material-UI                   | Modern UI and responsive design             |
+| Backend        | Node.js, Express.js                     | Scalable server-side logic and APIs         |
+| Database       | MySQL / MongoDB Atlas                   | Structured or NoSQL data management         |
+| Auth           | JWT (JSON Web Tokens)                   | Secure user login and session handling      |
+| Hosting        | AWS / Google Cloud (TBD)                | Cloud-based deployment                      |
+| AI Integration | OpenAI GPT / Custom LLM (via REST API)  | Smart chatbot with contextual responses     |
 
 ---
 
 ## 📱 Future Enhancements
 
-To ensure long-term value and adaptability, the following upgrades are planned:
-
-- **Real-time chat system** among users.
-- **Mobile app** for Android and iOS.
-- **Survey and feedback system** for gathering opinions and data.
-- **Dark/light theme toggles** for accessibility.
-- **Push notifications** for mobile and desktop platforms.
+- 🔄 Real-time chat system
+- 📊 Survey and feedback module
+- 📱 Mobile apps for Android & iOS
+- 🌙 Dark/light theme support
+- 🔔 Push notifications
 
 ---
 
-## 📌 Conclusion
+## ⚙️ Installation & Setup
 
-SUSTverse represents a transformative step toward creating a smart, connected, and inclusive university environment. By bringing essential services onto one unified platform, it fosters better communication, empowers student voices, and promotes collaboration across all user groups.
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/sustverse.git
+cd sustverse
 
-This initiative not only addresses current inefficiencies but also prepares SUST for a more **digitally enabled future**.
+# Install dependencies
+npm install
 
----
+# Run the development server
+npm run dev
 
-## 👥 Team Members
-
-- **Rayhanul Amin Tanvir**
-  - Reg. No: 2020331002
-  - Email: rayhanulamint2@gmail.com
-  - [GitHub](https://github.com/rayhanulamint2)
-
-- **Khalid Bin Selim**
-  - Reg. No: 2020331044
-  - Email: khalidbinselim@gmail.com
-  - [GitHub](https://github.com/KhalidBinSelim)
-
-- **Iqbal Mahmood Sajid**
-  - Reg. No: 2020331103
-  - Email: imsajid428@gmail.com
-  - [GitHub](https://github.com/IM-Sajid)
+# Create .env file from .env.example and configure your environment variables
