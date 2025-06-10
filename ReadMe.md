@@ -97,6 +97,8 @@ SUSTverse addresses these challenges through:
 | Hosting        | AWS / Google Cloud (TBD)                | Cloud-based deployment                      |
 | AI Integration | OpenAI GPT / Custom LLM (via REST API)  | Smart chatbot with contextual responses     |
 
+
+![Technology Stack](Frontend\src\assets\TechnologyStack.png)
 ---
 
 ## 📱 Future Enhancements
@@ -128,15 +130,13 @@ npm run dev
 
 > 📸 Add actual screenshots in the `./assets/screenshots/` directory and update paths below.
 
+### Home Page
+![Home Page](Frontend\src\assets\Homepage.png)
 
-### 📢 Notice Board
-![Notice Board](Frontend\src\assets\sust_gate.jpg)
 
-### 🎓 Alumni Directory
-![Alumni Directory](Frontend\src\assets\sust_gate.jpg)
+### Technology Stack
+![Technology Stack](Frontend\src\assets\TechnologyStack.png)
 
-### 🤖 AI Chatbot
-![Chatbot](Frontend\src\assets\sust_gate.jpg)
 
 ## 👥 Contributors
 
