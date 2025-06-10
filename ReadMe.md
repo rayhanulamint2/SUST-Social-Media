@@ -18,7 +18,6 @@
 - [⚙️ Installation & Setup](#installation--setup)
 - [🖼️ Screenshots](#screenshots)
 - [👥 Contributors](#contributors)
-- [📄 License](#license)
 
 ---
 <br><br>
