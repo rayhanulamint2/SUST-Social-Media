@@ -38,7 +38,35 @@ const userUpdate = async(id, updateData) => {
 
 const findUserById = async(id) => {
     try {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate({
+            path: 'posts',
+            populate:({
+                path: 'creator', select: 'name avatar'
+
+            }),
+            // populate:[({
+            //     path: 'comment.userId', select: 'name avater'
+            // })]
+        }).populate({
+            path: 'posts',
+            populate:({
+                path: 'comment.userId',select: 'name avater'
+            })
+        }).populate({
+            path: 'saved',
+            populate:({
+                path: 'creator', select: 'name avatar'
+
+            }),
+            // populate:[({
+            //     path: 'comment.userId', select: 'name avater'
+            // })]
+        }).populate({
+            path: 'saved',
+            populate:({
+                path: 'comment.userId',select: 'name avater'
+            })
+        });
         return user;
     } catch (error) {
         console.log('there are an error in server end');

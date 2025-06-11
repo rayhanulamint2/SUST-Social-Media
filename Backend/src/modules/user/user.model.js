@@ -124,7 +124,34 @@ const userSchema = new mongoose.Schema({
         ],
         default: []
     },
+    socialLinks: {
+        type: [
+            {
+            platform: {
+                type: String,
+                required: true,
+            },
+            link: {
+                type: String,
+                required: true,
+            },
+            username: {
+                type: String,
+                required: true,
+            },
+            description: {
+                type: String,
+            },
+            },
+        ],
+        default: [],
+    },
     posts: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Post',
+        default: []
+    },
+    saved: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Post',
         default: []

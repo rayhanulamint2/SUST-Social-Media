@@ -1,21 +1,30 @@
 // core business logic define
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {newUserCreation, findUser, userUpdate, findUserById} = require('./user.repository')
+const { newUserCreation, findUser, userUpdate, findUserById } = require('./user.repository')
 
-const signup = async(req,res) => {
-    try{
-        const hashedPassword = await bcrypt.hash(req.body.password,10)
+const signup = async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const userData = {
             name: req.body.name,
+            avatar: req.body.avatar || '',
             regNo: req.body.regNo,
             email: req.body.email,
             password: hashedPassword,
             department: req.body.department,
             session: req.body.session,
-            roles: req.body.roles, // should be an array (e.g., ["student", "teacher"])
-            filePath: req.file ? req.file.path : '' // if file was uploaded
+            filePath: req.file ? req.file.path : '',
+            roles: Array.isArray(req.body.roles) ? req.body.roles : [],
+            about: req.body.about || '',
+            workplaces: req.body.workplaces || [],
+            researchWorks: req.body.researchWorks || [],
+            achievements: req.body.achievements || [],
+            socialLinks: req.body.socialLinks || [],
+            posts: [],   // Initialize empty; likely managed later
+            saved: []    // Initialize empty; likely managed later
         };
+
         console.log(userData)
         // repository 
         newUserCreation(userData)
@@ -24,29 +33,29 @@ const signup = async(req,res) => {
         res.status(200).json({
             message: 'successfull'
         })
-    } catch{
+    } catch {
         res.status(500).json({
             error: 'serverside error'
         })
     }
 }
-const login = async(req,res) => {
-    try{
+const login = async (req, res) => {
+    try {
         const user = await findUser(req.body.email);
         console.log(" = ", user)
-        if(user && user.length>0){
-            const isValidePassword = await bcrypt.compare(req.body.password,user[0].password)
-            
-            if(isValidePassword){
+        if (user && user.length > 0) {
+            const isValidePassword = await bcrypt.compare(req.body.password, user[0].password)
+
+            if (isValidePassword) {
                 // console.log(process.env.JWT_SECRET)
                 // generate token
                 const token = jwt.sign({
                     fullname: user[0].fullname,
                     id: user[0]._id
                 }, "sfdjlajdlkfasjdfskljfjksjdfljskdf", // process.env.JWT_SECRET is not working 
-                {
-                    expiresIn: '1h'
-                });
+                    {
+                        expiresIn: '1h'
+                    });
                 console.log(token)
                 res.status(200).json({
                     "access_token": token,
@@ -63,7 +72,7 @@ const login = async(req,res) => {
                 "error": 'Authentication failed'
             })
         }
-    } catch(err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({
             "error": 'Authentication failed'
@@ -71,7 +80,7 @@ const login = async(req,res) => {
     }
 }
 
-const updateUser = async(req, res) => {
+const updateUser = async (req, res) => {
     try {
         const user = await findUser(req.params.id);
         if (!user) {
@@ -92,18 +101,18 @@ const updateUser = async(req, res) => {
     }
 };
 
-const findUserDetails = async(req,res)=>{
-    try{
+const findUserDetails = async (req, res) => {
+    try {
         const user = await findUserById(req.params.id)
         res.status(200).json({
-                    "user": user
-                })
+            "user": user
+        })
         return user
     }
-    catch(error){
+    catch (error) {
         console.log('there are an error in server end')
     }
 }
 
 
-module.exports = {signup,login,updateUser, findUserDetails}
+module.exports = { signup, login, updateUser, findUserDetails }
