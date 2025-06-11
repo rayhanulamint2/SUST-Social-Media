@@ -1,12 +1,25 @@
 const mongoose = require('mongoose')
 const postSchema = require('./post.model')
 const Post = new mongoose.model('Post',postSchema);
+const userSchema = require('../user/user.model')
+const User = new mongoose.model('User',userSchema);
 
 const newPostCreation = async(postData) => {
     const newPost = new Post(postData);
     try{
         await newPost.save();
-        console.log('post created successfully')
+        console.log('post created successfully', newPost);
+        const user = await User.findById(newPost.creator);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+
+        // Step 3: Add the post ID to user's posts array
+        user.posts.push(newPost._id);
+
+        // Step 4: Save the updated user
+        await user.save();
         return newPost;
     } catch(error){
         console.log('there are an error in server end')
