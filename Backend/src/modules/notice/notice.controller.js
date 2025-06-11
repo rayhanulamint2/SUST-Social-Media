@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createNotice,deleteNotice, updateNotice, findingNotice} = require('./notice.service')
+const {createNotice,deleteNotice, updateNotice, findingNotice, findAllNotices} = require('./notice.service')
 
 // Route to create a new notice
 router.post('/create', createNotice);
@@ -10,6 +10,8 @@ router.post('/delete/:id', deleteNotice);
 router.post('/update/:id', updateNotice);
 // Route to find a notice by ID
 router.get('/:id', findingNotice);
+
+router .get('/', findAllNotices);
 
 
 

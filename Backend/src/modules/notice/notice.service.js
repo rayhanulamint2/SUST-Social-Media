@@ -1,4 +1,4 @@
-const {newNoticeCreation, findNotice,deleteNoticeByID, noticeUpdate} = require('./notice.repository')    
+const {newNoticeCreation, findNotice,deleteNoticeByID, noticeUpdate, findAllNotice} = require('./notice.repository')    
 
 const createNotice = async(req, res) => {
     try{
@@ -114,4 +114,23 @@ const findingNotice = async(req, res) => {
     }
 };
 
-module.exports = {createNotice, deleteNotice, updateNotice, findingNotice};
+const findAllNotices = async(req, res) => {
+    try {
+        const notices = await findAllNotice();
+        if (!notices || notices.length === 0) {
+            return res.status(404).json({
+                error: 'No notices found'
+            });
+        }
+        res.status(200).json({
+            notices: notices
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Failed to retrieve notices'
+        });
+    }
+}
+
+module.exports = {createNotice, deleteNotice, updateNotice, findingNotice, findAllNotices};
