@@ -75,6 +75,22 @@ const findAllPosts = async () => {
   }
 };
 
+const postEdit = async (payload) => {
+    try{
+        console.log("payload",payload);
+        const post = await Post.findById(payload.postId)
+        console.log("post: ", post);
+        post.content = payload.content;
+        post.image = payload.image;
+        const newPost = await post.save();
+        console.log("newPost : ", newPost);
+        return newPost
+    }
+    catch(error){
+        console.log('there are an error in server end')
+    }
+}
 
 
-module.exports = {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts}
+
+module.exports = {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts, postEdit}
