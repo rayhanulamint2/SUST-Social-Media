@@ -12,6 +12,29 @@ type TopbarProps = {
 };
 
 export default function Topbar({ onNav, onNotices, onProfile }: TopbarProps) {
+  const handleProfileClick = () => {
+    handleProfile();
+
+    if (onProfile) {
+      onProfile();
+    }
+  };
+
+
+  const handleProfile = ()=>{
+    const userstring = localStorage.getItem("user")
+    let currentUserId = null;
+
+    if (userstring) {
+      const mainUser = JSON.parse(userstring);
+      console.log("mainuser:",mainUser)
+    if (Array.isArray(mainUser) && mainUser.length > 0) {
+        currentUserId = mainUser[0]._id;
+        console.log("currentUserId",currentUserId)
+        localStorage.setItem("currentUserId",currentUserId)
+      }
+    }
+  }
   return (
     <header className="fixed top-0 left-0 w-full z-30 bg-gray-900/80 backdrop-blur-xl border-b border-blue-400/10 shadow-lg">
       <div className="max-w-8xl mx-auto flex items-center justify-between px-6 py-2">
@@ -66,7 +89,8 @@ export default function Topbar({ onNav, onNotices, onProfile }: TopbarProps) {
           <button
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/70 hover:bg-green-500/80 text-white font-semibold transition-colors"
             title="Profile"
-            onClick={onProfile} // <-- call onProfile
+            onClick={handleProfileClick}
+            // onClick={onProfile} // <-- call onProfile
           >
             {/* Replace with user's avatar if available */}
             <img

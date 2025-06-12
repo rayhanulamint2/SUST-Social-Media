@@ -38,11 +38,139 @@ const userUpdate = async(id, updateData) => {
 
 const findUserById = async(id) => {
     try {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate({
+            path: 'posts',
+            populate:({
+                path: 'creator', select: 'name avatar'
+
+            }),
+            // populate:[({
+            //     path: 'comment.userId', select: 'name avater'
+            // })]
+        }).populate({
+            path: 'posts',
+            populate:({
+                path: 'comment.userId',select: 'name avater'
+            })
+        }).populate({
+            path: 'saved',
+            populate:({
+                path: 'creator', select: 'name avatar'
+
+            }),
+            // populate:[({
+            //     path: 'comment.userId', select: 'name avater'
+            // })]
+        }).populate({
+            path: 'saved',
+            populate:({
+                path: 'comment.userId',select: 'name avater'
+            })
+        });
         return user;
     } catch (error) {
         console.log('there are an error in server end');
     }
 };
 
-module.exports = {newUserCreation, findUser, userUpdate, findUserById}
+const achievementAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.achievements.push(payload.achievement);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+
+const workplaceAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.workplaces.push(payload.workplace);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+
+const researchAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.researchWorks.push(payload.researchWork);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+
+const sociallinkAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.socialLinks.push(payload.socialLink);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+
+const userEdit = async(payload) => {
+    try{
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        if (payload.about !== undefined) user.about = payload.about;
+        if (payload.department !== undefined) user.department = payload.department;
+        if (payload.name !== undefined) user.name = payload.name;
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there is an error')
+    }
+}
+module.exports = {newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd, userEdit}

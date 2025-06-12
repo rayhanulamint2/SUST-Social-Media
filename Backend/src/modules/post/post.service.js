@@ -1,4 +1,4 @@
-const {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts} = require('./post.repository')    
+const {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts, postEdit} = require('./post.repository')    
 
 const createPost = async(req, res) => {
     try{
@@ -148,4 +148,24 @@ const findingAllPosts = async(req, res) => {
     }
 };
 
-module.exports = {createPost, deletePost, updatePost, findingPost, findingAllPosts};
+const editPost = async(req,res) => {
+    try{
+        const post = await postEdit(req.body);
+        if (!post) {
+            return res.status(500).json({
+                error: 'Post not found'
+            });
+        }
+        res.status(200).json({
+            post: post
+        });
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).json({
+            error: 'failed to retrieve posts'
+        });
+    }
+}
+
+module.exports = {createPost, deletePost, updatePost, findingPost, findingAllPosts, editPost};
