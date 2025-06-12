@@ -1,7 +1,7 @@
 // core business logic define
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { newUserCreation, findUser, userUpdate, findUserById } = require('./user.repository')
+const { newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd} = require('./user.repository')
 
 const signup = async (req, res) => {
     try {
@@ -114,5 +114,58 @@ const findUserDetails = async (req, res) => {
     }
 }
 
+const addAchievement = async(req,res) =>  {
+    try {
+        const user = await achievementAdd(req.body)
+        res.status(200).json({
+            "user": user
+        })
+        return user
+    }
+    catch (error){
+        console.log("there are an serverside error")
+    }
+}
 
-module.exports = { signup, login, updateUser, findUserDetails }
+const addResearch= async(req,res) =>  {
+    try {
+        const user = await researchAdd(req.body)
+        res.status(200).json({
+            "user": user
+        })
+        return user
+    }
+    catch (error){
+        console.log("there are an serverside error")
+    }
+}
+
+const addWorkplace = async(req,res) =>  {
+    try {
+        const user = await workplaceAdd(req.body)
+        res.status(200).json({
+            "user": user
+        })
+        return user
+    }
+    catch (error){
+        console.log("there are an serverside error")
+    }
+}
+
+const addSociallink = async(req,res) =>  {
+    try {
+        const user = await sociallinkAdd(req.body)
+        res.status(200).json({
+            "user": user
+        })
+        return user
+    }
+    catch (error){
+        console.log("there are an serverside error")
+    }
+}
+
+
+
+module.exports = { signup, login, updateUser, findUserDetails, addAchievement, addResearch, addSociallink, addWorkplace}

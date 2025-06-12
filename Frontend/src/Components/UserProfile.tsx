@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import http from "../http";
 import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import type { User, Post, Comment, Achievement, ResearchWork, SocialLink, Workplace } from './types';
 import React from "react";
 import {
@@ -331,6 +332,7 @@ const leftMenu = [
 
 export default function UserProfile({ onBack }: { onBack?: () => void }) {
   const [user, setUser] = useState<User>(users);
+  const navigate = useNavigate();
   const currentUserId = localStorage.getItem("currentUserId")||"6849bb136e4b901e5e7102cb";
   console.log("currentUserId ", currentUserId);
 
@@ -373,18 +375,20 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
     title: "",
     description: "",
     link: "",
+    image: ""
   });
   const [socialLinks, setSocialLinks] = useState(user.socialLinks);
   const [newSocial, setNewSocial] = useState({
     username: "",
     platform: "",
     link: "",
+    description: ""
   });
   const [editSocialIdx, setEditSocialIdx] = useState<number | null>(null);
   const [editSocial, setEditSocial] = useState({
     username: "",
     platform: "",
-    link: "",
+    link: ""
   });
   const [editAchievementIdx, setEditAchievementIdx] = useState<number | null>(
     null
@@ -443,11 +447,34 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
 
   const isMe = userInfo.id == currentUserId ? true : false;
 
-  
-  console.log("user roles", user.roles)
-  console.log("user roles type", typeof(user.roles))
 
+  const saveAchievement = async(newAchievement:Achievement)=>{
+    await http.post("/user/addAchievement", {
+      userId: userInfo.id,
+      achievement: newAchievement,
+    });
+  }
 
+  const saveWorkplace = async(newWorkplace: Workplace) =>{
+    await http.post("/user/addWorkplace", {
+      userId: userInfo.id,
+      workplace: newWorkplace
+    })
+  }
+
+  const saveResearchwork = async(newResearch: ResearchWork) => {
+    await http.post("/user/addResearch",{
+      userId: userInfo.id,
+      researchWork: newResearch
+    })
+  }
+
+  const saveSocialLink = async(newSocial: SocialLink) => {
+    await http.post("/user/addSociallink",{
+      userId: userInfo.id,
+      socialLink: newSocial
+    })
+  }
 
   // --- Edit Profile Popup ---
   const EditProfilePopup = () =>
@@ -541,6 +568,14 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 setNewAchievement({ ...newAchievement, link: e.target.value })
               }
             />
+            <input
+              className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
+              placeholder="Image"
+              value={newAchievement.image}
+              onChange={(e) =>
+                setNewAchievement({ ...newAchievement, image: e.target.value })
+              }
+            />
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
               onClick={() => {
@@ -554,10 +589,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       title: newAchievement.title,
                       description: newAchievement.description,
                       link: newAchievement.link,
-                      image: "",
+                      image: newAchievement.image,
                     },
                   ]);
-                  setNewAchievement({ title: "", description: "", link: "" });
+                  setNewAchievement({ title: "", description: "", link: "", image: ""});
+                  console.log("newAchievement:", newAchievement)
+                  saveAchievement(newAchievement);
+
                   setShowAddAchievement(false);
                 }
               }}
@@ -640,6 +678,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       end: newWorkplace.end,
                     },
                   ]);
+                  saveWorkplace(newWorkplace);
                   setNewWorkplace({
                     name: "",
                     designation: "",
@@ -691,12 +730,21 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             />
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
+              placeholder="Description"
+              value={newSocial.description}
+              onChange={(e) =>
+                setNewSocial({ ...newSocial, description: e.target.value })
+              }
+            />
+            <input
+              className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="Link"
               value={newSocial.link}
               onChange={(e) =>
                 setNewSocial({ ...newSocial, link: e.target.value })
               }
             />
+            
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
               onClick={() => {
@@ -711,10 +759,11 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       username: newSocial.username,
                       platform: newSocial.platform,
                       link: newSocial.link,
-                      description: "",
+                      description: newSocial.description,
                     },
                   ]);
-                  setNewSocial({ username: "", platform: "", link: "" });
+                  saveSocialLink(newSocial)
+                  setNewSocial({ username: "", platform: "", link: "", description:""});
                   setShowAddSocial(false);
                 }
               }}
@@ -791,6 +840,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       link: newResearch.link,
                     },
                   ]);
+                  saveResearchwork(newResearch)
                   setNewResearch({
                     title: "",
                     description: "",
@@ -1869,7 +1919,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
         {/* Stylish Back Button - Icon Only */}
         <button
           className="mt-6 ml-6 flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-700 via-indigo-700 to-blue-900 text-white shadow-xl border-2 border-blue-400 hover:from-blue-800 hover:to-indigo-900 hover:scale-110 hover:border-indigo-400 transition-all duration-200 group"
-          onClick={onBack}
+          onClick={() => {
+            if (onBack) {
+              onBack();
+            } else {
+              navigate('/home');
+            }
+          }}
           title="Back to Home"
         >
           <FaArrowLeft className="text-2xl group-hover:-translate-x-1 transition-transform duration-200 drop-shadow-lg" />
