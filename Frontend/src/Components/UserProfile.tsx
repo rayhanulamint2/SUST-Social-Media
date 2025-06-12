@@ -432,7 +432,6 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
   const [editPostIdx, setEditPostIdx] = useState<number | null>(null);
   const [editPost, setEditPost] = useState({
     content: "",
-    tags: [] as string[],
     image: "",
   });
   const [savedMenuIdx, setSavedMenuIdx] = useState<number | null>(null);
@@ -475,7 +474,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
       socialLink: newSocial
     })
   }
-    
+
 
   console.log("user: ", user)
 
@@ -501,7 +500,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
 
   console.log("newUser: ", newUser)
 
-  const saveUser = async() => {
+  const saveUser = async () => {
 
 
     console.log("Saving user:", newUser);
@@ -520,6 +519,24 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
 
     setShowEditProfile(false);
   };
+
+
+  const editPostById = async (id: string) => {
+    const payload = {
+      postId: id,
+      content: editPost.content,
+      image: editPost.image
+    }
+
+    console.log("payload", payload);
+    await http.put("/post/edit", payload)
+
+  }
+
+  const deletePost = async (id: string) => {
+    await http.delete(`/post/delete/${id}`);
+  };
+
 
   // --- Edit Profile Popup ---
   const EditProfilePopup = () =>
@@ -980,30 +997,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       }
                       placeholder="Photo URL"
                     />
-                    <input
-                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
-                      value={editPost.tags.join(",")}
-                      onChange={(e) =>
-                        setEditPost({
-                          ...editPost,
-                          tags: e.target.value.split(",").map((t) => t.trim()),
-                        })
-                      }
-                      placeholder="Tags (comma separated)"
-                    />
+
                     <div className="flex gap-2 mt-2">
                       <button
                         className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
                         onClick={() => {
-                          // const updated = [...user.posts];
-                          // updated[idx:number] = {
-                          //   ...updated[idx],
-                          //   content: editPost.content,
-                          //   image: editPost.image,
-                          //   tags: editPost.tags,
-                          // };
-                          // user.posts = updated;
-                          // setEditPostIdx(null);
+                          editPostById(post._id)
+                          setEditPostIdx(null);
                         }}
                       >
                         Save
@@ -1053,7 +1053,6 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                                 setEditPostIdx(idx);
                                 setEditPost({
                                   content: post.content,
-                                  tags: post.tags,
                                   image: post.image || "",
                                 });
                                 setPostMenuIdx(null);
@@ -1065,6 +1064,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                               className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-b-xl flex items-center gap-2"
                               onClick={() => {
                                 user.posts.splice(idx, 1);
+                                deletePost(post._id);
                                 setPostMenuIdx(null);
                                 // Optionally update post state here if necessary
                               }}
