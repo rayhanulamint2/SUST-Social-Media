@@ -38,13 +38,14 @@ const universityNotices = [
 ];
 
 const mainUser = JSON.parse(localStorage.getItem("user") || "[]");
-const userDepartment = mainUser[0]?.department || "CSE";
+const departmentUser = mainUser[0]?.department;
+console.log("mainUserInfo: " , mainUser[0]?.department)
 
 console.log("Main User:", mainUser);
-console.log("User Department:", userDepartment);
+console.log("User Department:", departmentUser);
 
 const departmentNotices = universityNotices.filter(
-  (notice) => notice.department === userDepartment
+  (notice) => notice.department === departmentUser
 );
 
 
@@ -61,7 +62,7 @@ type Notice = {
 export default function NoticesPopup({
   open,
   onClose,
-  userDepartment = "CSE",
+  userDepartment = mainUser[0].department,
 }: {
   open: boolean;
   onClose: () => void;
@@ -85,12 +86,12 @@ export default function NoticesPopup({
   React.useEffect(() => {
     fetchNotices();
   }, []);
-  console.log(allNotices)
+  console.log("allNotices", allNotices)
   // const departmentNotices = allNotices;
-  console.log("userDepartment", userDepartment)
+  console.log("userDepartment", departmentUser)
 
   const departmentNotices = allNotices.filter(
-    (notice) => notice.department === userDepartment
+    (notice) => notice.department === departmentUser
   );
   console.log("department", departmentNotices)
 
@@ -149,7 +150,7 @@ export default function NoticesPopup({
             onClick={() => setTab("department")}
             title="Department Notices"
           >
-            {userDepartment} Notices
+            {departmentUser} Notices
           </button>
           <button
             className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${

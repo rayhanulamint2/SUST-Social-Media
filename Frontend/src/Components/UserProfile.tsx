@@ -443,7 +443,9 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
 
   const isMe = userInfo.id == currentUserId ? true : false;
 
-
+  
+  console.log("user roles", user.roles)
+  console.log("user roles type", typeof(user.roles))
 
 
 
@@ -822,7 +824,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               <div>
                 <div className="text-2xl font-bold text-white">{user.name}</div>
                 <div className="text-blue-300 text-base">
-                  {user.department} • {user.roles}
+                  {user.department} • {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
                 </div>
               </div>
               {isMe && (
@@ -1887,7 +1889,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             {user.department}
           </div>
           <div className="text-blue-200 text-sm font-semibold text-center">
-            {user.roles}
+          {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
           </div>
           <div className="flex flex-row gap-3 mt-4 w-full justify-center">
             {isMe && (
