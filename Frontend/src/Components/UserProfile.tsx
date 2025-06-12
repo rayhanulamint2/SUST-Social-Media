@@ -330,9 +330,19 @@ const leftMenu = [
 
 
 export default function UserProfile({ onBack }: { onBack?: () => void }) {
-  const [user,setUser] = useState<User>(users);
+  const [user, setUser] = useState<User>(users);
   const currentUserId = localStorage.getItem("currentUserId")||"6849bb136e4b901e5e7102cb";
-  console.log("currentUserId ",currentUserId);
+  console.log("currentUserId ", currentUserId);
+
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userInfo = {
+    id: mainUser[0]?._id || "6849bb136e4b901e5e7102cb",
+    name: mainUser[0]?.name || "Khalid",
+    avatar:
+      mainUser[0]?.avatar || "https://randomuser.me/api/portraits/men/32.jpg",
+    department: mainUser[0]?.department || "CSE",
+  };
+  console.log("user = ", userInfo);
 
   const fetchUserInfo = async () => {
     try {
@@ -346,7 +356,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
     }
   };
   React.useEffect(() => {
-      fetchUserInfo();
+    fetchUserInfo();
   }, []);
 
   const [section, setSection] = useState<
@@ -431,9 +441,11 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
   const postMenuRef = useRef<HTMLDivElement>(null);
   const savedMenuRef = useRef<HTMLDivElement>(null);
 
-  const isMe = true;
+  const isMe = userInfo.id == currentUserId ? true : false;
+
   
-  
+  console.log("user roles", user.roles)
+  console.log("user roles type", typeof(user.roles))
 
 
 
@@ -812,7 +824,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               <div>
                 <div className="text-2xl font-bold text-white">{user.name}</div>
                 <div className="text-blue-300 text-base">
-                  {user.department} • {user.roles}
+                  {user.department} • {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
                 </div>
               </div>
               {isMe && (
@@ -902,56 +914,60 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                     className="relative bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
                   >
                     {/* Three Dots Menu */}
-                    <div className="absolute top-4 right-4 z-10">
-                      <button
-                        className="p-2 rounded-full hover:bg-blue-900/40 transition"
-                        onClick={() =>
-                          setPostMenuIdx(postMenuIdx === idx ? null : idx)
-                        }
-                        title="Options"
-                      >
-                        <svg
-                          className="w-6 h-6 text-blue-200"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
+                    {isMe && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <button
+                          className="p-2 rounded-full hover:bg-blue-900/40 transition"
+                          onClick={() =>
+                            setPostMenuIdx(postMenuIdx === idx ? null : idx)
+                          }
+                          title="Options"
                         >
-                          <circle cx="4" cy="10" r="2" />
-                          <circle cx="10" cy="10" r="2" />
-                          <circle cx="16" cy="10" r="2" />
-                        </svg>
-                      </button>
-                      {postMenuIdx === idx && (
-                        <div
-                          ref={postMenuRef}
-                          className="absolute right-0 mt-2 w-32 bg-gray-900 border border-blue-700 rounded-xl shadow-lg flex flex-col z-20"
-                        >
-                          <button
-                            className="px-4 py-2 text-blue-200 hover:bg-blue-800/60 rounded-t-xl flex items-center gap-2"
-                            onClick={() => {
-                              setEditPostIdx(idx);
-                              setEditPost({
-                                content: post.content,
-                                tags: post.tags,
-                                image: post.image || "",
-                              });
-                              setPostMenuIdx(null);
-                            }}
+                          <svg
+                            className="w-6 h-6 text-blue-200"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
                           >
-                            <FaEdit /> Edit
-                          </button>
-                          <button
-                            className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-b-xl flex items-center gap-2"
-                            onClick={() => {
-                              user.posts.splice(idx, 1);
-                              setPostMenuIdx(null);
-                              // Force update if needed (if using state, update state instead)
-                            }}
+                            <circle cx="4" cy="10" r="2" />
+                            <circle cx="10" cy="10" r="2" />
+                            <circle cx="16" cy="10" r="2" />
+                          </svg>
+                        </button>
+
+                        {postMenuIdx === idx && (
+                          <div
+                            ref={postMenuRef}
+                            className="absolute right-0 mt-2 w-32 bg-gray-900 border border-blue-700 rounded-xl shadow-lg flex flex-col z-20"
                           >
-                            <FaTrash /> Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                            <button
+                              className="px-4 py-2 text-blue-200 hover:bg-blue-800/60 rounded-t-xl flex items-center gap-2"
+                              onClick={() => {
+                                setEditPostIdx(idx);
+                                setEditPost({
+                                  content: post.content,
+                                  tags: post.tags,
+                                  image: post.image || "",
+                                });
+                                setPostMenuIdx(null);
+                              }}
+                            >
+                              <FaEdit /> Edit
+                            </button>
+                            <button
+                              className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-b-xl flex items-center gap-2"
+                              onClick={() => {
+                                user.posts.splice(idx, 1);
+                                setPostMenuIdx(null);
+                                // Optionally update post state here if necessary
+                              }}
+                            >
+                              <FaTrash /> Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Post Content */}
                     <div className="flex items-center gap-3">
                       <img
@@ -1030,7 +1046,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                             className="flex items-start gap-3"
                           >
                             <img
-                              src={comment.userId.avatar|| "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
+                              src={comment.userId.avatar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                               alt={comment.userId.name}
                               className="w-8 h-8 rounded-full object-cover border border-blue-400"
                             />
@@ -1063,7 +1079,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 No saved posts or events.
               </div>
             ) : (
-              user.saved.map((post:Post, idx:number) =>
+              user.saved.map((post: Post, idx: number) =>
                 editSavedIdx === idx ? (
                   <div
                     key={post._id}
@@ -1171,7 +1187,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                     {/* Post Content */}
                     <div className="flex items-center gap-3">
                       <img
-                        src={user.avatar|| "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
+                        src={user.avatar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                         alt={user.name}
                         className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
                       />
@@ -1198,7 +1214,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                     {post.image && (
                       <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
                         <img
-                          src={post.image|| "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
+                          src={post.image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                           alt="Saved"
                           className="w-full object-cover max-h-72"
                         />
@@ -1246,7 +1262,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                             className="flex items-start gap-3"
                           >
                             <img
-                              src={comment.userId.avatar|| "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
+                              src={comment.userId.avatar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                               alt={comment.userId.name}
                               className="w-8 h-8 rounded-full object-cover border border-blue-400"
                             />
@@ -1291,7 +1307,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                   No achievements yet.
                 </div>
               ) : (
-                user.achievements.map((ach:Achievement, idx:number) =>
+                user.achievements.map((ach: Achievement, idx: number) =>
                   editAchievementIdx === idx ? (
                     <div
                       key={idx}
@@ -1377,7 +1393,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       )}
                       {ach.image && (
                         <img
-                          src={ach.image|| "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
+                          src={ach.image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                           alt={ach.title}
                           className="w-32 h-32 object-cover rounded-xl border border-blue-400 mt-2"
                         />
@@ -1466,7 +1482,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 user.workplaces.length === 0 ? (
                   <div className="text-gray-400 text-center py-10">N/A</div>
                 ) : (
-                  user.workplaces.map((work:Workplace, idx:number) =>
+                  user.workplaces.map((work: Workplace, idx: number) =>
                     editWorkIdx === idx ? (
                       <div
                         key={idx}
@@ -1581,7 +1597,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               ) : user.researchWorks.length === 0 ? (
                 <div className="text-gray-400 text-center py-10">N/A</div>
               ) : (
-                user.researchWorks.map((rw:ResearchWork, idx:number) =>
+                user.researchWorks.map((rw: ResearchWork, idx: number) =>
                   editResearchIdx === idx ? (
                     <div
                       key={idx}
@@ -1729,7 +1745,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                   links.
                 </div>
               ) : (
-                user.socialLinks.map((sl:SocialLink, idx:number) =>
+                user.socialLinks.map((sl: SocialLink, idx: number) =>
                   editSocialIdx === idx ? (
                     <div
                       key={idx}
@@ -1873,7 +1889,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             {user.department}
           </div>
           <div className="text-blue-200 text-sm font-semibold text-center">
-            {user.roles}
+          {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
           </div>
           <div className="flex flex-row gap-3 mt-4 w-full justify-center">
             {isMe && (
@@ -1884,12 +1900,14 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 <FaEdit /> Edit Profile
               </button>
             )}
-            <button
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm flex items-center gap-2 hover:from-blue-700 hover:to-indigo-700 transition-colors shadow-lg font-semibold"
-              onClick={() => setShowPostCreation(true)}
-            >
-              <FaPlus /> Add New Post
-            </button>
+            {isMe && (
+              <button
+                className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm flex items-center gap-2 hover:from-blue-700 hover:to-indigo-700 transition-colors shadow-lg font-semibold"
+                onClick={() => setShowPostCreation(true)}
+              >
+                <FaPlus /> Add New Post
+              </button>
+            )}
           </div>
         </div>
         {/* Navigation Buttons */}

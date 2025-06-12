@@ -2,7 +2,7 @@ export interface User {
   name: string;
   avatar: string;
   department: string;
-  roles: string;
+  roles: string[];
   about: string;
   achievements: Achievement[];
   workplaces: Workplace[];
