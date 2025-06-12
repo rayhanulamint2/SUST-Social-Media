@@ -73,4 +73,83 @@ const findUserById = async(id) => {
     }
 };
 
-module.exports = {newUserCreation, findUser, userUpdate, findUserById}
+const achievementAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.achievements.push(payload.achievement);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+
+const workplaceAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.workplaces.push(payload.workplace);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+
+const researchAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.researchWorks.push(payload.researchWork);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+
+const sociallinkAdd = async(payload) => {
+    try {
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        // Step 3: Add the post ID to user's posts array
+        user.socialLinks.push(payload.socialLink);
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there are an error in server end123');
+    }
+}
+module.exports = {newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd}
