@@ -152,4 +152,25 @@ const sociallinkAdd = async(payload) => {
         console.log('there are an error in server end123');
     }
 }
-module.exports = {newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd}
+
+const userEdit = async(payload) => {
+    try{
+        const user = await User.findById(payload.userId);
+        if (!user) {
+            console.log('Creator not found');
+            return null;
+        }
+        console.log("user = ", user);
+        console.log("payload = ", payload);
+        if (payload.about !== undefined) user.about = payload.about;
+        if (payload.department !== undefined) user.department = payload.department;
+        if (payload.name !== undefined) user.name = payload.name;
+
+        // Step 4: Save the updated user
+        await user.save();
+    }
+    catch(error){
+        console.log('there is an error')
+    }
+}
+module.exports = {newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd, userEdit}

@@ -333,7 +333,7 @@ const leftMenu = [
 export default function UserProfile({ onBack }: { onBack?: () => void }) {
   const [user, setUser] = useState<User>(users);
   const navigate = useNavigate();
-  const currentUserId = localStorage.getItem("currentUserId")||"6849bb136e4b901e5e7102cb";
+  const currentUserId = localStorage.getItem("currentUserId") || "6849bb136e4b901e5e7102cb";
   console.log("currentUserId ", currentUserId);
 
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
@@ -448,33 +448,78 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
   const isMe = userInfo.id == currentUserId ? true : false;
 
 
-  const saveAchievement = async(newAchievement:Achievement)=>{
+  const saveAchievement = async (newAchievement: Achievement) => {
     await http.post("/user/addAchievement", {
       userId: userInfo.id,
       achievement: newAchievement,
     });
   }
 
-  const saveWorkplace = async(newWorkplace: Workplace) =>{
+  const saveWorkplace = async (newWorkplace: Workplace) => {
     await http.post("/user/addWorkplace", {
       userId: userInfo.id,
       workplace: newWorkplace
     })
   }
 
-  const saveResearchwork = async(newResearch: ResearchWork) => {
-    await http.post("/user/addResearch",{
+  const saveResearchwork = async (newResearch: ResearchWork) => {
+    await http.post("/user/addResearch", {
       userId: userInfo.id,
       researchWork: newResearch
     })
   }
 
-  const saveSocialLink = async(newSocial: SocialLink) => {
-    await http.post("/user/addSociallink",{
+  const saveSocialLink = async (newSocial: SocialLink) => {
+    await http.post("/user/addSociallink", {
       userId: userInfo.id,
       socialLink: newSocial
     })
   }
+    
+
+  console.log("user: ", user)
+
+  const [newUser, setNewUser] = useState({
+    name: "",
+    department: "",
+    about: "",
+    role: "",
+  });
+
+  useEffect(() => {
+    if (user?.name) {
+      const rolesString =
+        user.roles[0] + (user.roles[1] ? `, ${user.roles[1]}` : "");
+      setNewUser({
+        name: user.name,
+        department: user.department,
+        about: user.about,
+        role: rolesString,
+      });
+    }
+  }, [user]);
+
+  console.log("newUser: ", newUser)
+
+  const saveUser = async() => {
+
+
+    console.log("Saving user:", newUser);
+
+    const payload = {
+      userId: userInfo.id,
+      about: newUser.about,
+      name: newUser.name,
+      department: newUser.department
+    }
+
+
+    // Example API call
+    // await http.put("/user/update-profile", updatedUser);
+    await http.put("/user/edit", payload)
+
+    setShowEditProfile(false);
+  };
 
   // --- Edit Profile Popup ---
   const EditProfilePopup = () =>
@@ -495,27 +540,40 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="Name"
-              defaultValue={user.name}
+              value={newUser.name}
+              onChange={(e) =>
+                setNewUser({ ...newUser, name: e.target.value })
+              }
             />
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="Department"
-              defaultValue={user.department}
+              value={newUser.department}
+              onChange={(e) =>
+                setNewUser({ ...newUser, department: e.target.value })
+              }
             />
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
-              placeholder="Role"
-              defaultValue={user.roles}
+              placeholder="Department"
+              value={newUser.role}
+              onChange={(e) =>
+                setNewUser({ ...newUser, role: e.target.value })
+              }
             />
+
             <textarea
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="About"
-              defaultValue={user.about}
+              value={newUser.about}
+              onChange={(e) =>
+                setNewUser({ ...newUser, about: e.target.value })
+              }
               rows={3}
             />
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
-              onClick={() => setShowEditProfile(false)}
+              onClick={saveUser}
               type="button"
             >
               Save Changes
@@ -592,7 +650,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       image: newAchievement.image,
                     },
                   ]);
-                  setNewAchievement({ title: "", description: "", link: "", image: ""});
+                  setNewAchievement({ title: "", description: "", link: "", image: "" });
                   console.log("newAchievement:", newAchievement)
                   saveAchievement(newAchievement);
 
@@ -744,7 +802,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 setNewSocial({ ...newSocial, link: e.target.value })
               }
             />
-            
+
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
               onClick={() => {
@@ -763,7 +821,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                     },
                   ]);
                   saveSocialLink(newSocial)
-                  setNewSocial({ username: "", platform: "", link: "", description:""});
+                  setNewSocial({ username: "", platform: "", link: "", description: "" });
                   setShowAddSocial(false);
                 }
               }}
@@ -1945,7 +2003,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             {user.department}
           </div>
           <div className="text-blue-200 text-sm font-semibold text-center">
-          {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
+            {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
           </div>
           <div className="flex flex-row gap-3 mt-4 w-full justify-center">
             {isMe && (

@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const {signup,login, updateUser, findUserDetails, addAchievement, addResearch, addWorkplace, addSociallink} = require('./user.service')
+const {signup,login, updateUser, findUserDetails, addAchievement, addResearch, addWorkplace, addSociallink, editUser} = require('./user.service')
 
 router.post('/signup', signup);
 
 router.post('/login', login);
 
 router.put('/update/:id', updateUser);
+
+router.put('/edit', editUser);
 
 router.get('/:id', findUserDetails);
 
