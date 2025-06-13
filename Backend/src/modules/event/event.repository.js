@@ -61,4 +61,35 @@ const findAllEvents = async () => {
   }
 };
 
-module.exports = {newEventCreation, findEvent, deleteEventByID, eventUpdate, findAllEvents}
+const addComment = async(payload) =>{
+    try{
+        console.log("payload = ", payload);
+        const event= await Event.findById(payload.eventId)
+        console.log("event: ", event);
+        event.comment.push(payload.comment);
+
+        const newEvent = await event.save();
+        return newEvent;
+
+    }
+    catch(error){
+        console.log('there is an error');
+    }
+}
+
+const addInterested = async(payload) => {
+    try{
+        console.log("payload = ", payload);
+        const event= await Event.findById(payload.eventId)
+        console.log("event: ", event);
+        event.interested = event.interested+1;
+
+        const newEvent = await event.save();
+        return newEvent;
+    }
+    catch(error){
+        console.log('there is an error');
+    }
+}
+
+module.exports = {newEventCreation, findEvent, deleteEventByID, eventUpdate, findAllEvents, addComment, addInterested}

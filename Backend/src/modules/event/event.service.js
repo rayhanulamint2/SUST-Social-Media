@@ -1,4 +1,4 @@
-const {newEventCreation, findEvent, deleteEventByID, eventUpdate, findAllEvents} = require('./event.repository')    
+const {newEventCreation, findEvent, deleteEventByID, eventUpdate, findAllEvents, addComment, addInterested} = require('./event.repository')    
 
 const createEvent = async(req, res) => {
     try{
@@ -160,4 +160,46 @@ const findingAllEvents = async(req, res) => {
     }
 };
 
-module.exports = {createEvent, deleteEvent, updateEvent, findingEvent, findingAllEvents};
+const commentAdding = async(req,res) => {
+    try {
+        const event = await addComment(req.body);
+        if (!event) {
+            return res.status(404).json({
+                error: 'event not found'
+            });
+        }
+        res.status(200).json({
+            event: event
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Failed to retrieve post'
+        });
+    }
+
+}
+
+const interested = async(req, res) => {
+    try{
+        const event = await addInterested(req.body);
+        if (!event) {
+            return res.status(404).json({
+                error: 'Event not found'
+            });
+        }
+        res.status(200).json({
+            event: event
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Failed to retrieve post'
+        });
+    }
+
+}
+
+module.exports = {createEvent, deleteEvent, updateEvent, findingEvent, findingAllEvents, commentAdding, interested};
