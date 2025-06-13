@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createPost,deletePost, updatePost, findingPost, findingAllPosts, editPost} = require('./post.service')
+const {createPost,deletePost, updatePost, findingPost, findingAllPosts, editPost, commentAdding, changeVote} = require('./post.service')
 
 // Route to create a new post
 router.post('/create', createPost);
@@ -14,6 +14,10 @@ router.get('/:id', findingPost);
 router.get('/', findingAllPosts);
 
 router.put('/edit', editPost);
+
+router.put('/addComment', commentAdding);
+
+router.put('/changeVote', changeVote);
 
 
 module.exports = router

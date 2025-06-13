@@ -214,24 +214,23 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
   const [comments, setComments] = useState(dummyComments);
   const [commentInput, setCommentInput] = useState("");
   const [saved, setSaved] = useState(false);
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = mainUser[0]._id;
 
-  const handleSendComment = (e: React.FormEvent) => {
+  const handleSendComment = async(e: React.FormEvent) => {
     e.preventDefault();
-    // if (!commentInput.trim()) return;
-    // setComments([
-    //   ...comments,
-    //   {
-    //     user: {
-    //       name: "You",
-    //       avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    //     },
-    //     text: commentInput,
-    //     time: "Just now",
-    //   },
-    // ]);
-    // setCommentInput("");
+    const payload = {
+      postId: post._id,
+      comment:{
+        userId: userId,
+        commentText: commentInput
+      }
+    }
+    const newPost = await http.put("/post/addComment",payload);
+    console.log("newPost = ", newPost);
+    setCommentInput("");
   };
-
+  console.log("post in postFeed", post);
 
   return (
     <div className="bg-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-5 mb-6 flex flex-col gap-3">
@@ -320,10 +319,10 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
       {showComments && (
         <div className="mt-4 bg-gray-800/70 rounded-xl px-4 py-3">
           <div className="mb-3">
-            {comments.map((c, idx) => (
+            {post.comment.map((c, idx) => (
               <div key={idx} className="flex items-start gap-3 mb-3">
                 <img
-                  src={c.userId.avatar}
+                  src={c.userId.avatar ? c.userId.avatar : "https://randomuser.me/api/portraits/men/32.jpg"}
                   alt={c.userId.name}
                   className="w-8 h-8 rounded-full object-cover border border-blue-400"
                 />
@@ -331,7 +330,7 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
                   <div className="text-sm text-white font-semibold">
                     {c.userId.name}{" "}
                     <span className="text-xs text-gray-400 font-normal ml-2">
-                      {c.createdAt}
+                      {formatDistanceToNow(new Date(c.createdAt), { addSuffix: true })}
                     </span>
                   </div>
                   <div className="text-gray-200 text-sm">{c.commentText}</div>
@@ -381,7 +380,7 @@ export default function PostFeed() {
     fetchPosts();
   }, []);
   // console.log(" djflksjdfj", Array.isArray(posts)); // should return true
-
+  console.log("possts", posts);
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userInfo = {
     id: mainUser[0]?._id || "6849bb136e4b901e5e7102cb",
@@ -398,6 +397,7 @@ export default function PostFeed() {
     }
     return p.feedType === feedType;
   });
+
 
   const handleToggleSave = (id: string): void => {
     setPosts((prev: Post[]) =>
