@@ -37,37 +37,29 @@ const universityNotices = [
   },
 ];
 
-const mainUser = JSON.parse(localStorage.getItem("user") || "[]");
-const departmentUser = mainUser[0]?.department;
-console.log("mainUserInfo: " , mainUser[0]?.department)
 
-console.log("Main User:", mainUser);
-console.log("User Department:", departmentUser);
-
-const departmentNotices = universityNotices.filter(
-  (notice) => notice.department === departmentUser
-);
-
-
-console.log("departmentNotices:",departmentNotices);
-type Notice = {
-  description: string;
-  filePath: string;
-  startDate: string;
-  endDate: string;
-  department: string | null;
-};
 
 
 export default function NoticesPopup({
   open,
   onClose,
-  userDepartment = mainUser[0].department,
 }: {
   open: boolean;
   onClose: () => void;
-  userDepartment?: string;
 }) {
+  const mainUser = JSON.parse(localStorage.getItem("user") || "[]");
+  const departmentUser = mainUser[0]?.department;
+  console.log("mainUserInfo: " , mainUser[0]?.department)
+
+  console.log("Main User:", mainUser);
+  console.log("User Department:", departmentUser);
+  type Notice = {
+    description: string;
+    filePath: string;
+    startDate: string;
+    endDate: string;
+    department: string | null;
+  };
   const [tab, setTab] = useState<"university" | "department" | "bus">(
     "university"
   );

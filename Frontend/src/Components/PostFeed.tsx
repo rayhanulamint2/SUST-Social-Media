@@ -214,6 +214,8 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
   const [comments, setComments] = useState(dummyComments);
   const [commentInput, setCommentInput] = useState("");
   const [saved, setSaved] = useState(false);
+  const [upVote, setUpVote] = useState(post.upVotes);
+  const [downVote, setDownVote] = useState(post.downVotes);
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = mainUser[0]._id;
 
@@ -230,6 +232,30 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
     console.log("newPost = ", newPost);
     setCommentInput("");
   };
+
+  const changeUpVote = async()=>{
+    const vote = upVote+1;
+    setUpVote(vote);
+    const payload = {
+      postId: post._id,
+      upVote: vote,
+      downVote: downVote
+    }
+    const newPost = await http.put("/post/changeVote",payload);
+    console.log("newPost from changeVote", newPost);
+  }
+  const changeDownVote = async()=>{
+    const vote = downVote+1;
+    setDownVote(vote);
+    const payload = {
+      postId: post._id,
+      upVote: upVote,
+      downVote: vote
+    }
+    const newPost = await http.put("/post/changeVote",payload);
+    console.log("newPost from changeVote", newPost);
+  }
+
   console.log("post in postFeed", post);
 
   return (
@@ -285,16 +311,19 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
           <button
             className="p-2 rounded-full hover:bg-green-600/30 transition-colors text-green-400"
             title="Upvote"
+            onClick={changeUpVote}
           >
             <FaArrowUp />
           </button>
-          <span className="text-gray-300 text-sm">{post.upVotes}</span>
+          <span className="text-gray-300 text-sm">{upVote}</span>
           <button
             className="p-2 rounded-full hover:bg-red-600/30 transition-colors text-red-400"
             title="Downvote"
+            onClick={changeDownVote}
           >
             <FaArrowDown />
           </button>
+          <span className="text-gray-300 text-sm">{downVote}</span>
         </div>
         <button
           className="flex items-center gap-2 p-2 rounded-full hover:bg-indigo-600/30 transition-colors text-indigo-400"
