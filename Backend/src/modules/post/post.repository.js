@@ -91,6 +91,38 @@ const postEdit = async (payload) => {
     }
 }
 
+const addComment = async(payload) =>{
+    try{
+        console.log("payload = ", payload);
+        const post= await Post.findById(payload.postId)
+        console.log("post: ", post);
+        post.comment.push(payload.comment);
+
+        const newPost = await post.save();
+        return newPost;
+
+    }
+    catch(error){
+        console.log('there is an error');
+    }
+}
+
+const addUpDownVote = async(payload) => {
+    try{
+        console.log("payload = ", payload);
+        const post= await Post.findById(payload.postId)
+        console.log("post: ", post);
+        post.upVotes = payload.upVote;
+        post.downVotes = payload.downVote;
+
+        const newPost = await post.save();
+        return newPost;
+    }
+    catch(error){
+        console.log('there is an error');
+    }
+}
 
 
-module.exports = {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts, postEdit}
+
+module.exports = {newPostCreation, findPost, deleteByID, postUpdate, findAllPosts, postEdit, addComment, addUpDownVote}
