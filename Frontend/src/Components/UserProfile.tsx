@@ -1014,18 +1014,19 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                   {user.department} • {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
                 </div>
               </div>
-              {isMe && (
+              {/* {isMe && (
                 <button
                   className="ml-4 px-4 py-2 rounded-full bg-blue-700 text-white text-sm flex items-center gap-1 hover:bg-blue-800 transition-colors shadow"
                   onClick={() => setShowEditProfile(true)}
                 >
                   <FaEdit /> Edit
                 </button>
-              )}
+              )} */}
             </div>
-            <div className="text-gray-200 text-lg whitespace-pre-line">
+            <div className="text-gray-200 text-lg whitespace-pre-line break-words">
               {user.about}
             </div>
+
           </div>
         );
       case "posts":
