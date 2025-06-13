@@ -8,6 +8,7 @@ import {
   FaArrowLeft,
   FaUserCircle,
   FaEdit,
+  FaImage,
   FaBook,
   FaBookmark,
   FaTrophy,
@@ -18,6 +19,7 @@ import {
 } from "react-icons/fa";
 import PostCreationSection from "./PostCreationSection";
 import Chatbot from "./Chatbot";
+
 import type { image } from "framer-motion/client";
 
 const dummyComments: Comment[] = [
@@ -331,6 +333,7 @@ const leftMenu = [
 
 
 export default function UserProfile({ onBack }: { onBack?: () => void }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [user, setUser] = useState<User>(users);
   const navigate = useNavigate();
   const currentUserId = localStorage.getItem("currentUserId") || "6849bb136e4b901e5e7102cb";
@@ -483,6 +486,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
     department: "",
     about: "",
     role: "",
+    avatar: ""
   });
 
   useEffect(() => {
@@ -494,6 +498,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
         department: user.department,
         about: user.about,
         role: rolesString,
+        avatar: user.avatar
       });
     }
   }, [user]);
@@ -509,13 +514,26 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
       userId: userInfo.id,
       about: newUser.about,
       name: newUser.name,
-      department: newUser.department
+      department: newUser.department,
+      avatar: newUser.avatar
     }
 
 
     // Example API call
     // await http.put("/user/update-profile", updatedUser);
-    await http.put("/user/edit", payload)
+    const newUser1 = await http.put("/user/edit", payload);
+    console.log("newUser = 1231231231", newUser1.data.user);
+    const newUser2 = newUser1.data.user;
+    const mainUser = JSON.parse(localStorage.getItem("user") || "[]");
+    console.log("mainUser = ", mainUser);
+    mainUser[0].department = newUser2.depatment;
+    mainUser[0].avatar = newUser2.avatar;
+    mainUser[0].about = newUser2.about;
+    mainUser[0].name = newUser2.name;
+    localStorage.setItem("user", JSON.stringify(mainUser));
+
+
+
 
     setShowEditProfile(false);
   };
@@ -535,6 +553,20 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
 
   const deletePost = async (id: string) => {
     await http.delete(`/post/delete/${id}`);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setNewUser((prevUser) => ({
+          ...prevUser,
+          avatar: ev.target?.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
 
@@ -588,6 +620,36 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               }
               rows={3}
             />
+            {/* Image Upload Field */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                className="flex items-center gap-2 px-3 py-2 rounded-full bg-gray-800 text-blue-300 hover:bg-blue-900/40 transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+                title="Add Image"
+              >
+                <FaImage />
+                Add Image
+              </button>
+              <label htmlFor="user-image-upload" className="sr-only">
+                Upload Image
+              </label>
+              <input
+                id="user-image-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+              />
+              {newUser.avatar && (
+                <img
+                  src={newUser.avatar}
+                  alt="Preview"
+                  className="w-16 h-16 object-cover rounded-xl border border-blue-400"
+                />
+              )}
+            </div>
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
               onClick={saveUser}
@@ -2058,11 +2120,11 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
       {/* Middle Content (40%) */}
       <div className="ml-[30vw] w-[40vw] max-w-[740px] min-w-[340px] flex flex-col min-h-screen border-r border-blue-900/40 bg-gradient-to-br from-gray-950/60 via-gray-900/60 to-gray-950/60">
         {/* Post Creation Section at the top */}
-        <div className="w-full flex justify-center items-center px-4 pt-1 pb-4 bg-gradient-to-r from-blue-900/70 via-blue-950/70 to-gray-900/70 shadow-lg border-b border-blue-900/30">
+        {/* <div className="w-full flex justify-center items-center px-4 pt-1 pb-4 bg-gradient-to-r from-blue-900/70 via-blue-950/70 to-gray-900/70 shadow-lg border-b border-blue-900/30">
           <div className="w-full max-w-2xl">
             <PostCreationSection />
           </div>
-        </div>
+        </div> */}
         {/* Section Content - Make scrollable and fill all available height */}
         <main className="flex-1 w-full h-0 min-h-0 overflow-y-auto px-0 md:px-6 py-4">
           <div className="max-w-3xl mx-auto h-full flex flex-col">

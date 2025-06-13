@@ -169,6 +169,7 @@ const addSociallink = async(req,res) =>  {
 const editUser = async(req,res) => {
     try {
         const user = await userEdit(req.body)
+        console.log("user", user);
         res.status(200).json({
             "user":user
         })

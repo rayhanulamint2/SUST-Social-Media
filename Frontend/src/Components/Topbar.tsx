@@ -4,6 +4,7 @@ import {
   FaBell,
   FaSearch,
 } from "react-icons/fa";
+import { jsx } from "react/jsx-runtime";
 
 type TopbarProps = {
   onNav?: (nav: "home" | "events") => void;
@@ -19,6 +20,9 @@ export default function Topbar({ onNav, onNotices, onProfile }: TopbarProps) {
       onProfile();
     }
   };
+
+  const mainUser = JSON.parse(localStorage.getItem("user") || "[]");
+  const avatar = mainUser[0].avatar;
 
 
   const handleProfile = ()=>{
@@ -94,7 +98,7 @@ export default function Topbar({ onNav, onNotices, onProfile }: TopbarProps) {
           >
             {/* Replace with user's avatar if available */}
             <img
-              src="https://randomuser.me/api/portraits/men/32.jpg"
+              src={avatar||"https://randomuser.me/api/portraits/men/32.jpg"}
               alt="Profile"
               className="w-8 h-8 rounded-full object-cover border-2 border-blue-500"
             />
