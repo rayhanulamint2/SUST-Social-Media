@@ -1,9 +1,11 @@
 export interface User {
+  _id: string;
   name: string;
   avatar: string;
   department: string;
   roles: string[];
   about: string;
+  session: string;
   achievements: Achievement[];
   workplaces: Workplace[];
   researchWorks: ResearchWork[];

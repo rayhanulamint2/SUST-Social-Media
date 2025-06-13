@@ -25,6 +25,7 @@ export default function Login() {
       setData(response.data);
       localStorage.setItem("token", response.data.access_token); // Store token in localStorage
       localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user data in localStorage
+      console.log("user info from login", response.data.user);
       navigate("/home"); // Navigate to home on successful login
     } catch (error) {
       console.error("Login failed:", error);
