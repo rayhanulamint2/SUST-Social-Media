@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import http from "../http"; // Adjust the import path as necessary
+import { formatDistanceToNow } from 'date-fns';
 import {
   FaRegCommentDots,
   FaRegBookmark,
@@ -191,11 +192,9 @@ type Event = {
 function EventCard({
   event,
   onToggleSave,
-  onToggleInterested,
 }: {
   event: Event;
   onToggleSave: () => void;
-  onToggleInterested: () => void;
 }) {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState(dummyComments);
@@ -203,23 +202,36 @@ function EventCard({
   const [saved, setSaved] = useState(false);
   const [isInterested, setIsInterested] = useState(false);
   const shareLink = `https://example.com/event/${event._id}`;
+  const [interested, setInterested] = useState(event.interested);
 
-  const handleSendComment = (e: React.FormEvent) => {
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = mainUser[0]._id;
+
+  const handleSendComment = async(e: React.FormEvent) => {
     e.preventDefault();
-    // if (!commentInput.trim()) return;
-    // setComments([
-    //   ...comments,
-    //   {
-    //     user: {
-    //       name: "You",
-    //       avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    //     },
-    //     text: commentInput,
-    //     time: "Just now",
-    //   },
-    // ]);
-    // setCommentInput("");
+    const payload = {
+      eventId: event._id,
+      comment:{
+        userId: userId,
+        commentText: commentInput
+      }
+    }
+    const newEvent = await http.put("/event/addComment",payload);
+    console.log("event = ", newEvent);
+    setCommentInput("");
   };
+
+  const handleToggleInterested = async() =>{
+    const payload = {
+      eventId: event._id
+    }
+    const newEvent = await http.put("/event/interested",payload);
+    const a = interested+1;
+    setInterested(a);
+    console.log("event = ", newEvent);
+  }
+
+
   const formatEventDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -279,9 +291,9 @@ function EventCard({
         <span className="flex items-center gap-1">
           <FaCalendarAlt className="text-blue-400" /> {formatEventDate(event.startDate)}
         </span>
-        <span className="flex items-center gap-1">
+        {/* <span className="flex items-center gap-1">
           <FaMapMarkerAlt className="text-pink-400" /> {event.place}
-        </span>
+        </span> */}
       </div>
       {/* Tags */}
       <div className="flex gap-2 flex-wrap mt-1">
@@ -313,11 +325,11 @@ function EventCard({
                 ? "bg-green-600 text-white"
                 : "bg-gray-800/80 text-green-400 hover:bg-green-700/40"
             }`}
-          onClick={onToggleInterested}
+          onClick={handleToggleInterested}
         >
           <FaUserPlus />
           {isInterested ? "Interested" : "I'm Interested"}
-          <span className="ml-2 text-xs font-normal">{event.interested}</span>
+          <span className="ml-2 text-xs font-normal">{interested}</span>
         </button>
         <button
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/80 text-indigo-400 hover:bg-indigo-700/40 transition-colors"
@@ -349,10 +361,10 @@ function EventCard({
       {showComments && (
         <div className="mt-4 bg-gray-800/70 rounded-xl px-4 py-3">
           <div className="mb-3">
-            {comments.map((c, idx) => (
+            {event.comment.map((c, idx) => (
               <div key={idx} className="flex items-start gap-3 mb-3">
                 <img
-                  src={c.userId.avatar}
+                  src={c.userId.avatar ? c.userId.avatar : "https://randomuser.me/api/portraits/men/32.jpg"}
                   alt={c.userId.name}
                   className="w-8 h-8 rounded-full object-cover border border-blue-400"
                 />
@@ -360,7 +372,7 @@ function EventCard({
                   <div className="text-sm text-white font-semibold">
                     {c.userId.name}{" "}
                     <span className="text-xs text-gray-400 font-normal ml-2">
-                      {c.createdAt}
+                      {formatDistanceToNow(new Date(c.createdAt), { addSuffix: true })}
                     </span>
                   </div>
                   <div className="text-gray-200 text-sm">{c.commentText}</div>
@@ -421,7 +433,7 @@ export default function EventFeed() {
     );
   };
 
-  const handleToggleInterested = (id: string) => {
+  // const handleToggleInterested = (id: string) => {
     // setEvents((prev) =>
     //   prev.map((event) =>
     //     event.id === id
@@ -435,7 +447,7 @@ export default function EventFeed() {
     //       : event
     //   )
     // );
-  };
+  // };
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-8">
@@ -478,7 +490,6 @@ export default function EventFeed() {
               key={event._id}
               event={event}
               onToggleSave={() => handleToggleSave(event._id)}
-              onToggleInterested={() => handleToggleInterested(event._id)}
             />
           ))
         )}
