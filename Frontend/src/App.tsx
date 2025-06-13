@@ -6,6 +6,9 @@ import LandingPage from "./Components/LandingPage";
 import Signup from "./Components/Signup";
 import Homepage from "./Components/Homepage";
 import UserProfile from "./Components/UserProfile"
+import AdminHomepage from './Components/AdminHomepage';
+import AdminLogin from './Components/AdminLogin';
+import AdminSignup from './Components/AdminSignup';
 
 function App() {
   return (
@@ -15,7 +18,9 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/home" element={<Homepage />} />
       <Route path="/user" element={<UserProfile />} />
-      {/* other routes */}
+      <Route path="/admin" element={<AdminHomepage />} />
+      <Route path="/adminLogin" element={<AdminLogin />} />
+      <Route path="/adminSignup" element={<AdminSignup />} />
     </Routes>
   );
 }
