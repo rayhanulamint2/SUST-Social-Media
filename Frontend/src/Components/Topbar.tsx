@@ -48,9 +48,9 @@ export default function Topbar({ onNav, onNotices }: TopbarProps) {
   const handleProfileNavigate = () => {
     setDropdownOpen(false);
     if (userId) {
-      navigate(`/profile/${userId}`);
+      navigate("/user");
     } else {
-      navigate("/profile");
+      navigate("/user");
     }
   };
 
