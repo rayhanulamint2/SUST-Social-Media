@@ -5,7 +5,7 @@ const {createNotice,deleteNotice, updateNotice, findingNotice, findAllNotices} =
 // Route to create a new notice
 router.post('/create', createNotice);
 // Route to delete a notice by ID
-router.post('/delete/:id', deleteNotice);
+router.delete('/:id', deleteNotice);
 // Route to update a notice by ID
 router.post('/update/:id', updateNotice);
 // Route to find a notice by ID

@@ -7,10 +7,17 @@ import AdminNotices from "./AdminNotices";
 import AdminComplaint from "./AdminComplaint";
 
 export default function AdminHomepage() {
+    
     const [section, setSection] = useState<
         "verification" | "createNotice" | "notices" | "complaints"
     >("verification");
+    // Check localStorage
+    const isAdmin = localStorage.getItem("admin");
 
+    // If not admin, render nothing
+    if (isAdmin === null) {
+        return null; 
+    }
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
             <AdminTopbar />
