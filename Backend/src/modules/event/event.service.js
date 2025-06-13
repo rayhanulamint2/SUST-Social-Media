@@ -8,6 +8,7 @@ const createEvent = async(req, res) => {
             content: Array.isArray(req.body.content)
                 ? req.body.content.join('\n')
                 : req.body.content,
+            comment: req.body.comment || [], // Ensure comment is included
             image: req.body.image || '',
             tags: Array.isArray(req.body.tags)
                 ? req.body.tags
@@ -16,7 +17,10 @@ const createEvent = async(req, res) => {
             department: req.body.department || '', // Ensure department is included
             startDate: req.body.startDate,
             endDate: req.body.endDate,
-            createdAt: new Date()
+            createdAt: new Date(),
+            participationLink: req.body.participationLink || '', // Optional field for participation link
+            place: req.body.place || '', // Optional field for event place
+            interested: req.body.interested || 0 // Optional field for interested count
         };
 
 
@@ -27,14 +31,18 @@ const createEvent = async(req, res) => {
                 _id: newEvent._id,
                 creator: newEvent.creator,
                 title: newEvent.title,
-                description: newEvent.description,
+                content: newEvent.content,
                 image: newEvent.image,
                 tags: newEvent.tags,
-                isDepartmentPost: newEvent.isDepartmentPost,
+                feedType: newEvent.feedType || 'university', // Ensure feedType is included
                 startDate: newEvent.startDate,
                 endDate: newEvent.endDate,
                 createdAt: newEvent.createdAt,
-                department: newEvent.department || '' // Ensure department is included
+                department: newEvent.department || '', // Ensure department is included
+                comment: newEvent.comment || [], // Ensure comment is included
+                participationLink: newEvent.participationLink || '', // Include participation link if available
+                place: newEvent.place || '', // Include event place if available
+                interested: newEvent.interested || 0 // Include interested count if available
             }
         });
     } catch (error) {
@@ -87,12 +95,16 @@ const updateEvent = async(req, res) => {
                 ? req.body.tags
                 : [req.body.tags].filter(Boolean),
             feedType: req.body.feedType || 'university', // Default to 'university' if not provided
+            comment: req.body.comment || [], // Ensure comment is included
             startDate: req.body.startDate,
             endDate: req.body.endDate,
             comment: req.body.comment || [],
             // Ensure createdAt is not updated
             createdAt: event.createdAt,
-            department: req.body.department || event.department // Ensure department is included
+            department: req.body.department || event.department, // Ensure department is included
+            participationLink: req.body.participationLink || event.participationLink, // Optional field for participation link
+            place: req.body.place || event.place, // Optional field for event place
+            interested: req.body.interested || event.interested // Optional field for interested count
         };
 
         const updatedEvent = await eventUpdate(req.params.id, eventData);

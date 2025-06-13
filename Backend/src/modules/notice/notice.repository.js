@@ -47,4 +47,14 @@ const noticeUpdate = async(id, updateData) => {
         console.error(error);
     }
 }
-module.exports = {newNoticeCreation, findNotice, deleteNoticeByID, noticeUpdate}
+
+const findAllNotice = async () => {
+    try {
+        const notices = await Notice.find();
+        return notices;
+    } catch (error) {
+        console.log('there are an error in server end');
+        console.error(error);
+    }
+}
+module.exports = {newNoticeCreation, findNotice, deleteNoticeByID, noticeUpdate, findAllNotice}

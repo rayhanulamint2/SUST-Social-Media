@@ -1,8 +1,14 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import http from "../http";
+import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import type { User, Post, Comment, Achievement, ResearchWork, SocialLink, Workplace } from './types';
+import React from "react";
 import {
   FaArrowLeft,
   FaUserCircle,
   FaEdit,
+  FaImage,
   FaBook,
   FaBookmark,
   FaTrophy,
@@ -14,12 +20,35 @@ import {
 import PostCreationSection from "./PostCreationSection";
 import Chatbot from "./Chatbot";
 
+import type { image } from "framer-motion/client";
+
+const dummyComments: Comment[] = [
+  {
+    userId: {
+      _id: "664a1f5e23a9ef2b1a9ef223",
+      name: "Alice Johnson",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    commentText: "This is awesome! Looking forward to it.",
+    createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2 minutes ago
+  },
+  {
+    userId: {
+      _id: "664a1f5e23a9ef2b1a9ef456",
+      name: "Bob Smith",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    commentText: "Congrats to the team!",
+    createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
+  },
+];
+
 // Dummy user data (replace with real user/context)
-const user = {
+const users = {
   name: "Khalid",
   avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   department: "CSE",
-  role: "Student",
+  roles: "Student",
   about:
     "Passionate about AI and software engineering. Loves to travel and explore new technologies.",
   achievements: [
@@ -56,182 +85,240 @@ const user = {
   ],
   posts: [
     {
-      id: 1,
-      text: "Excited to announce a new workshop on AI and Machine Learning! Join us this Friday.",
-      time: "2 hours ago",
+      _id: "6650f6debc11f0a2f8b12345",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef111",
+        name: "Dr. A. I. Mentor",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Excited to announce a new workshop on AI and Machine Learning! Join us this Friday.",
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
+      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      upVotes: 12,
+      downVotes: 1,
+      comment: dummyComments,
       tags: ["Workshop", "Career"],
-      photo:
-        "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
-      upvotes: 12,
-      downvotes: 1,
-      saved: false,
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: "Ayesha",
-            avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-          },
-          text: "Looking forward to it!",
-          time: "1 hour ago",
-        },
-        {
-          id: 2,
-          user: {
-            name: "Rahim",
-            avatar: "https://randomuser.me/api/portraits/men/45.jpg",
-          },
-          text: "Will there be a recording?",
-          time: "45 minutes ago",
-        },
-      ],
+      feedType: "university",
     },
     {
-      id: 3,
-      text: "Congratulations to all the freshers for joining SUST! Orientation program starts next week.",
-      time: "1 day ago",
-      tags: ["Announcement", "Freshers"],
-      photo:
-        "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80",
-      upvotes: 20,
-      downvotes: 0,
-      saved: true,
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: "Tanvir",
-            avatar: "https://randomuser.me/api/portraits/men/50.jpg",
-          },
-          text: "Welcome everyone!",
-          time: "23 hours ago",
-        },
-      ],
+      _id: "6650f6debc11f0a2f8b12346",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef112",
+        name: "Emily Trekker",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Throwback to our last campus hiking trip. Who's joining next time?",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+      createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      upVotes: 8,
+      downVotes: 0,
+      comment: [],
+      tags: ["Adventure", "Travel"],
+      feedType: "university",
     },
     {
-      id: 4,
-      text: "Hackathon registration is open now. Form teams and register before 15th June.",
-      time: "3 days ago",
-      tags: ["Hackathon", "Competition"],
-      photo:
-        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80",
-      upvotes: 30,
-      downvotes: 2,
-      saved: false,
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: "Mitu",
-            avatar: "https://randomuser.me/api/portraits/women/55.jpg",
-          },
-          text: "Looking for a team!",
-          time: "2 days ago",
-        },
-        {
-          id: 2,
-          user: {
-            name: "Shuvo",
-            avatar: "https://randomuser.me/api/portraits/men/60.jpg",
-          },
-          text: "Let's win this!",
-          time: "1 day ago",
-        },
-      ],
+      _id: "6650f6debc11f0a2f8b12347",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef113",
+        name: "Liam Walker",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Captured this beautiful sunset at the campus lake yesterday. Nature is truly mesmerizing!",
+      image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+      createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+      upVotes: 15,
+      downVotes: 0,
+      comment: [],
+      tags: ["Nature", "Photography"],
+      feedType: "university",
+    },
+    {
+      _id: "6650f6debc11f0a2f8b12348",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef114",
+        name: "Sophie Alumni",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Alumni meet-up scheduled for next month! Register now to reconnect with your batchmates.",
+      image: "",
+      createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+      upVotes: 25,
+      downVotes: 2,
+      comment: [],
+      tags: ["Alumni", "Career"],
+      feedType: "university",
+    },
+    {
+      _id: "6650f6debc11f0a2f8b12349",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef115",
+        name: "Dr. R. Search",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Our department just published a new research paper in Nature! Congratulations to the team.",
+      image: "",
+      createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+      upVotes: 20,
+      downVotes: 0,
+      comment: dummyComments,
+      tags: ["Paper Publication"],
+      feedType: "department",
+      department: "CSE",
+    },
+    {
+      _id: "6650f6debc11f0a2f8b12350",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef116",
+        name: "Prof. Data",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Reminder: The Data Science workshop starts at 3 PM in Room 204. Don't miss it!",
+      image: "",
+      createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
+      upVotes: 7,
+      downVotes: 0,
+      comment: [],
+      tags: ["Workshop"],
+      feedType: "department",
+      department: "CSE",
+    },
+    {
+      _id: "6650f6debc11f0a2f8b12351",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef117",
+        name: "Intern Bot",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Internship opportunity at a leading tech company for CSE students. Check your email for details.",
+      image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80",
+      createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+      upVotes: 13,
+      downVotes: 1,
+      comment: [],
+      tags: ["Career", "Internship"],
+      feedType: "department",
+      department: "CSE",
+    },
+    {
+      _id: "6650f6debc11f0a2f8b12352",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef118",
+        name: "Bootcamp Coach",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Join our coding bootcamp this weekend! Beginners are welcome.",
+      image: "",
+      createdAt: new Date().toISOString(),
+      upVotes: 10,
+      downVotes: 0,
+      comment: [],
+      tags: ["Workshop", "Club"],
+      feedType: "department",
+      department: "CSE",
     },
   ],
   saved: [
     {
-      id: 2,
-      text: "Internship opportunity at a leading tech company for CSE students. Check your email for details.",
-      time: "5 minutes ago",
-      tags: ["Career", "Internship"],
-      photo:
-        "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80",
-      upvotes: 13,
-      downvotes: 1,
-      saved: true,
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: "Sadia",
-            avatar: "https://randomuser.me/api/portraits/women/46.jpg",
-          },
-          text: "Thanks for sharing!",
-          time: "Just now",
-        },
-      ],
+      _id: "6650f6debc11f0a2f8b12345",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef111",
+        name: "Dr. A. I. Mentor",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Excited to announce a new workshop on AI and Machine Learning! Join us this Friday.",
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80",
+      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      upVotes: 12,
+      downVotes: 1,
+      comment: dummyComments,
+      tags: ["Workshop", "Career"],
+      feedType: "university",
     },
     {
-      id: 3,
-      text: "Congratulations to all the freshers for joining SUST! Orientation program starts next week.",
-      time: "1 day ago",
-      tags: ["Announcement", "Freshers"],
-      photo:
-        "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80",
-      upvotes: 20,
-      downvotes: 0,
-      saved: true,
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: "Tanvir",
-            avatar: "https://randomuser.me/api/portraits/men/50.jpg",
-          },
-          text: "Welcome everyone!",
-          time: "23 hours ago",
-        },
-      ],
+      _id: "6650f6debc11f0a2f8b12346",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef112",
+        name: "Emily Trekker",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Throwback to our last campus hiking trip. Who's joining next time?",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+      createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      upVotes: 8,
+      downVotes: 0,
+      comment: [],
+      tags: ["Adventure", "Travel"],
+      feedType: "university",
     },
     {
-      id: 5,
-      text: "SUST Annual Tech Fest is coming soon! Stay tuned for more updates and registration info.",
-      time: "4 days ago",
-      tags: ["Event", "TechFest"],
-      photo:
-        "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-      upvotes: 25,
-      downvotes: 1,
-      saved: true,
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: "Rafi",
-            avatar: "https://randomuser.me/api/portraits/men/70.jpg",
-          },
-          text: "Can't wait for the fest!",
-          time: "3 days ago",
-        },
-      ],
+      _id: "6650f6debc11f0a2f8b12347",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef113",
+        name: "Liam Walker",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Captured this beautiful sunset at the campus lake yesterday. Nature is truly mesmerizing!",
+      image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+      createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+      upVotes: 15,
+      downVotes: 0,
+      comment: [],
+      tags: ["Nature", "Photography"],
+      feedType: "university",
     },
-    // Example event as a saved item (if you want to show events in saved)
     {
-      id: 101,
-      text: "SUST Career Fair 2025 is scheduled for July 10. Meet top recruiters and attend career workshops.",
-      time: "2 days ago",
-      tags: ["Event", "CareerFair"],
-      photo:
-        "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
-      upvotes: 40,
-      downvotes: 0,
-      saved: true,
-      comments: [
-        {
-          id: 1,
-          user: {
-            name: "Sultana",
-            avatar: "https://randomuser.me/api/portraits/women/80.jpg",
-          },
-          text: "Will there be resume reviews?",
-          time: "1 day ago",
-        },
-      ],
+      _id: "6650f6debc11f0a2f8b12348",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef114",
+        name: "Sophie Alumni",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Alumni meet-up scheduled for next month! Register now to reconnect with your batchmates.",
+      image: "",
+      createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+      upVotes: 25,
+      downVotes: 2,
+      comment: [],
+      tags: ["Alumni", "Career"],
+      feedType: "university",
     },
+    {
+      _id: "6650f6debc11f0a2f8b12349",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef115",
+        name: "Dr. R. Search",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Our department just published a new research paper in Nature! Congratulations to the team.",
+      image: "",
+      createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+      upVotes: 20,
+      downVotes: 0,
+      comment: dummyComments,
+      tags: ["Paper Publication"],
+      feedType: "department",
+      department: "CSE",
+    },
+    {
+      _id: "6650f6debc11f0a2f8b12350",
+      creator: {
+        _id: "664a1f5e23a9ef2b1a9ef116",
+        name: "Prof. Data",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+      },
+      content: "Reminder: The Data Science workshop starts at 3 PM in Room 204. Don't miss it!",
+      image: "",
+      createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
+      upVotes: 7,
+      downVotes: 0,
+      comment: [],
+      tags: ["Workshop"],
+      feedType: "department",
+      department: "CSE",
+    }
   ],
 };
+
 
 const leftMenu = [
   { key: "posts", label: "Posts", icon: <FaBook /> },
@@ -242,7 +329,41 @@ const leftMenu = [
   { key: "social", label: "Social Links", icon: <FaLink /> },
 ];
 
+
+
+
 export default function UserProfile({ onBack }: { onBack?: () => void }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [user, setUser] = useState<User>(users);
+  const navigate = useNavigate();
+  const currentUserId = localStorage.getItem("currentUserId") || "6849bb136e4b901e5e7102cb";
+  console.log("currentUserId ", currentUserId);
+
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userInfo = {
+    id: mainUser[0]?._id || "6849bb136e4b901e5e7102cb",
+    name: mainUser[0]?.name || "Khalid",
+    avatar:
+      mainUser[0]?.avatar || "https://randomuser.me/api/portraits/men/32.jpg",
+    department: mainUser[0]?.department || "CSE",
+  };
+  console.log("user = ", userInfo);
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await http.get(`/user/${currentUserId}`);
+      const userMain = response.data.user;
+      console.log('Fetched user data:', userMain);
+      // Optionally set this to state
+      setUser(userMain);
+    } catch (error) {
+      console.error('Failed to fetch user info:', error);
+    }
+  };
+  React.useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
   const [section, setSection] = useState<
     "posts" | "about" | "saved" | "achievements" | "work" | "social"
   >("about");
@@ -257,18 +378,20 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
     title: "",
     description: "",
     link: "",
+    image: ""
   });
   const [socialLinks, setSocialLinks] = useState(user.socialLinks);
   const [newSocial, setNewSocial] = useState({
     username: "",
     platform: "",
     link: "",
+    description: ""
   });
   const [editSocialIdx, setEditSocialIdx] = useState<number | null>(null);
   const [editSocial, setEditSocial] = useState({
     username: "",
     platform: "",
-    link: "",
+    link: ""
   });
   const [editAchievementIdx, setEditAchievementIdx] = useState<number | null>(
     null
@@ -311,21 +434,141 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
   const [postMenuIdx, setPostMenuIdx] = useState<number | null>(null);
   const [editPostIdx, setEditPostIdx] = useState<number | null>(null);
   const [editPost, setEditPost] = useState({
-    text: "",
-    tags: [] as string[],
-    photo: "",
+    content: "",
+    image: "",
   });
   const [savedMenuIdx, setSavedMenuIdx] = useState<number | null>(null);
   const [editSavedIdx, setEditSavedIdx] = useState<number | null>(null);
   const [editSaved, setEditSaved] = useState({
-    text: "",
+    content: "",
     tags: [] as string[],
-    photo: "",
+    image: "",
   });
   const postMenuRef = useRef<HTMLDivElement>(null);
   const savedMenuRef = useRef<HTMLDivElement>(null);
 
-  const isMe = true;
+  const isMe = userInfo.id == currentUserId ? true : false;
+
+
+  const saveAchievement = async (newAchievement: Achievement) => {
+    await http.post("/user/addAchievement", {
+      userId: userInfo.id,
+      achievement: newAchievement,
+    });
+  }
+
+  const saveWorkplace = async (newWorkplace: Workplace) => {
+    await http.post("/user/addWorkplace", {
+      userId: userInfo.id,
+      workplace: newWorkplace
+    })
+  }
+
+  const saveResearchwork = async (newResearch: ResearchWork) => {
+    await http.post("/user/addResearch", {
+      userId: userInfo.id,
+      researchWork: newResearch
+    })
+  }
+
+  const saveSocialLink = async (newSocial: SocialLink) => {
+    await http.post("/user/addSociallink", {
+      userId: userInfo.id,
+      socialLink: newSocial
+    })
+  }
+
+
+  console.log("user: ", user)
+
+  const [newUser, setNewUser] = useState({
+    name: "",
+    department: "",
+    about: "",
+    role: "",
+    avatar: ""
+  });
+
+  useEffect(() => {
+    if (user?.name) {
+      const rolesString =
+        user.roles[0] + (user.roles[1] ? `, ${user.roles[1]}` : "");
+      setNewUser({
+        name: user.name,
+        department: user.department,
+        about: user.about,
+        role: rolesString,
+        avatar: user.avatar
+      });
+    }
+  }, [user]);
+
+  console.log("newUser: ", newUser)
+
+  const saveUser = async () => {
+
+
+    console.log("Saving user:", newUser);
+
+    const payload = {
+      userId: userInfo.id,
+      about: newUser.about,
+      name: newUser.name,
+      department: newUser.department,
+      avatar: newUser.avatar
+    }
+
+
+    // Example API call
+    // await http.put("/user/update-profile", updatedUser);
+    const newUser1 = await http.put("/user/edit", payload);
+    console.log("newUser = 1231231231", newUser1.data.user);
+    const newUser2 = newUser1.data.user;
+    const mainUser = JSON.parse(localStorage.getItem("user") || "[]");
+    console.log("mainUser = ", mainUser);
+    mainUser[0].department = newUser2.depatment;
+    mainUser[0].avatar = newUser2.avatar;
+    mainUser[0].about = newUser2.about;
+    mainUser[0].name = newUser2.name;
+    localStorage.setItem("user", JSON.stringify(mainUser));
+
+
+
+
+    setShowEditProfile(false);
+  };
+
+
+  const editPostById = async (id: string) => {
+    const payload = {
+      postId: id,
+      content: editPost.content,
+      image: editPost.image
+    }
+
+    console.log("payload", payload);
+    await http.put("/post/edit", payload)
+
+  }
+
+  const deletePost = async (id: string) => {
+    await http.delete(`/post/delete/${id}`);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setNewUser((prevUser) => ({
+          ...prevUser,
+          avatar: ev.target?.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   // --- Edit Profile Popup ---
   const EditProfilePopup = () =>
@@ -346,27 +589,70 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="Name"
-              defaultValue={user.name}
+              value={newUser.name}
+              onChange={(e) =>
+                setNewUser({ ...newUser, name: e.target.value })
+              }
             />
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="Department"
-              defaultValue={user.department}
+              value={newUser.department}
+              onChange={(e) =>
+                setNewUser({ ...newUser, department: e.target.value })
+              }
             />
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
-              placeholder="Role"
-              defaultValue={user.role}
+              placeholder="Department"
+              value={newUser.role}
+              onChange={(e) =>
+                setNewUser({ ...newUser, role: e.target.value })
+              }
             />
+
             <textarea
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="About"
-              defaultValue={user.about}
+              value={newUser.about}
+              onChange={(e) =>
+                setNewUser({ ...newUser, about: e.target.value })
+              }
               rows={3}
             />
+            {/* Image Upload Field */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                className="flex items-center gap-2 px-3 py-2 rounded-full bg-gray-800 text-blue-300 hover:bg-blue-900/40 transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+                title="Add Image"
+              >
+                <FaImage />
+                Add Image
+              </button>
+              <label htmlFor="user-image-upload" className="sr-only">
+                Upload Image
+              </label>
+              <input
+                id="user-image-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+              />
+              {newUser.avatar && (
+                <img
+                  src={newUser.avatar}
+                  alt="Preview"
+                  className="w-16 h-16 object-cover rounded-xl border border-blue-400"
+                />
+              )}
+            </div>
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
-              onClick={() => setShowEditProfile(false)}
+              onClick={saveUser}
               type="button"
             >
               Save Changes
@@ -419,6 +705,14 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 setNewAchievement({ ...newAchievement, link: e.target.value })
               }
             />
+            <input
+              className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
+              placeholder="Image"
+              value={newAchievement.image}
+              onChange={(e) =>
+                setNewAchievement({ ...newAchievement, image: e.target.value })
+              }
+            />
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
               onClick={() => {
@@ -432,10 +726,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       title: newAchievement.title,
                       description: newAchievement.description,
                       link: newAchievement.link,
-                      image: "",
+                      image: newAchievement.image,
                     },
                   ]);
-                  setNewAchievement({ title: "", description: "", link: "" });
+                  setNewAchievement({ title: "", description: "", link: "", image: "" });
+                  console.log("newAchievement:", newAchievement)
+                  saveAchievement(newAchievement);
+
                   setShowAddAchievement(false);
                 }
               }}
@@ -518,6 +815,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       end: newWorkplace.end,
                     },
                   ]);
+                  saveWorkplace(newWorkplace);
                   setNewWorkplace({
                     name: "",
                     designation: "",
@@ -569,12 +867,21 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             />
             <input
               className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
+              placeholder="Description"
+              value={newSocial.description}
+              onChange={(e) =>
+                setNewSocial({ ...newSocial, description: e.target.value })
+              }
+            />
+            <input
+              className="bg-gray-800 text-blue-100 px-4 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500"
               placeholder="Link"
               value={newSocial.link}
               onChange={(e) =>
                 setNewSocial({ ...newSocial, link: e.target.value })
               }
             />
+
             <button
               className="mt-2 w-full py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
               onClick={() => {
@@ -589,10 +896,11 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       username: newSocial.username,
                       platform: newSocial.platform,
                       link: newSocial.link,
-                      description: "",
+                      description: newSocial.description,
                     },
                   ]);
-                  setNewSocial({ username: "", platform: "", link: "" });
+                  saveSocialLink(newSocial)
+                  setNewSocial({ username: "", platform: "", link: "", description: "" });
                   setShowAddSocial(false);
                 }
               }}
@@ -669,6 +977,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       link: newResearch.link,
                     },
                   ]);
+                  saveResearchwork(newResearch)
                   setNewResearch({
                     title: "",
                     description: "",
@@ -695,14 +1004,14 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
           <div className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 rounded-2xl shadow-xl p-8">
             <div className="flex items-center gap-4 mb-6">
               <img
-                src={user.avatar}
+                src={user.avatar ? user.avatar : "https://randomuser.me/api/portraits/men/32.jpg"}
                 alt={user.name}
                 className="w-16 h-16 rounded-full object-cover border-2 border-blue-500 shadow"
               />
               <div>
                 <div className="text-2xl font-bold text-white">{user.name}</div>
                 <div className="text-blue-300 text-base">
-                  {user.department} • {user.role}
+                  {user.department} • {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
                 </div>
               </div>
               {isMe && (
@@ -727,52 +1036,35 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 No posts yet.
               </div>
             ) : (
-              user.posts.map((post, idx) =>
+              user.posts.map((post: Post, idx: number) =>
                 editPostIdx === idx ? (
                   <div
-                    key={post.id}
+                    key={post._id}
                     className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
                   >
                     <textarea
                       className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
-                      value={editPost.text}
+                      value={editPost.content}
                       onChange={(e) =>
-                        setEditPost({ ...editPost, text: e.target.value })
+                        setEditPost({ ...editPost, content: e.target.value })
                       }
                       placeholder="Edit your post"
                       title="Edit post text"
                     />
                     <input
                       className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
-                      value={editPost.photo}
+                      value={editPost.image}
                       onChange={(e) =>
-                        setEditPost({ ...editPost, photo: e.target.value })
+                        setEditPost({ ...editPost, image: e.target.value })
                       }
                       placeholder="Photo URL"
                     />
-                    <input
-                      className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
-                      value={editPost.tags.join(",")}
-                      onChange={(e) =>
-                        setEditPost({
-                          ...editPost,
-                          tags: e.target.value.split(",").map((t) => t.trim()),
-                        })
-                      }
-                      placeholder="Tags (comma separated)"
-                    />
+
                     <div className="flex gap-2 mt-2">
                       <button
                         className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
                         onClick={() => {
-                          const updated = [...user.posts];
-                          updated[idx] = {
-                            ...updated[idx],
-                            text: editPost.text,
-                            photo: editPost.photo,
-                            tags: editPost.tags,
-                          };
-                          user.posts = updated;
+                          editPostById(post._id)
                           setEditPostIdx(null);
                         }}
                       >
@@ -788,64 +1080,68 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                   </div>
                 ) : (
                   <div
-                    key={post.id}
+                    key={post._id}
                     className="relative bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
                   >
                     {/* Three Dots Menu */}
-                    <div className="absolute top-4 right-4 z-10">
-                      <button
-                        className="p-2 rounded-full hover:bg-blue-900/40 transition"
-                        onClick={() =>
-                          setPostMenuIdx(postMenuIdx === idx ? null : idx)
-                        }
-                        title="Options"
-                      >
-                        <svg
-                          className="w-6 h-6 text-blue-200"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
+                    {isMe && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <button
+                          className="p-2 rounded-full hover:bg-blue-900/40 transition"
+                          onClick={() =>
+                            setPostMenuIdx(postMenuIdx === idx ? null : idx)
+                          }
+                          title="Options"
                         >
-                          <circle cx="4" cy="10" r="2" />
-                          <circle cx="10" cy="10" r="2" />
-                          <circle cx="16" cy="10" r="2" />
-                        </svg>
-                      </button>
-                      {postMenuIdx === idx && (
-                        <div
-                          ref={postMenuRef}
-                          className="absolute right-0 mt-2 w-32 bg-gray-900 border border-blue-700 rounded-xl shadow-lg flex flex-col z-20"
-                        >
-                          <button
-                            className="px-4 py-2 text-blue-200 hover:bg-blue-800/60 rounded-t-xl flex items-center gap-2"
-                            onClick={() => {
-                              setEditPostIdx(idx);
-                              setEditPost({
-                                text: post.text,
-                                tags: post.tags,
-                                photo: post.photo || "",
-                              });
-                              setPostMenuIdx(null);
-                            }}
+                          <svg
+                            className="w-6 h-6 text-blue-200"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
                           >
-                            <FaEdit /> Edit
-                          </button>
-                          <button
-                            className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-b-xl flex items-center gap-2"
-                            onClick={() => {
-                              user.posts.splice(idx, 1);
-                              setPostMenuIdx(null);
-                              // Force update if needed (if using state, update state instead)
-                            }}
+                            <circle cx="4" cy="10" r="2" />
+                            <circle cx="10" cy="10" r="2" />
+                            <circle cx="16" cy="10" r="2" />
+                          </svg>
+                        </button>
+
+                        {postMenuIdx === idx && (
+                          <div
+                            ref={postMenuRef}
+                            className="absolute right-0 mt-2 w-32 bg-gray-900 border border-blue-700 rounded-xl shadow-lg flex flex-col z-20"
                           >
-                            <FaTrash /> Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                            <button
+                              className="px-4 py-2 text-blue-200 hover:bg-blue-800/60 rounded-t-xl flex items-center gap-2"
+                              onClick={() => {
+                                setEditPostIdx(idx);
+                                setEditPost({
+                                  content: post.content,
+                                  image: post.image || "",
+                                });
+                                setPostMenuIdx(null);
+                              }}
+                            >
+                              <FaEdit /> Edit
+                            </button>
+                            <button
+                              className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-b-xl flex items-center gap-2"
+                              onClick={() => {
+                                user.posts.splice(idx, 1);
+                                deletePost(post._id);
+                                setPostMenuIdx(null);
+                                // Optionally update post state here if necessary
+                              }}
+                            >
+                              <FaTrash /> Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Post Content */}
                     <div className="flex items-center gap-3">
                       <img
-                        src={user.avatar}
+                        src={user.avatar ? user.avatar : "https://randomuser.me/api/portraits/men/32.jpg"}
                         alt={user.name}
                         className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
                       />
@@ -853,11 +1149,11 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         <div className="text-white font-semibold text-base">
                           {user.name}
                         </div>
-                        <div className="text-xs text-gray-400">{post.time}</div>
+                        <div className="text-xs text-gray-400">{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</div>
                       </div>
                       <div className="flex-1" />
                     </div>
-                    <div className="text-gray-200 text-base">{post.text}</div>
+                    <div className="text-gray-200 text-base">{post.content}</div>
                     {/* TAGS BELOW CAPTION */}
                     <div className="flex gap-1 flex-wrap mb-1">
                       {post.tags.map((tag) => (
@@ -869,10 +1165,10 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         </span>
                       ))}
                     </div>
-                    {post.photo && (
+                    {post.image && (
                       <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
                         <img
-                          src={post.photo}
+                          src={post.image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                           alt="Post"
                           className="w-full object-cover max-h-72"
                         />
@@ -886,7 +1182,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         >
                           <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955l6.561.955l-4.756 4.635l1.122 6.545z" />
                         </svg>
-                        <span>{post.upvotes}</span>
+                        <span>{post.upVotes}</span>
                       </div>
                       <div className="flex items-center gap-1 text-red-300">
                         <svg
@@ -895,7 +1191,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         >
                           <path d="M10 5l5.878-3.09l-1.122 6.545L19.512 13.09l-6.561.955L10 20l-2.951-5.955l-6.561-.955l4.756-4.635L10 5z" />
                         </svg>
-                        <span>{post.downvotes}</span>
+                        <span>{post.downVotes}</span>
                       </div>
                       <div className="flex items-center gap-1 text-gray-400">
                         <svg
@@ -913,27 +1209,26 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       </div>
                     </div>
                     {/* Comments Section */}
-                    {post.comments && post.comments.length > 0 && (
+                    {post.comment && post.comment.length > 0 && (
                       <div className="mt-4 space-y-3">
-                        {post.comments.map((comment) => (
+                        {post.comment.map((comment) => (
                           <div
-                            key={comment.id}
                             className="flex items-start gap-3"
                           >
                             <img
-                              src={comment.user.avatar}
-                              alt={comment.user.name}
+                              src={comment.userId.avatar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
+                              alt={comment.userId.name}
                               className="w-8 h-8 rounded-full object-cover border border-blue-400"
                             />
                             <div>
                               <div className="text-blue-200 font-semibold text-sm">
-                                {comment.user.name}
+                                {comment.userId.name}
                                 <span className="ml-2 text-xs text-gray-400">
-                                  {comment.time}
+                                  {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                                 </span>
                               </div>
                               <div className="text-gray-300 text-sm">
-                                {comment.text}
+                                {comment.commentText}
                               </div>
                             </div>
                           </div>
@@ -954,26 +1249,26 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 No saved posts or events.
               </div>
             ) : (
-              user.saved.map((post, idx) =>
+              user.saved.map((post: Post, idx: number) =>
                 editSavedIdx === idx ? (
                   <div
-                    key={post.id}
+                    key={post._id}
                     className="bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
                   >
                     <textarea
                       className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
-                      value={editSaved.text}
+                      value={editSaved.content}
                       onChange={(e) =>
-                        setEditSaved({ ...editSaved, text: e.target.value })
+                        setEditSaved({ ...editSaved, content: e.target.value })
                       }
                       placeholder="Edit your post"
                       title="Edit post text"
                     />
                     <input
                       className="bg-gray-800 text-blue-100 px-3 py-2 rounded-lg border border-blue-400/20 focus:ring-2 focus:ring-blue-500 mb-2"
-                      value={editSaved.photo}
+                      value={editSaved.image}
                       onChange={(e) =>
-                        setEditSaved({ ...editSaved, photo: e.target.value })
+                        setEditSaved({ ...editSaved, image: e.target.value })
                       }
                       placeholder="Photo URL"
                     />
@@ -992,15 +1287,15 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       <button
                         className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
                         onClick={() => {
-                          const updated = [...user.saved];
-                          updated[idx] = {
-                            ...updated[idx],
-                            text: editSaved.text,
-                            photo: editSaved.photo,
-                            tags: editSaved.tags,
-                          };
-                          user.saved = updated;
-                          setEditSavedIdx(null);
+                          // const updated = [...user.saved];
+                          // updated[idx] = {
+                          //   ...updated[idx],
+                          //   content: editSaved.content,
+                          //   image: editSaved.image,
+                          //   tags: editSaved.tags,
+                          // };
+                          // user.saved = updated;
+                          // setEditSavedIdx(null);
                         }}
                       >
                         Save
@@ -1015,7 +1310,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                   </div>
                 ) : (
                   <div
-                    key={post.id}
+                    key={post._id}
                     className="relative bg-gradient-to-br from-blue-950/60 to-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-6 flex flex-col gap-3"
                   >
                     {/* Three Dots Menu */}
@@ -1045,13 +1340,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                           <button
                             className="px-4 py-2 text-red-300 hover:bg-red-800/60 rounded-xl flex items-center gap-2"
                             onClick={() => {
-                              // Remove from saved
-                              const updated = user.saved.filter(
-                                (_, i) => i !== idx
-                              );
-                              user.saved = updated;
-                              setSavedMenuIdx(null);
-                              // If using state for saved, call setSaved(updated) instead
+                              // // Remove from saved
+                              // const updated = user.saved.filter(
+                              //   (_, i) => i !== idx
+                              // );
+                              // user.saved = updated;
+                              // setSavedMenuIdx(null);
+                              // // If using state for saved, call setSaved(updated) instead
                             }}
                           >
                             <FaTrash /> Unsave
@@ -1062,7 +1357,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                     {/* Post Content */}
                     <div className="flex items-center gap-3">
                       <img
-                        src={user.avatar}
+                        src={user.avatar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                         alt={user.name}
                         className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
                       />
@@ -1070,11 +1365,11 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         <div className="text-white font-semibold text-base">
                           {user.name}
                         </div>
-                        <div className="text-xs text-gray-400">{post.time}</div>
+                        <div className="text-xs text-gray-400">{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</div>
                       </div>
                       <div className="flex-1" />
                     </div>
-                    <div className="text-gray-200 text-base">{post.text}</div>
+                    <div className="text-gray-200 text-base">{post.content}</div>
                     {/* TAGS BELOW CAPTION */}
                     <div className="flex gap-1 flex-wrap mb-1">
                       {post.tags.map((tag) => (
@@ -1086,10 +1381,10 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         </span>
                       ))}
                     </div>
-                    {post.photo && (
+                    {post.image && (
                       <div className="w-full rounded-xl overflow-hidden border border-gray-800 mt-1">
                         <img
-                          src={post.photo}
+                          src={post.image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                           alt="Saved"
                           className="w-full object-cover max-h-72"
                         />
@@ -1103,7 +1398,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         >
                           <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955l6.561.955l-4.756 4.635l1.122 6.545z" />
                         </svg>
-                        <span>{post.upvotes}</span>
+                        <span>{post.upVotes}</span>
                       </div>
                       <div className="flex items-center gap-1 text-red-300">
                         <svg
@@ -1112,7 +1407,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         >
                           <path d="M10 5l5.878-3.09l-1.122 6.545L19.512 13.09l-6.561.955L10 20l-2.951-5.955l-6.561-.955l4.756-4.635L10 5z" />
                         </svg>
-                        <span>{post.downvotes}</span>
+                        <span>{post.downVotes}</span>
                       </div>
                       <div className="flex items-center gap-1 text-gray-400">
                         <svg
@@ -1130,27 +1425,26 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       </div>
                     </div>
                     {/* Comments Section */}
-                    {post.comments && post.comments.length > 0 && (
+                    {post.comment && post.comment.length > 0 && (
                       <div className="mt-4 space-y-3">
-                        {post.comments.map((comment) => (
+                        {post.comment.map((comment) => (
                           <div
-                            key={comment.id}
                             className="flex items-start gap-3"
                           >
                             <img
-                              src={comment.user.avatar}
-                              alt={comment.user.name}
+                              src={comment.userId.avatar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
+                              alt={comment.userId.name}
                               className="w-8 h-8 rounded-full object-cover border border-blue-400"
                             />
                             <div>
                               <div className="text-blue-200 font-semibold text-sm">
-                                {comment.user.name}
+                                {comment.userId.name}
                                 <span className="ml-2 text-xs text-gray-400">
-                                  {comment.time}
+                                  {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                                 </span>
                               </div>
                               <div className="text-gray-300 text-sm">
-                                {comment.text}
+                                {comment.commentText}
                               </div>
                             </div>
                           </div>
@@ -1178,12 +1472,12 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               )}
             </div>
             <div className="space-y-6 max-h-[60vh] overflow-y-auto">
-              {achievements.length === 0 ? (
+              {user.achievements.length === 0 ? (
                 <div className="text-gray-400 text-center py-10">
                   No achievements yet.
                 </div>
               ) : (
-                achievements.map((ach, idx) =>
+                user.achievements.map((ach: Achievement, idx: number) =>
                   editAchievementIdx === idx ? (
                     <div
                       key={idx}
@@ -1226,13 +1520,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         <button
                           className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
                           onClick={() => {
-                            const updated = [...achievements];
-                            updated[idx] = {
-                              ...editAchievement,
-                              image: achievements[idx].image || "",
-                            };
-                            setAchievements(updated);
-                            setEditAchievementIdx(null);
+                            // const updated = [...achievements];
+                            // updated[idx] = {
+                            //   ...editAchievement,
+                            //   image: achievements[idx].image || "",
+                            // };
+                            // setAchievements(updated);
+                            // setEditAchievementIdx(null);
                           }}
                         >
                           Save
@@ -1269,7 +1563,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                       )}
                       {ach.image && (
                         <img
-                          src={ach.image}
+                          src={ach.image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"}
                           alt={ach.title}
                           className="w-32 h-32 object-cover rounded-xl border border-blue-400 mt-2"
                         />
@@ -1293,9 +1587,9 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                           <button
                             className="flex items-center gap-1 px-3 py-1 rounded-full bg-red-700 text-white text-xs font-semibold hover:bg-red-800 transition-colors"
                             onClick={() => {
-                              setAchievements(
-                                achievements.filter((_, i) => i !== idx)
-                              );
+                              // setAchievements(
+                              //   achievements.filter((_, i) => i !== idx)
+                              // );
                             }}
                           >
                             <FaTrash /> Remove
@@ -1335,21 +1629,19 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             </div>
             <div className="flex gap-4 mb-4">
               <button
-                className={`px-4 py-2 rounded-full font-semibold transition-colors ${
-                  !showResearch
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
-                    : "bg-gray-800/80 text-blue-300 hover:bg-blue-900/40"
-                }`}
+                className={`px-4 py-2 rounded-full font-semibold transition-colors ${!showResearch
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                  : "bg-gray-800/80 text-blue-300 hover:bg-blue-900/40"
+                  }`}
                 onClick={() => setShowResearch(false)}
               >
                 Workplace
               </button>
               <button
-                className={`px-4 py-2 rounded-full font-semibold transition-colors ${
-                  showResearch
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
-                    : "bg-gray-800/80 text-blue-300 hover:bg-blue-900/40"
-                }`}
+                className={`px-4 py-2 rounded-full font-semibold transition-colors ${showResearch
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                  : "bg-gray-800/80 text-blue-300 hover:bg-blue-900/40"
+                  }`}
                 onClick={() => setShowResearch(true)}
               >
                 Research Works
@@ -1357,10 +1649,10 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             </div>
             <div className="space-y-6 max-h-[60vh] overflow-y-auto">
               {!showResearch ? (
-                workplaces.length === 0 ? (
+                user.workplaces.length === 0 ? (
                   <div className="text-gray-400 text-center py-10">N/A</div>
                 ) : (
-                  workplaces.map((work, idx) =>
+                  user.workplaces.map((work: Workplace, idx: number) =>
                     editWorkIdx === idx ? (
                       <div
                         key={idx}
@@ -1410,10 +1702,10 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                           <button
                             className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
                             onClick={() => {
-                              const updated = [...workplaces];
-                              updated[idx] = { ...editWork };
-                              setWorkplaces(updated);
-                              setEditWorkIdx(null);
+                              // const updated = [...workplaces];
+                              // updated[idx] = { ...editWork };
+                              // setWorkplaces(updated);
+                              // setEditWorkIdx(null);
                             }}
                           >
                             Save
@@ -1459,9 +1751,9 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                             <button
                               className="flex items-center gap-1 px-3 py-1 rounded-full bg-red-700 text-white text-xs font-semibold hover:bg-red-800 transition-colors"
                               onClick={() => {
-                                setWorkplaces(
-                                  workplaces.filter((_, i) => i !== idx)
-                                );
+                                // setWorkplaces(
+                                //   workplaces.filter((_, i) => i !== idx)
+                                // );
                               }}
                             >
                               <FaTrash /> Remove
@@ -1472,10 +1764,10 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                     )
                   )
                 )
-              ) : researchWorks.length === 0 ? (
+              ) : user.researchWorks.length === 0 ? (
                 <div className="text-gray-400 text-center py-10">N/A</div>
               ) : (
-                researchWorks.map((rw, idx) =>
+                user.researchWorks.map((rw: ResearchWork, idx: number) =>
                   editResearchIdx === idx ? (
                     <div
                       key={idx}
@@ -1529,10 +1821,10 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         <button
                           className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
                           onClick={() => {
-                            const updated = [...researchWorks];
-                            updated[idx] = { ...editResearch };
-                            setResearchWorks(updated);
-                            setEditResearchIdx(null);
+                            // const updated = [...researchWorks];
+                            // updated[idx] = { ...editResearch };
+                            // setResearchWorks(updated);
+                            // setEditResearchIdx(null);
                           }}
                         >
                           Save
@@ -1584,9 +1876,9 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                           <button
                             className="flex items-center gap-1 px-3 py-1 rounded-full bg-red-700 text-white text-xs font-semibold hover:bg-red-800 transition-colors"
                             onClick={() => {
-                              setResearchWorks(
-                                researchWorks.filter((_, i) => i !== idx)
-                              );
+                              // setResearchWorks(
+                              //   researchWorks.filter((_, i) => i !== idx)
+                              // );
                             }}
                           >
                             <FaTrash /> Remove
@@ -1617,13 +1909,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               )}
             </div>
             <div className="space-y-6 max-h-[60vh] overflow-y-auto">
-              {socialLinks.length === 0 ? (
+              {user.socialLinks.length === 0 ? (
                 <div className="text-gray-400 text-center py-10">
                   No social links added yet. Click "Add" to add your social
                   links.
                 </div>
               ) : (
-                socialLinks.map((sl, idx) =>
+                user.socialLinks.map((sl: SocialLink, idx: number) =>
                   editSocialIdx === idx ? (
                     <div
                       key={idx}
@@ -1663,10 +1955,10 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         <button
                           className="flex-1 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
                           onClick={() => {
-                            const updated = [...socialLinks];
-                            updated[idx] = { ...editSocial, description: "" };
-                            setSocialLinks(updated);
-                            setEditSocialIdx(null);
+                            // const updated = [...socialLinks];
+                            // updated[idx] = { ...editSocial, description: "" };
+                            // setSocialLinks(updated);
+                            // setEditSocialIdx(null);
                           }}
                         >
                           Save
@@ -1717,9 +2009,9 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                           <button
                             className="flex items-center gap-1 px-3 py-1 rounded-full bg-red-700 text-white text-xs font-semibold hover:bg-red-800 transition-colors"
                             onClick={() => {
-                              setSocialLinks(
-                                socialLinks.filter((_, i) => i !== idx)
-                              );
+                              // setSocialLinks(
+                              //   socialLinks.filter((_, i) => i !== idx)
+                              // );
                             }}
                           >
                             <FaTrash /> Remove
@@ -1747,7 +2039,13 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
         {/* Stylish Back Button - Icon Only */}
         <button
           className="mt-6 ml-6 flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-700 via-indigo-700 to-blue-900 text-white shadow-xl border-2 border-blue-400 hover:from-blue-800 hover:to-indigo-900 hover:scale-110 hover:border-indigo-400 transition-all duration-200 group"
-          onClick={onBack}
+          onClick={() => {
+            if (onBack) {
+              onBack();
+            } else {
+              navigate('/home');
+            }
+          }}
           title="Back to Home"
         >
           <FaArrowLeft className="text-2xl group-hover:-translate-x-1 transition-transform duration-200 drop-shadow-lg" />
@@ -1755,7 +2053,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
         {/* Profile Info */}
         <div className="flex flex-col items-center mt-4 mb-6 px-4">
           <img
-            src={user.avatar}
+            src={user.avatar || "https://randomuser.me/api/portraits/men/32.jpg"}
             alt={user.name}
             className="w-24 h-24 rounded-full object-cover border-4 border-blue-500 shadow-lg bg-gray-900"
             style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)" }}
@@ -1767,7 +2065,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             {user.department}
           </div>
           <div className="text-blue-200 text-sm font-semibold text-center">
-            {user.role}
+            {user.roles[0]}{user.roles[1] ? `, ${user.roles[1]}` : ""}
           </div>
           <div className="flex flex-row gap-3 mt-4 w-full justify-center">
             {isMe && (
@@ -1778,12 +2076,14 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                 <FaEdit /> Edit Profile
               </button>
             )}
-            <button
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm flex items-center gap-2 hover:from-blue-700 hover:to-indigo-700 transition-colors shadow-lg font-semibold"
-              onClick={() => setShowPostCreation(true)}
-            >
-              <FaPlus /> Add New Post
-            </button>
+            {isMe && (
+              <button
+                className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm flex items-center gap-2 hover:from-blue-700 hover:to-indigo-700 transition-colors shadow-lg font-semibold"
+                onClick={() => setShowPostCreation(true)}
+              >
+                <FaPlus /> Add New Post
+              </button>
+            )}
           </div>
         </div>
         {/* Navigation Buttons */}
@@ -1792,21 +2092,20 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
             <button
               key={item.key}
               className={`flex items-center gap-4 w-full px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-sm border
-                ${
-                  section === item.key
-                    ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-blue-500 scale-105 shadow-lg"
-                    : "bg-gray-800/80 text-blue-300 border-transparent hover:bg-blue-900/40 hover:text-white"
+                ${section === item.key
+                  ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-blue-500 scale-105 shadow-lg"
+                  : "bg-gray-800/80 text-blue-300 border-transparent hover:bg-blue-900/40 hover:text-white"
                 }
               `}
               onClick={() =>
                 setSection(
                   item.key as
-                    | "posts"
-                    | "about"
-                    | "saved"
-                    | "achievements"
-                    | "work"
-                    | "social"
+                  | "posts"
+                  | "about"
+                  | "saved"
+                  | "achievements"
+                  | "work"
+                  | "social"
                 )
               }
               title={item.label}
@@ -1821,11 +2120,11 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
       {/* Middle Content (40%) */}
       <div className="ml-[30vw] w-[40vw] max-w-[740px] min-w-[340px] flex flex-col min-h-screen border-r border-blue-900/40 bg-gradient-to-br from-gray-950/60 via-gray-900/60 to-gray-950/60">
         {/* Post Creation Section at the top */}
-        <div className="w-full flex justify-center items-center px-4 pt-1 pb-4 bg-gradient-to-r from-blue-900/70 via-blue-950/70 to-gray-900/70 shadow-lg border-b border-blue-900/30">
+        {/* <div className="w-full flex justify-center items-center px-4 pt-1 pb-4 bg-gradient-to-r from-blue-900/70 via-blue-950/70 to-gray-900/70 shadow-lg border-b border-blue-900/30">
           <div className="w-full max-w-2xl">
             <PostCreationSection />
           </div>
-        </div>
+        </div> */}
         {/* Section Content - Make scrollable and fill all available height */}
         <main className="flex-1 w-full h-0 min-h-0 overflow-y-auto px-0 md:px-6 py-4">
           <div className="max-w-3xl mx-auto h-full flex flex-col">

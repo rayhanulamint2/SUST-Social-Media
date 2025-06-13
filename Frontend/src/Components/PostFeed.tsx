@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import http from "../http"; // Adjust the import path as necessary
 import { formatDistanceToNow } from 'date-fns';
+import { useNavigate } from "react-router-dom";
 import {
   FaArrowUp,
   FaArrowDown,
@@ -208,6 +209,7 @@ type PostCardProps = {
 };
 
 function PostCard({ post, onToggleSave }: PostCardProps) {
+  const navigate = useNavigate();
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState(dummyComments);
   const [commentInput, setCommentInput] = useState("");
@@ -230,6 +232,7 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
     // setCommentInput("");
   };
 
+
   return (
     <div className="bg-gray-900/80 border border-blue-400/10 rounded-2xl shadow-lg p-5 mb-6 flex flex-col gap-3">
       {/* Header */}
@@ -240,9 +243,17 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
           className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
         />
         <div>
-          <div className="text-white font-semibold text-base">
+          <button
+            className="text-white font-semibold text-base hover:underline focus:outline-none"
+            onClick={() => {
+              // Add desired click handler logic here
+              console.log("Creator clicked:", post.creator);
+              localStorage.setItem('currentUserId',post.creator._id)
+              navigate('/user');
+            }}
+          >
             {post.creator?.name || "Anonymous"}
-          </div>
+          </button>
           <div className="text-xs text-gray-400">{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</div>
         </div>
         <div className="flex-1" />
@@ -357,7 +368,6 @@ export default function PostFeed() {
   const [feedType, setFeedType] = useState("university");
   const [posts, setPosts] = useState(dummyPosts);
   const [saved, setSaved] = useState<string[]>([]);
-  const [data, setData] = useState<Post[]>([]);
   const fetchPosts = async () => {
     try {
       const response = await http.get("/post");
@@ -372,7 +382,22 @@ export default function PostFeed() {
   }, []);
   // console.log(" djflksjdfj", Array.isArray(posts)); // should return true
 
-  const filteredPosts = posts.filter((p) => p.feedType === feedType);
+  const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userInfo = {
+    id: mainUser[0]?._id || "6849bb136e4b901e5e7102cb",
+    name: mainUser[0]?.name || "Khalid",
+    avatar:
+      mainUser[0]?.avatar || "https://randomuser.me/api/portraits/men/32.jpg",
+    department: mainUser[0]?.department || "CSE",
+  };
+  console.log("user = ", userInfo);
+
+  const filteredPosts = posts.filter((p) => {
+    if (feedType === "department") {
+      return p.feedType === "department" && p.department === userInfo.department;
+    }
+    return p.feedType === feedType;
+  });
 
   const handleToggleSave = (id: string): void => {
     setPosts((prev: Post[]) =>
@@ -389,10 +414,9 @@ export default function PostFeed() {
         <button
           onClick={() => setFeedType("university")}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm border
-            ${
-              feedType === "university"
-                ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-blue-500 scale-105 shadow-lg"
-                : "bg-gray-800/80 text-blue-300 border-transparent hover:bg-blue-900/40 hover:text-white"
+            ${feedType === "university"
+              ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-blue-500 scale-105 shadow-lg"
+              : "bg-gray-800/80 text-blue-300 border-transparent hover:bg-blue-900/40 hover:text-white"
             }
           `}
           style={{ transition: "all 0.18s cubic-bezier(.4,0,.2,1)" }}
@@ -402,10 +426,9 @@ export default function PostFeed() {
         <button
           onClick={() => setFeedType("department")}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm border
-            ${
-              feedType === "department"
-                ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white border-pink-500 scale-105 shadow-lg"
-                : "bg-gray-800/80 text-pink-300 border-transparent hover:bg-pink-900/40 hover:text-white"
+            ${feedType === "department"
+              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white border-pink-500 scale-105 shadow-lg"
+              : "bg-gray-800/80 text-pink-300 border-transparent hover:bg-pink-900/40 hover:text-white"
             }
           `}
           style={{ transition: "all 0.18s cubic-bezier(.4,0,.2,1)" }}

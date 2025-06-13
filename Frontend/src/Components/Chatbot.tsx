@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { FaRobot, FaPaperPlane } from "react-icons/fa";
+import axios from "axios";
+
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([
@@ -11,17 +13,47 @@ export default function Chatbot() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+  
+  const [answer, setAnswer] = useState("");
+  const http = axios.create({
+    baseURL: "https://9865-34-53-3-62.ngrok-free.app", // Adjust the base URL as needed
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Use token from localStorage
+    },
+  });
+  
 
-  const handleSend = (e?: React.FormEvent) => {
+
+  const handleSend = async(e?: React.FormEvent) => {
+
     if (e) e.preventDefault();
     if (!input.trim()) return;
+    const fetchAnswer = async (input: string) => {
+      const question = {
+        "question": input,
+      }
+      console.log("message sent:", input.trim());
+      console.log("question object:", question);
+      try {
+      const response = await http.post("/ask", question); // Adjust endpoint if necessary
+        console.log("message get successfully:", response.data);
+        setAnswer(response.data.answer);
+        console.log("answer:", response.data.answer);
+        return response.data.answer;
+      } catch (error) {
+        console.error("message fetching failed:", error);
+        alert("Failed to get the answer Please check your inputs.");
+      }
+    }
+    const answer1 = await fetchAnswer(input.trim());
     setMessages((msgs) => [
       ...msgs,
       { sender: "user", text: input.trim() },
       // Simulate bot reply
       {
         sender: "bot",
-        text: "I'm an AI assistant. (This is a demo response.)",
+        text: answer1 || "I'm an AI assistant. (This is a demo response.)",
       },
     ]);
     setInput("");
@@ -64,7 +96,7 @@ export default function Chatbot() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) handleSend(); }}
+          // onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) handleSend(); }}
           placeholder="Type your message..."
           className="flex-1 px-4 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
         />
