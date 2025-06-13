@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {signup,login, updateUser, findUserDetails, addAchievement, addResearch, addWorkplace, addSociallink, editUser} = require('./user.service')
+const {signup,login, updateUser, findUserDetails, addAchievement, addResearch, addWorkplace, addSociallink, editUser, findAllUser} = require('./user.service')
 
 router.post('/signup', signup);
 
@@ -18,7 +18,9 @@ router.post('/addResearch', addResearch);
 
 router.post('/addWorkplace', addWorkplace);
 
-router.post('/addSociallink', addSociallink)
+router.post('/addSociallink', addSociallink);
+
+router.get('/', findAllUser);
 
 
 module.exports = router

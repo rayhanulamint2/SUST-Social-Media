@@ -1,28 +1,28 @@
 // database query
 const mongoose = require('mongoose')
 const userSchema = require('./user.model')
-const User = new mongoose.model('User',userSchema);
+const User = new mongoose.model('User', userSchema);
 
-const newUserCreation = async(userData) => {
+const newUserCreation = async (userData) => {
     const newUser = new User(userData);
-    try{
+    try {
         await newUser.save();
         console.log('user created successfully')
-    } catch(error){
+    } catch (error) {
         console.log('there are an error in server end')
     }
 }
-const findUser = async(email)=>{
-    try{
-        const user = await User.find({email: email})
+const findUser = async (email) => {
+    try {
+        const user = await User.find({ email: email })
         return user
     }
-    catch(error){
+    catch (error) {
         console.log('there are an error in server end')
     }
 }
 
-const userUpdate = async(id, updateData) => {
+const userUpdate = async (id, updateData) => {
     try {
         console.log('Updating user with ID:', id);
         console.log('Update data:', updateData);
@@ -36,11 +36,11 @@ const userUpdate = async(id, updateData) => {
     }
 };
 
-const findUserById = async(id) => {
+const findUserById = async (id) => {
     try {
         const user = await User.findById(id).populate({
             path: 'posts',
-            populate:({
+            populate: ({
                 path: 'creator', select: 'name avatar'
 
             }),
@@ -49,12 +49,12 @@ const findUserById = async(id) => {
             // })]
         }).populate({
             path: 'posts',
-            populate:({
-                path: 'comment.userId',select: 'name avater'
+            populate: ({
+                path: 'comment.userId', select: 'name avater'
             })
         }).populate({
             path: 'saved',
-            populate:({
+            populate: ({
                 path: 'creator', select: 'name avatar'
 
             }),
@@ -63,8 +63,8 @@ const findUserById = async(id) => {
             // })]
         }).populate({
             path: 'saved',
-            populate:({
-                path: 'comment.userId',select: 'name avater'
+            populate: ({
+                path: 'comment.userId', select: 'name avater'
             })
         });
         return user;
@@ -73,7 +73,7 @@ const findUserById = async(id) => {
     }
 };
 
-const achievementAdd = async(payload) => {
+const achievementAdd = async (payload) => {
     try {
         const user = await User.findById(payload.userId);
         if (!user) {
@@ -88,12 +88,12 @@ const achievementAdd = async(payload) => {
         // Step 4: Save the updated user
         await user.save();
     }
-    catch(error){
+    catch (error) {
         console.log('there are an error in server end123');
     }
 }
 
-const workplaceAdd = async(payload) => {
+const workplaceAdd = async (payload) => {
     try {
         const user = await User.findById(payload.userId);
         if (!user) {
@@ -108,12 +108,12 @@ const workplaceAdd = async(payload) => {
         // Step 4: Save the updated user
         await user.save();
     }
-    catch(error){
+    catch (error) {
         console.log('there are an error in server end123');
     }
 }
 
-const researchAdd = async(payload) => {
+const researchAdd = async (payload) => {
     try {
         const user = await User.findById(payload.userId);
         if (!user) {
@@ -128,12 +128,12 @@ const researchAdd = async(payload) => {
         // Step 4: Save the updated user
         await user.save();
     }
-    catch(error){
+    catch (error) {
         console.log('there are an error in server end123');
     }
 }
 
-const sociallinkAdd = async(payload) => {
+const sociallinkAdd = async (payload) => {
     try {
         const user = await User.findById(payload.userId);
         if (!user) {
@@ -148,13 +148,13 @@ const sociallinkAdd = async(payload) => {
         // Step 4: Save the updated user
         await user.save();
     }
-    catch(error){
+    catch (error) {
         console.log('there are an error in server end123');
     }
 }
 
-const userEdit = async(payload) => {
-    try{
+const userEdit = async (payload) => {
+    try {
         const user = await User.findById(payload.userId);
         if (!user) {
             console.log('Creator not found');
@@ -172,8 +172,23 @@ const userEdit = async(payload) => {
         console.log("newUser = ", newUser);
         return newUser;
     }
-    catch(error){
+    catch (error) {
         console.log('there is an error')
     }
 }
-module.exports = {newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd, userEdit}
+
+const findUsers = async () => {
+    try {
+        const allUsers = await User.find({
+            session: { $lt: "2020-21" },
+        });
+        console.log("allusers = ", allUsers);
+
+        return allUsers;
+    }
+    catch {
+        console.log("there is an errordfa");
+    }
+
+}
+module.exports = { newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd, userEdit, findUsers }
