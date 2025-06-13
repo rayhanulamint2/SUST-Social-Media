@@ -76,6 +76,7 @@ export default function Login() {
                 Home
               </button>
               <a href="/signup" className="hover:text-blue-400 transition-colors">Join</a>
+              <a href="/AdminLogin" className="hover:text-blue-400 transition-colors">Admin</a>
             </nav>
           </div>
           {/* Title */}
