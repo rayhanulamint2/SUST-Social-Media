@@ -165,9 +165,12 @@ const userEdit = async(payload) => {
         if (payload.about !== undefined) user.about = payload.about;
         if (payload.department !== undefined) user.department = payload.department;
         if (payload.name !== undefined) user.name = payload.name;
+        if (payload.avatar !== undefined) user.avatar = payload.avatar;
 
         // Step 4: Save the updated user
-        await user.save();
+        const newUser = await user.save();
+        console.log("newUser = ", newUser);
+        return newUser;
     }
     catch(error){
         console.log('there is an error')
