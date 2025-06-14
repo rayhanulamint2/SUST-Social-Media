@@ -25,7 +25,7 @@ export default function Homepage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 pl-0 lg:pl-[20rem] pr-0 lg:pr-[24rem]">
+    <div className="min-h-screen  pl-0 lg:pl-[20rem] pr-0 lg:pr-[24rem] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       <Topbar
         onNav={(nav) => setMainFeed(nav)}
         onNotices={() => setShowNotices(true)}
@@ -38,7 +38,7 @@ export default function Homepage() {
         onChat={() => setMainFeed(mainFeed === "chat" ? "home" : "chat")} // <-- add this line
       />
       <Chatbot />
-      <div className="pt-10 max-w-8xl mx-auto px-4">
+      <div className="max-w-8xl mx-auto px-4 pt-10">
         {mainFeed === "chat" ? (
           <Chat />
         ) : (
