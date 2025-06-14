@@ -642,7 +642,7 @@ export default function LandingPage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-6 rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all duration-300 font-medium transform hover:scale-[1.02] focus:scale-[0.98]"
+                  className=" text-white py-3 px-6 w-full bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all duration-300 font-medium transform hover:scale-[1.02] focus:scale-[0.98]"
                 >
                   Send Message
                 </button>
