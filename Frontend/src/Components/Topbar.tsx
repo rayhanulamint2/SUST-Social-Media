@@ -132,7 +132,7 @@ export default function Topbar({ onNav, onNotices }: TopbarProps) {
               <img
                 src={avatar}
                 alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border-2 border-blue-500"
+                className="rounded-full w-8 h-8 object-cover border-2 border-blue-500"
               />
               <span className="hidden sm:inline">Profile</span>
               <FaChevronDown className="text-xs" />
