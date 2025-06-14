@@ -173,11 +173,16 @@ npm run dev
 
 
 
-# 🖼️ Screenshots of the platform
+# 🖼️ Other screenshots of the platform
 
 ## Contact with us through SUSTverse
 ![alt text](<Landing Page Contact.png>)
 
+## Admin Page Notice Creation
+![alt text](<Admin Create Notice.png>)
+
+## Admin Page Notice View
+![alt text](<Admin Notice View.png>)
 
 
 
