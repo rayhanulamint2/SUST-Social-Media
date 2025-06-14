@@ -93,7 +93,7 @@ export default function Signup() {
   console.log("Payload:", payload);
 
   try {
-    const response = await http.post("user/signup", payload);
+    const response = await http.post("userVerification/createVerification", payload);
     console.log("Registration successful:", response.data);
     setData(response.data);
     navigate("/login"); // Navigate to home or login page after successful registration

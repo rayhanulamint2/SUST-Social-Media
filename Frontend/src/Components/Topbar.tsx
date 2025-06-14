@@ -47,6 +47,7 @@ export default function Topbar({ onNav, onNotices }: TopbarProps) {
 
   const handleProfileNavigate = () => {
     setDropdownOpen(false);
+    localStorage.setItem("currentUserId", userId);
     if (userId) {
       navigate("/user");
     } else {

@@ -1,38 +1,40 @@
 import { useState } from "react";
 import { FaFileAlt, FaCheckCircle } from "react-icons/fa";
+import React from "react";
+import http from "../http";
 
 // Dummy complaints data
 const complaintsList = [
     {
-        id: 1,
-        docPic: "https://randomuser.me/api/portraits/men/32.jpg",
+        _id: "1",
+        image: "https://randomuser.me/api/portraits/men/32.jpg",
         department: "CSE",
         date: "2025-06-01",
-        description: "Lab computers are not working properly.",
+        content: "Lab computers are not working properly.",
         solved: false,
     },
     {
-        id: 2,
-        docPic: "https://randomuser.me/api/portraits/women/44.jpg",
+        _id: "2",
+        image: "https://randomuser.me/api/portraits/women/44.jpg",
         department: "EEE",
         date: "2025-06-03",
-        description: "Frequent power outages in the EEE building.",
+        content: "Frequent power outages in the EEE building.",
         solved: false,
     },
     {
-        id: 3,
-        docPic: "https://randomuser.me/api/portraits/men/70.jpg",
+        _id: "3",
+        image: "https://randomuser.me/api/portraits/men/70.jpg",
         department: "Administration",
         date: "2025-06-05",
-        description: "Delay in processing scholarship documents.",
+        content: "Delay in processing scholarship documents.",
         solved: false,
     },
     {
-        id: 4,
-        docPic: "https://randomuser.me/api/portraits/women/55.jpg",
+        _id: "4",
+        image: "https://randomuser.me/api/portraits/women/55.jpg",
         department: "Shahporan Hall",
         date: "2025-06-07",
-        description: "Water supply issue in Hall 2.",
+        content: "Water supply issue in Hall 2.",
         solved: false,
     },
 ];
@@ -97,24 +99,54 @@ const departments = [
     "Begum Sirajunnesa Chowdhury hall",
     "Begum Fajilatunnesa mujib hall",
 ];
+type Complaint = {
+    _id: string;
+    image: string;
+    department: string;
+    date: string;
+    content: string;
+    solved: boolean;
+};
+
 
 export default function AdminComplaint() {
-    const [selectedDept, setSelectedDept] = useState("All");
-    const [complaints, setComplaints] = useState(complaintsList);
+    const [selectedDept, setSelectedDept] = useState("Not Specified");
+    const [complaints, setComplaints] = useState<Complaint[]>(complaintsList);
+
 
     // Filter logic
     const filtered = complaints.filter((c) => {
-        if (selectedDept === "All") return true;
+        if (selectedDept === "Not Specified") return true;
         return c.department === selectedDept;
     });
 
-    // Handle solved
-    const handleSolved = (id: number) => {
-        setComplaints((prev) =>
-            prev.map((c) => (c.id === id ? { ...c, solved: true } : c))
-        );
-        // Optionally, send solved status to backend here
+    const fetchComplaints = async () => {
+        try {
+            const response = await http.get("/complaint");
+            const fetched = response.data.complain;
+            setComplaints(fetched);
+            console.log("Complaint fetched and mapped successfully:", fetched);
+        } catch (error) {
+            console.error("Error fetching complaints:", error);
+        }
     };
+
+    React.useEffect(() => {
+        fetchComplaints();
+    }, []);
+
+
+    // Handle solved
+    const handleSolved = async(id: string) => {
+        setComplaints((prev) => prev.filter((c) => c._id !== id));
+        const payload = {
+            id: id
+        }
+        await http.post("/complaint/update",payload);
+        
+    };
+
+
 
     return (
         <div className="ml-[1vw] mt-2 px-8 py-8 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 min-h-[calc(100vh-4rem)]">
@@ -148,11 +180,11 @@ export default function AdminComplaint() {
                 )}
                 {filtered.map((c) => (
                     <div
-                        key={c.id}
+                        key={c._id}
                         className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-gradient-to-br from-blue-950/80 to-gray-900/80 border border-blue-900/30 rounded-2xl shadow-lg p-6"
                     >
                         <img
-                            src={c.docPic}
+                            src={c.image || "https://randomuser.me/api/portraits/men/32.jpg"}
                             alt="Document"
                             className="w-28 h-28 rounded-xl object-cover border-4 border-blue-400 shadow"
                         />
@@ -164,14 +196,14 @@ export default function AdminComplaint() {
                             <div className="text-blue-200 text-base">
                                 Date: <span className="font-semibold">{c.date}</span>
                             </div>
-                            <div className="text-blue-300 text-base">{c.description}</div>
+                            <div className="text-blue-300 text-base">{c.content}</div>
                             <button
                                 className={`mt-4 px-6 py-2 rounded-full font-semibold flex items-center gap-2 shadow transition-all
                   ${c.solved
                                         ? "bg-gradient-to-r from-green-500 to-blue-500 text-white"
                                         : "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700"
                                     }`}
-                                onClick={() => handleSolved(c.id)}
+                                onClick={() => handleSolved(c._id)}
                                 disabled={c.solved}
                             >
                                 <FaCheckCircle />

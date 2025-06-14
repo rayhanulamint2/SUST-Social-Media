@@ -59,7 +59,7 @@ const deleteComplain = async(req, res) => {
 
 const updateComplain = async(req, res) => {
     try {
-        const complain = await findComplain(req.params.id);
+        const complain = await findComplain(req.body);
         if (!complain) {
             return res.status(404).json({
                 error: 'Complain not found'
@@ -68,17 +68,18 @@ const updateComplain = async(req, res) => {
         // Update logic here
         // For example, updating content or tags
         const complainData = {
-            content: Array.isArray(req.body.content)
-                ? req.body.content.join('\n')
-                : req.body.content,
-            date: new Date(req.body.date),
-            image: req.body.image || '',
-            createdAt: new Date(), // Optional, Mongoose handles this by default
-            department: req.body.department || '',
-            solved: false // Optional, Mongoose sets this by default
+            id: req.body.id,
+            // content: Array.isArray(req.body.content)
+            //     ? req.body.content.join('\n')
+            //     : req.body.content,
+            // date: new Date(req.body.date),
+            // image: req.body.image || '',
+            // createdAt: new Date(), // Optional, Mongoose handles this by default
+            // department: req.body.department || '',
+            // solved: false // Optional, Mongoose sets this by default
         };
 
-        const updatedComplain = await complainUpdate(req.params.id, complainData);
+        const updatedComplain = await complainUpdate(complainData);
         // complain updated
         res.status(200).json({
             message: 'Complain updated successfully',
@@ -94,7 +95,7 @@ const updateComplain = async(req, res) => {
 
 const findingComplain = async(req, res) => {
     try {
-        const complain = await findComplain(req.params.id);
+        const complain = await findComplain();
         if (!complain) {
             return res.status(404).json({
                 error: 'Complain not found'

@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { FaFileUpload, FaSave } from "react-icons/fa";
+import http from "../http"
+import { MdDescription } from "react-icons/md";
 
 export default function AdminCreateNotice() {
     const [noticeName, setNoticeName] = useState("");
@@ -8,6 +10,7 @@ export default function AdminCreateNotice() {
     const [endDate, setEndDate] = useState("");
     const [endTime, setEndTime] = useState("");
     const [docName, setDocName] = useState("");
+    const [department, setDepartment] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,8 +19,23 @@ export default function AdminCreateNotice() {
         }
     };
 
-    const handleSave = () => {
+    const handleSave = async() => {
         // Save logic here (send to backend)
+        const combined = new Date(`${startDate}T${startTime}`);
+        const newStartDate = combined.toISOString();
+        const combined1 = new Date(`${endDate}T${endTime}`);
+        const newEndDate = combined1.toISOString();
+        const payload = {
+            description: noticeName,
+            startDate: newStartDate,
+            endDate: newEndDate,
+            filePath: docName,
+            department: department
+        }
+        console.log("payload = ", payload);
+        const newNotice = await http.post("/notice/create",payload);
+        console.log("newNotice = ", newNotice);
+
         // Reset form after save
         setNoticeName("");
         setStartDate("");
@@ -25,6 +43,7 @@ export default function AdminCreateNotice() {
         setEndDate("");
         setEndTime("");
         setDocName("");
+        setDepartment("");
         alert("Notice saved!");
     };
 
@@ -103,28 +122,45 @@ export default function AdminCreateNotice() {
                         />
                     </div>
                 </div>
-                {/* Add Document */}
-                <div>
-                    <label className="block text-blue-300 font-semibold mb-1">
-                        Add Document
-                    </label>
-                    <button
-                        type="button"
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition-all"
-                        onClick={() => fileInputRef.current?.click()}
-                    >
-                        <FaFileUpload />
-                        {docName ? docName : "Upload Document"}
-                    </button>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        className="hidden"
-                        onChange={handleFileChange}
-                        placeholder="Upload document"
-                        title="Upload document"
-                    />
+                <div className="flex flex-wrap gap-6">
+                    {/* Add Document */}
+                    <div className="flex-1 min-w-[200px]">
+                        <label className="block text-blue-300 font-semibold mb-1">
+                            Add Document
+                        </label>
+                        <button
+                            type="button"
+                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition-all"
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            <FaFileUpload />
+                            {docName ? docName : "Upload Document"}
+                        </button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            onChange={handleFileChange}
+                            placeholder="Upload document"
+                            title="Upload document"
+                        />
+                    </div>
+
+                    {/* Notice Name */}
+                    <div className="flex-1 min-w-[200px]">
+                        <label className="block text-blue-300 font-semibold mb-1">
+                            Department
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full px-4 py-2 rounded-lg bg-gray-800 text-blue-100 border border-blue-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                            value={department}
+                            onChange={(e) => setDepartment(e.target.value)}
+                            placeholder="Enter department name"
+                        />
+                    </div>
                 </div>
+
                 {/* Save Notice */}
                 <button
                     className="mt-4 px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center gap-2 justify-center"

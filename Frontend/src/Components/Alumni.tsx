@@ -3,6 +3,7 @@ import React from "react";
 import { FaUserGraduate, FaUsers, FaSort, FaUserPlus } from "react-icons/fa";
 import http from "../http"
 import type { User } from "./types"; // adjust the path as needed
+import { useNavigate } from "react-router-dom";
 import { filter } from "framer-motion/client";
 
 
@@ -53,6 +54,7 @@ const sortOptions = [
 ];
 
 export default function Alumni() {
+  const navigate = useNavigate();
   const [view, setView] = useState<"university" | "department">("university");
   const [sortBy, setSortBy] = useState("name");
   const [showSort, setShowSort] = useState(false);
@@ -60,14 +62,14 @@ export default function Alumni() {
   const [isFollowed, setIsFollowed] = useState(false);
   const mainUser = JSON.parse(localStorage.getItem("user") || "[]");
   const userDept = mainUser[0]?.department;
-  console.log("mainUser from alumni " , mainUser);
+  console.log("mainUser from alumni ", mainUser);
   console.log("userDeptlsdjf", userDept);
   const [allAlumni, setAllAlumni] = useState<User[]>([]);
 
   const fetchUserInfo = async () => {
     try {
       const response = await http.get("/user");
-      const allUsers:User[] = response.data.users
+      const allUsers: User[] = response.data.users
       console.log('Fetched user data:', allUsers);
       // Optionally set this to state
       setAllAlumni(allUsers);
@@ -80,7 +82,7 @@ export default function Alumni() {
   }, []);
   // Filter and sort alumni
   let filtered = allAlumni.filter(
-    (a:User) => view === "university" || a.department === userDept
+    (a: User) => view === "university" || a.department === userDept
   );
   console.log("userDept = ", userDept);
   console.log("filtered ", filtered);
@@ -108,10 +110,9 @@ export default function Alumni() {
         <div className="flex gap-2">
           <button
             className={`flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-base shadow transition-all
-              ${
-                view === "university"
-                  ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white scale-105"
-                  : "bg-gray-800/80 text-blue-200 hover:bg-blue-900/40"
+              ${view === "university"
+                ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white scale-105"
+                : "bg-gray-800/80 text-blue-200 hover:bg-blue-900/40"
               }`}
             onClick={() => setView("university")}
           >
@@ -120,10 +121,9 @@ export default function Alumni() {
           </button>
           <button
             className={`flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-base shadow transition-all
-              ${
-                view === "department"
-                  ? "bg-gradient-to-r from-cyan-600 to-blue-500 text-white scale-105"
-                  : "bg-gray-800/80 text-blue-200 hover:bg-blue-900/40"
+              ${view === "department"
+                ? "bg-gradient-to-r from-cyan-600 to-blue-500 text-white scale-105"
+                : "bg-gray-800/80 text-blue-200 hover:bg-blue-900/40"
               }`}
             onClick={() => setView("department")}
           >
@@ -145,9 +145,8 @@ export default function Alumni() {
               {sortOptions.map((opt) => (
                 <button
                   key={opt.key}
-                  className={`px-4 py-2 text-blue-200 hover:bg-blue-800/60 rounded-xl text-left ${
-                    sortBy === opt.key ? "bg-blue-900/60 font-bold" : ""
-                  }`}
+                  className={`px-4 py-2 text-blue-200 hover:bg-blue-800/60 rounded-xl text-left ${sortBy === opt.key ? "bg-blue-900/60 font-bold" : ""
+                    }`}
                   onClick={() => {
                     setSortBy(opt.key);
                     setShowSort(false);
@@ -163,7 +162,7 @@ export default function Alumni() {
       {/* Alumni Grid */}
       <div className="px-6 pb-6 pt-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filtered.map((alum:User) => (
+          {filtered.map((alum: User) => (
             <div
               key={alum._id}
               className="bg-gradient-to-br from-blue-950/80 to-blue-900/80 border border-blue-900/30 rounded-2xl shadow-lg p-5 flex flex-col items-center gap-3"
@@ -174,7 +173,17 @@ export default function Alumni() {
                 className="w-20 h-20 rounded-full object-cover border-4 border-blue-400 shadow"
               />
               <div className="text-lg font-bold text-white text-center">
-                {alum.name}
+                <button
+                  className="text-white font-semibold text-base hover:underline focus:outline-none"
+                  onClick={() => {
+                    // Add desired click handler logic here
+                    console.log("Creator clicked:", alum._id);
+                    localStorage.setItem('currentUserId', alum._id)
+                    navigate('/user');
+                  }}
+                >
+                  {alum.name || "Anonymous"}
+                </button>
               </div>
               <div className="text-blue-200 text-base">{alum.department}</div>
               <div className="text-blue-300 text-sm">{alum.session}</div>

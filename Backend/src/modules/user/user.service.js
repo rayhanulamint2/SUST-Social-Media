@@ -3,40 +3,38 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { newUserCreation, findUser, userUpdate, findUserById, achievementAdd, sociallinkAdd, researchAdd, workplaceAdd, userEdit, findUsers} = require('./user.repository')
 
-const signup = async (req, res) => {
+const signup = async (payload) => {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        const hashedPassword = await bcrypt.hash(payload.password, 10)
+        console.log("payload",payload);
         const userData = {
-            name: req.body.name,
-            avatar: req.body.avatar || '',
-            regNo: req.body.regNo,
-            email: req.body.email,
+            name: payload.name,
+            avatar: payload.avatar || '',
+            regNo: payload.regNo,
+            email: payload.email,
             password: hashedPassword,
-            department: req.body.department,
-            session: req.body.session,
-            filePath: req.file ? req.file.path : '',
-            roles: Array.isArray(req.body.roles) ? req.body.roles : [],
-            about: req.body.about || '',
-            workplaces: req.body.workplaces || [],
-            researchWorks: req.body.researchWorks || [],
-            achievements: req.body.achievements || [],
-            socialLinks: req.body.socialLinks || [],
+            department: payload.department,
+            session: payload.session,
+            filePath: payload.filePath ? payload.filePath : '',
+            roles: payload.roles,
+            about: payload.about || '',
+            workplaces: payload.workplaces || [],
+            researchWorks: payload.researchWorks || [],
+            achievements: payload.achievements || [],
+            socialLinks: payload.socialLinks || [],
             posts: [],   // Initialize empty; likely managed later
             saved: []    // Initialize empty; likely managed later
         };
 
         console.log(userData)
         // repository 
-        newUserCreation(userData)
+        const newUser = newUserCreation(userData)
+        console.log("newUser sjdlfk", newUser);
+        return newUser;
         // const newUser = new User(userData);
         // await newUser.save();
-        res.status(200).json({
-            message: 'successfull'
-        })
     } catch {
-        res.status(500).json({
-            error: 'serverside error'
-        })
+        console.log('there is an error', error);
     }
 }
 const login = async (req, res) => {
@@ -44,6 +42,7 @@ const login = async (req, res) => {
         const user = await findUser(req.body.email);
         console.log(" = ", user)
         if (user && user.length > 0) {
+            console.log('password = ', user[0].password);
             const isValidePassword = await bcrypt.compare(req.body.password, user[0].password)
 
             if (isValidePassword) {

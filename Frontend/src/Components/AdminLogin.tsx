@@ -26,6 +26,8 @@ export default function AdminLogin() {
       // Store token and admin info in localStorage
       localStorage.setItem("token", response.data.access_token);
       localStorage.setItem("admin", JSON.stringify(response.data.admin));
+      console.log('admuin = ', response.data);
+      console.log('admuin = ', response.data.admin);
       // Redirect to admin homepage
       navigate("/admin");
     } catch (error) {
