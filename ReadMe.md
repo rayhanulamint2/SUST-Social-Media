@@ -72,6 +72,9 @@ SUSTverse addresses these challenges through:
 - Support for paid promotions and admin approvals
 - Calendar link integration
 
+![alt text](<New Post.png>)
+![alt text](<New Event.png>)
+
 ## 📢 Notice Board
 - Department-specific boards with admin-only publishing
 - Real-time notifications and searchable archive
@@ -165,11 +168,12 @@ npm run dev
 
 # 🖼️ Screenshots of the platform
 
-### Technology Stack
+## Technology Stack
 ![alt text](<Landing Page Tech Stack.png>)
 
-### Contact with us through SUSTverse
+## Contact with us through SUSTverse
 ![alt text](<Landing Page Contact.png>)
+
 
 
 
