@@ -116,7 +116,7 @@ export default function Sidebar({
         </button>
 
         {/* Need Help */}
-        <button className="flex items-center gap-3 px-6 py-4 hover:bg-blue-400/10 transition-colors text-white text-base font-medium w-full text-left">
+        <button className="px-6 py-4 flex items-center gap-3 hover:bg-blue-400/10 transition-colors text-white text-base font-medium w-full text-left">
           <FaQuestionCircle className="text-blue-400" />
           Need Help?
         </button>
