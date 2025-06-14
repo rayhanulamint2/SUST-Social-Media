@@ -1902,7 +1902,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               <div className="text-xl font-bold text-white">Social Links</div>
               {isMe && (
                 <button
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-700 text-white font-semibold hover:bg-blue-800 transition-colors shadow"
+                  className="gap-2 px-4 py-2 rounded-full bg-blue-700 text-white font-semibold hover:bg-blue-800 transition-colors shadow flex items-center"
                   onClick={() => setShowAddSocial(true)}
                 >
                   <FaPlus /> Add
