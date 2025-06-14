@@ -91,6 +91,8 @@ SUSTverse addresses these challenges through:
 - Multilingual support (English & Bangla)
 - Personalized suggestions and policy updates
 
+![alt text](<Landing Page Features.png>)
+
 ---
 <br><br>
 
@@ -166,10 +168,11 @@ npm run dev
 ### Home Page
 ![Home Page](Frontend\src\assets\Homepage.png)
 
-
 ### Technology Stack
-![Technology Stack](Frontend\src\assets\TechnologyStack.png)
+![alt text](<Landing Page Tech Stack.png>)
 
+### Contact with us through SUSTverse
+![alt text](<Landing Page Contact.png>)
 
 
 
