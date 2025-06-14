@@ -271,7 +271,6 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
           <button
             className="text-white font-semibold text-base hover:underline focus:outline-none"
             onClick={() => {
-              // Add desired click handler logic here
               console.log("Creator clicked:", post.creator);
               localStorage.setItem('currentUserId',post.creator._id)
               navigate('/user');
@@ -408,7 +407,7 @@ export default function PostFeed() {
   React.useEffect(() => {
     fetchPosts();
   }, []);
-  // console.log(" djflksjdfj", Array.isArray(posts)); // should return true
+  
   console.log("possts", posts);
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userInfo = {

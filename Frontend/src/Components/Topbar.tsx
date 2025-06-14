@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  FaHome,
   FaCalendarAlt,
   FaBell,
   FaSearch,
   FaChevronDown,
+  FaHome,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { jsx } from "react/jsx-runtime";
@@ -92,7 +92,7 @@ export default function Topbar({ onNav, onNotices }: TopbarProps) {
             <input
               type="text"
               placeholder="Search in SUSTverse..."
-              className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 outline-none text-sm shadow"
+              className="bg-gray-800/80 border border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 outline-none text-sm shadow w-full pl-10 pr-4 py-2 rounded-full"
             />
           </div>
         </div>
