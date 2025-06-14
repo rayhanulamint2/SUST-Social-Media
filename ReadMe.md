@@ -163,10 +163,7 @@ npm run dev
 
 
 
-# 🖼️ Screenshots
-
-### Home Page
-![Home Page](Frontend\src\assets\Homepage.png)
+# 🖼️ Screenshots of the platform
 
 ### Technology Stack
 ![alt text](<Landing Page Tech Stack.png>)
