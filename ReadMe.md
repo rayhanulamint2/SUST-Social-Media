@@ -1,6 +1,6 @@
 # 🌐 SUSTverse – A Unified Campus Communication Platform
 
-![SUSTverse Banner](Frontend\src\assets\sust_gate.jpg)
+![SUSTverse Banner](sust_gate.jpg)
 
 ># Bringing students, alumni, and administrators together on one platform to streamline communication, manage events, and foster collaboration at SUST.
 
