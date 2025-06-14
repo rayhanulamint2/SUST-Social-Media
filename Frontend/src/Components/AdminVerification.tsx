@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+import http from "../http";
+import React from "react";
+
 // Dummy data for demonstration
 const verificationList = [
     {
@@ -115,37 +118,78 @@ const departments = [
 ];
 
 export default function AdminVerification() {
-    const [selectedDept, setSelectedDept] = useState("All");
+    const [selectedDept, setSelectedDept] = useState("Not Specified");
     const [verifications, setVerifications] = useState(
         verificationList.map((v) => ({
             ...v,
+            id: String(v.id), // Ensure all IDs are strings
             status: v.verified ? "Verified" : "Unverified",
         }))
     );
 
+
+    const fetchUserInfo = async () => {
+        try {
+            const response = await http.get("/userVerification");
+
+            const fetchedUsers = response.data.users;
+            console.log("fetchedUsers ", fetchedUsers);
+
+            const transformed = fetchedUsers.map((user) => ({
+                id: user._id,
+                name: user.name,
+                regNo: user.regNo,
+                department: user.department || "",
+                session: user.session || "",
+                docPic: user.fillPath && user.fillPath.trim() !== ""
+                    ? user.fillPath
+                    : "https://unsplash.com/photos/stack-of-paper-files-and-pen-business-equipment-on-office-table-qGTymDfxq6A",
+                verified: user.verified ?? false,
+            }));
+
+            setVerifications(transformed);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    React.useEffect(() => {
+        fetchUserInfo();
+    }, []);
+
     // Filter logic
     const filtered = verifications.filter((v) => {
-        if (selectedDept === "All") return true;
-        if (selectedDept === "Administration") return v.type === "Employee";
-        if (selectedDept === "Hall Name") return v.department === "Hall Name";
+        if (selectedDept === "Not Specified") return true;
         return v.department === selectedDept;
     });
 
     // Handle radio change
-    const handleRadio = (id: number, status: "Verified" | "Unverified") => {
+    const handleRadio = (id: string, status: "Verified" | "Unverified") => {
         setVerifications((prev) =>
             prev.map((v) => (v.id === id ? { ...v, status } : v))
         );
     };
 
+
     // Handle confirm
-    const handleConfirm = (id: number) => {
+    const handleConfirm = async(id: string) => {
         setVerifications((prev) =>
-            prev.map((v) =>
-                v.id === id ? { ...v, verified: v.status === "Verified" } : v
-            )
+            prev.filter((v) => v.id !== id)
         );
-        // Optionally, send verification status to backend here
+        const current = verifications.find((v) => v.id === id);
+        if (!current) return;
+
+        const payload = {
+            id: id,
+            verified: current.status === "Verified",
+        };
+
+        console.log("payload from notice ", payload);
+
+        // send verification status to backend here
+
+        const changedUser =  await http.put('/userVerification/verify', payload);
+        console.log(changedUser);
     };
 
     return (
