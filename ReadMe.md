@@ -106,9 +106,6 @@ SUSTverse addresses these challenges through:
 | AI Integration | OpenAI GPT / Custom LLM (via REST API)  | Smart chatbot with contextual responses     |
 <br>
 
-
-![Technology Stack](Frontend\src\assets\TechnologyStack.png)
-<br><br>
 ---
 
 
