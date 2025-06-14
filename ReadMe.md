@@ -64,6 +64,8 @@ SUSTverse addresses these challenges through:
 <br>
 
 ![SUSTverse Homepage](Homepage.png)
+![Bus Schedule](<Bus Schedule.png>)
+![Profile](Profile.png)
 
 <br>
 
@@ -78,6 +80,7 @@ SUSTverse addresses these challenges through:
 ## 📢 Notice Board
 - Department-specific boards with admin-only publishing
 - Real-time notifications and searchable archive
+![Notice Board](Notices.png)
 
 ## 🎓 Alumni Section
 - Alumni directory with search and connection tools
@@ -88,6 +91,8 @@ SUSTverse addresses these challenges through:
 - Submit complaints confidentially
 - Track progress of submitted issues
 - Admin tools for analytics and reporting
+
+![Complaint Box](ComplaintBox.png)
 
 ## 🤖 AI Chatbot (24/7 Support)
 - Natural language answers to FAQs and queries
@@ -110,6 +115,8 @@ SUSTverse addresses these challenges through:
 | Hosting        | AWS / Google Cloud (TBD)                | Cloud-based deployment                      |
 | AI Integration | OpenAI GPT / Custom LLM (via REST API)  | Smart chatbot with contextual responses     |
 <br>
+
+![alt text](<Landing Page Tech Stack.png>)
 
 ---
 
@@ -167,9 +174,6 @@ npm run dev
 
 
 # 🖼️ Screenshots of the platform
-
-## Technology Stack
-![alt text](<Landing Page Tech Stack.png>)
 
 ## Contact with us through SUSTverse
 ![alt text](<Landing Page Contact.png>)
