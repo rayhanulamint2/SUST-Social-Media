@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import {
   FaUsers,
+  FaBrain,
   FaCalendarAlt,
   FaRobot,
   FaShieldAlt,
@@ -9,7 +10,6 @@ import {
   FaComments,
   FaReact,
   FaNodeJs,
-  FaBrain,
 } from "react-icons/fa";
 import { SiMongodb, SiJet, SiAmazon, SiGooglecloud } from "react-icons/si";
 
@@ -49,14 +49,14 @@ const features = [
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-x-hidden font-sans">
-      {/* Soft blurred background glows */}
+
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute -top-32 -left-32 w-[700px] h-[700px] bg-gradient-to-br from-blue-500/20 via-indigo-500/10 to-purple-500/10 rounded-full blur-[120px]" />
         <div className="absolute top-1/2 right-0 w-[500px] h-[400px] bg-gradient-to-tr from-purple-500/20 via-blue-500/10 to-indigo-500/10 rounded-full blur-[100px] translate-y-[-50%]" />
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
       </div>
 
-      {/* Glassy Navigation Bar */}
+      
       <nav className="fixed left-1/2 top-8 z-20 -translate-x-1/2 w-[90vw] max-w-5xl rounded-full bg-gray-900/80 backdrop-blur-xl border border-blue-400/10 shadow-lg flex items-center justify-between px-8 py-3">
         <div className="flex items-center gap-3">
           <div className="w-5 h-5 rounded-full bg-blue-500" />
@@ -117,7 +117,7 @@ export default function LandingPage() {
           boxShadow: "0 8px 32px 0 rgba(31,38,135,0.37)",
         }}
       >
-        {/* Blurred background image */}
+        
         <div className="absolute inset-0 pointer-events-none">
           <img
             src="src/assets/sust_gate.jpg"
@@ -130,7 +130,7 @@ export default function LandingPage() {
 
         {/* Hero Content */}
         <div className="relative z-10 w-full px-6 md:px-16 py-24 flex flex-col md:flex-row items-center justify-center gap-12">
-          {/* Left: Large Title and CTA */}
+          
           <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start text-center md:text-left">
             <span className="uppercase tracking-widest text-xs md:text-sm text-blue-400 font-semibold mb-3">
               Welcome to SUSTVerse
@@ -158,7 +158,7 @@ export default function LandingPage() {
               </a>
             </div>
           </div>
-          {/* Right: Glassy Feature Preview */}
+          
           <div className="w-full md:w-1/2 flex flex-col gap-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {features.slice(0, 4).map((feature) => (
