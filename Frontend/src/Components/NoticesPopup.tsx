@@ -142,7 +142,7 @@ export default function NoticesPopup({
             onClick={() => setTab("department")}
             title="Department Notices"
           >
-            {departmentUser} Notices
+            {departmentUser} Department Notices
           </button>
           <button
             className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
