@@ -6,10 +6,12 @@ const User = new mongoose.model('User', userSchema);
 const newUserCreation = async (userData) => {
     const newUser = new User(userData);
     try {
+        console.log("newUser = ", newUser);
         await newUser.save();
         console.log('user created successfully')
+        return newUser;
     } catch (error) {
-        console.log('there are an error in server end')
+        console.log('there are an error in server end', error)
     }
 }
 const findUser = async (email) => {
