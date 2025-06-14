@@ -7,9 +7,9 @@ router.post('/create', createComplain);
 // Route to delete a complain by ID
 router.post('/delete/:id', deleteComplain);
 // Route to update a complain by ID
-router.post('/update/:id', updateComplain);
+router.post('/update', updateComplain);
 // Route to find a complain by ID
-router.get('/:id', findingComplain);
+router.get('/', findingComplain);
 
 
 

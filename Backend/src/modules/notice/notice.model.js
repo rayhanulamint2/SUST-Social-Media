@@ -22,7 +22,8 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     isDepartmentPost: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     department: {
         type: String
