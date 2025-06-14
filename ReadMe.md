@@ -44,6 +44,8 @@ Currently, communication at SUST is fragmented across social media, printed noti
 
 # ✅ Proposed Solution
 
+![SUSTverse Homepage](Homepage.png)
+
 SUSTverse addresses these challenges through:
 
 - Seamless communication between all university stakeholders
@@ -63,8 +65,10 @@ SUSTverse addresses these challenges through:
 - Filter and search content easily
 <br>
 
-![SUSTverse Homepage](Homepage.png)
+## Update of the Bus Schedule
 ![Bus Schedule](<Bus Schedule.png>)
+
+## Profile page of the user
 ![Profile](Profile.png)
 
 <br>
@@ -74,7 +78,10 @@ SUSTverse addresses these challenges through:
 - Support for paid promotions and admin approvals
 - Calendar link integration
 
+## New Post Creation
 ![alt text](<New Post.png>)
+
+## New Event Creation
 ![alt text](<New Event.png>)
 
 ## 📢 Notice Board
