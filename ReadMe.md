@@ -63,7 +63,8 @@ SUSTverse addresses these challenges through:
 - Filter and search content easily
 <br>
 
-![Home Page](Frontend\src\assets\Homepage.png)
+![SUSTverse Homepage](Homepage.png)
+
 <br>
 
 ## 🎉 Event Page
