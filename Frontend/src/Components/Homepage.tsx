@@ -4,12 +4,12 @@ import Sidebar from "./Sidebar";
 import Chatbot from "./Chatbot";
 import PostCreationSection from "./PostCreationSection";
 import PostFeed from "./PostFeed";
+import Chat from "./Chat";
 import EventFeed from "./EventFeed";
 import NoticesPopup from "./NoticesPopup";
 import ComplaintBox from "./ComplaintBox";
 import UserProfile from "./UserProfile";
 import Alumni from "./Alumni";
-import Chat from "./Chat"; // <-- import Chat
 
 export default function Homepage() {
   const [mainFeed, setMainFeed] = useState<
@@ -35,7 +35,7 @@ export default function Homepage() {
         onComplaintBox={() => setShowComplaintBox(true)}
         onProfile={() => setShowProfile(true)}
         onAlumni={() => setMainFeed("alumni")}
-        onChat={() => setMainFeed(mainFeed === "chat" ? "home" : "chat")} // <-- add this line
+        onChat={() => setMainFeed(mainFeed === "chat" ? "home" : "chat")} 
       />
       <Chatbot />
       <div className="max-w-8xl mx-auto px-4 pt-10">
