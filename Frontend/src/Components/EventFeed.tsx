@@ -207,26 +207,26 @@ function EventCard({
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = mainUser[0]._id;
 
-  const handleSendComment = async(e: React.FormEvent) => {
+  const handleSendComment = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = {
       eventId: event._id,
-      comment:{
+      comment: {
         userId: userId,
         commentText: commentInput
       }
     }
-    const newEvent = await http.put("/event/addComment",payload);
+    const newEvent = await http.put("/event/addComment", payload);
     console.log("event = ", newEvent);
     setCommentInput("");
   };
 
-  const handleToggleInterested = async() =>{
+  const handleToggleInterested = async () => {
     const payload = {
       eventId: event._id
     }
-    const newEvent = await http.put("/event/interested",payload);
-    const a = interested+1;
+    const newEvent = await http.put("/event/interested", payload);
+    const a = interested + 1;
     setInterested(a);
     console.log("event = ", newEvent);
   }
@@ -239,10 +239,10 @@ function EventCard({
       day % 10 === 1 && day !== 11
         ? "st"
         : day % 10 === 2 && day !== 12
-        ? "nd"
-        : day % 10 === 3 && day !== 13
-        ? "rd"
-        : "th";
+          ? "nd"
+          : day % 10 === 3 && day !== 13
+            ? "rd"
+            : "th";
     const month = date.toLocaleString("default", { month: "long" });
     const year = date.getFullYear();
     const time = date.toLocaleString("en-US", {
@@ -320,10 +320,9 @@ function EventCard({
       <div className="flex items-center gap-4 mt-2 flex-wrap">
         <button
           className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-colors shadow-sm
-            ${
-              isInterested
-                ? "bg-green-600 text-white"
-                : "bg-gray-800/80 text-green-400 hover:bg-green-700/40"
+            ${isInterested
+              ? "bg-green-600 text-white"
+              : "bg-gray-800/80 text-green-400 hover:bg-green-700/40"
             }`}
           onClick={handleToggleInterested}
         >
@@ -411,19 +410,28 @@ export default function EventFeed() {
   const [events, setEvents] = useState(dummyEvents);
   const [saved, setSaved] = useState(false);
   const fetchEvent = async () => {
-      try {
-        const response = await http.get("/event");
-        setEvents(response.data.events);
-        console.log("Events fetched successfully:", response.data);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
-    React.useEffect(() => {
-      fetchEvent();
-    }, []);
+    try {
+      const response = await http.get("/event");
+      setEvents(response.data.events);
+      console.log("Events fetched successfully:", response.data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+  React.useEffect(() => {
+    fetchEvent();
+  }, []);
 
-  const filteredEvents = events.filter((e) => e.feedType === feedType);
+  const filteredEvents = events.filter((e) => {
+    const matchesFeed = e.feedType === feedType;
+    const tag = localStorage.getItem('tag')||"Clear Tag";
+    const matchesTag = tag === "Clear Tag"
+      ? true
+      : e.tags?.some((t) => t.toLowerCase() === tag.toLowerCase());
+
+    return matchesFeed && matchesTag;
+  });
+
 
   const handleToggleSave = (id: string) => {
     setEvents((prev) =>
@@ -434,19 +442,19 @@ export default function EventFeed() {
   };
 
   // const handleToggleInterested = (id: string) => {
-    // setEvents((prev) =>
-    //   prev.map((event) =>
-    //     event.id === id
-    //       ? {
-    //           ...event,
-    //           isInterested: !event.isInterested,
-    //           interested: event.isInterested
-    //             ? event.interested - 1
-    //             : event.interested + 1,
-    //         }
-    //       : event
-    //   )
-    // );
+  // setEvents((prev) =>
+  //   prev.map((event) =>
+  //     event.id === id
+  //       ? {
+  //           ...event,
+  //           isInterested: !event.isInterested,
+  //           interested: event.isInterested
+  //             ? event.interested - 1
+  //             : event.interested + 1,
+  //         }
+  //       : event
+  //   )
+  // );
   // };
 
   return (
@@ -456,10 +464,9 @@ export default function EventFeed() {
         <button
           onClick={() => setFeedType("university")}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm border
-            ${
-              feedType === "university"
-                ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-blue-500 scale-105 shadow-lg"
-                : "bg-gray-800/80 text-blue-300 border-transparent hover:bg-blue-900/40 hover:text-white"
+            ${feedType === "university"
+              ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-blue-500 scale-105 shadow-lg"
+              : "bg-gray-800/80 text-blue-300 border-transparent hover:bg-blue-900/40 hover:text-white"
             }
           `}
         >
@@ -468,10 +475,9 @@ export default function EventFeed() {
         <button
           onClick={() => setFeedType("department")}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm border
-            ${
-              feedType === "department"
-                ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white border-pink-500 scale-105 shadow-lg"
-                : "bg-gray-800/80 text-pink-300 border-transparent hover:bg-pink-900/40 hover:text-white"
+            ${feedType === "department"
+              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white border-pink-500 scale-105 shadow-lg"
+              : "bg-gray-800/80 text-pink-300 border-transparent hover:bg-pink-900/40 hover:text-white"
             }
           `}
         >

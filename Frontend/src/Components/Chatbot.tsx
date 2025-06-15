@@ -16,7 +16,7 @@ export default function Chatbot() {
 
   const [answer, setAnswer] = useState("");
   const http = axios.create({
-    baseURL: "https://2e8e-34-19-73-236.ngrok-free.app", // Adjust the base URL as needed
+    baseURL: "https://ef2e-35-237-121-234.ngrok-free.app", // Adjust the base URL as needed
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`, // Use token from localStorage

@@ -16,12 +16,13 @@ export default function PostCreationSection() {
   const [eventData, setEventData] = useState(""); // State to hold event API response data
   // Retrieve user data from localStorage
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log("mainUser from post creation", mainUser[0]);
   // Dummy user data
   const user = {
     name: mainUser[0]?.name || "Khalid",
     avatar:
       mainUser[0]?.avatar || "https://randomuser.me/api/portraits/men/32.jpg",
-    department: mainUser[0]?.department || "CSE",
+    department: mainUser[0]?.department,
   };
 
   const [showPopup, setShowPopup] = useState(false);
