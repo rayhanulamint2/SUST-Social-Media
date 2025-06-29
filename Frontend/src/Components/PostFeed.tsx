@@ -219,40 +219,40 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
   const mainUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = mainUser[0]._id;
 
-  const handleSendComment = async(e: React.FormEvent) => {
+  const handleSendComment = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = {
       postId: post._id,
-      comment:{
+      comment: {
         userId: userId,
         commentText: commentInput
       }
     }
-    const newPost = await http.put("/post/addComment",payload);
+    const newPost = await http.put("/post/addComment", payload);
     console.log("newPost = ", newPost);
     setCommentInput("");
   };
 
-  const changeUpVote = async()=>{
-    const vote = upVote+1;
+  const changeUpVote = async () => {
+    const vote = upVote + 1;
     setUpVote(vote);
     const payload = {
       postId: post._id,
       upVote: vote,
       downVote: downVote
     }
-    const newPost = await http.put("/post/changeVote",payload);
+    const newPost = await http.put("/post/changeVote", payload);
     console.log("newPost from changeVote", newPost);
   }
-  const changeDownVote = async()=>{
-    const vote = downVote+1;
+  const changeDownVote = async () => {
+    const vote = downVote + 1;
     setDownVote(vote);
     const payload = {
       postId: post._id,
       upVote: upVote,
       downVote: vote
     }
-    const newPost = await http.put("/post/changeVote",payload);
+    const newPost = await http.put("/post/changeVote", payload);
     console.log("newPost from changeVote", newPost);
   }
 
@@ -273,7 +273,7 @@ function PostCard({ post, onToggleSave }: PostCardProps) {
             onClick={() => {
               // Add desired click handler logic here
               console.log("Creator clicked:", post.creator);
-              localStorage.setItem('currentUserId',post.creator._id)
+              localStorage.setItem('currentUserId', post.creator._id)
               navigate('/user');
             }}
           >
@@ -421,11 +421,22 @@ export default function PostFeed() {
   console.log("user = ", userInfo);
 
   const filteredPosts = posts.filter((p) => {
-    if (feedType === "department") {
-      return p.feedType === "department" && p.department === userInfo.department;
-    }
-    return p.feedType === feedType;
+    const matchesFeedType =
+      feedType === "department"
+        ? p.feedType === "department" && p.department === userInfo.department
+        : p.feedType === feedType;
+    const tag = localStorage.getItem('tag');
+    const matchesTag =
+      tag === 'Clear Tag'
+        ? true
+        : tag
+          ? p.tags?.some((t) => t.toLowerCase() === tag.toLowerCase())
+          : true;
+
+
+    return matchesFeedType && matchesTag;
   });
+
 
 
   const handleToggleSave = (id: string): void => {
