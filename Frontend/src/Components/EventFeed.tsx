@@ -9,7 +9,6 @@ import {
   FaShareAlt,
   FaUserPlus,
   FaCalendarAlt,
-  FaMapMarkerAlt,
   FaLink,
 } from "react-icons/fa";
 
@@ -392,9 +391,9 @@ function EventCard({
             />
             <button
               type="submit"
-              className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow transition-colors"
-              title="Send Comment"
               aria-label="Send Comment"
+              title="Send Comment"
+              className="p-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow transition-colors"
             >
               <FaPaperPlane />
             </button>
@@ -441,6 +440,7 @@ export default function EventFeed() {
     );
   };
 
+
   // const handleToggleInterested = (id: string) => {
   // setEvents((prev) =>
   //   prev.map((event) =>
@@ -456,6 +456,7 @@ export default function EventFeed() {
   //   )
   // );
   // };
+
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-8">

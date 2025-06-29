@@ -13,26 +13,74 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const departments = [
+  "FES",
+  "ARC",
+  "CEP",
+  "CEE",
   "CSE",
   "EEE",
-  "CE",
-  "ME",
-  "IPE",
-  "GEB",
   "FET",
-  "FES",
-  "FBS",
-  "FSS",
-  "FST",
+  "IPE",
+  "MEE",
+  "PME",
+  "SWE",
+  "BMB",
+  "GEB",
+  "Business Administration",
+  "Chemistry",
+  "Mathematics",
+  "Physics",
+  "Statistics",
+  "GEE",
+  "OCG",
+  "ANP",
+  "BNG",
+  "ECO",
+  "ENG",
+  "PSS",
+  "PAD",
+  "SCW",
+  "SOC",
 ];
+
 const sessions = [
+  "1990-91",
+  "1991-92",
+  "1992-93",
+  "1993-94",
+  "1994-95",
+  "1995-96",
+  "1996-97",
+  "1997-98",
+  "1998-99",
+  "1999-00",
+  "2000-01",
+  "2001-02",
+  "2002-03",
+  "2003-04",
+  "2004-05",
+  "2005-06",
+  "2006-07",
+  "2007-08",
+  "2008-09",
+  "2009-10",
+  "2010-11",
+  "2011-12",
+  "2012-13",
+  "2013-14",
+  "2014-15",
+  "2015-16",
+  "2016-17",
   "2017-18",
   "2018-19",
   "2019-20",
   "2020-21",
   "2021-22",
   "2022-23",
+  "2023-24",
+  "2024-25"
 ];
+
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -234,7 +282,7 @@ export default function Signup() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-800/80 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 outline-none text-sm"
+                  className="pl-10 pr-4 py-2 rounded-xl w-full bg-gray-800/80 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 outline-none text-sm"
                   placeholder="your@email.com"
                 />
               </div>

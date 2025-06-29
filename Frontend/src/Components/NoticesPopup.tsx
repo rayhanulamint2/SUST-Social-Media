@@ -142,7 +142,7 @@ export default function NoticesPopup({
             onClick={() => setTab("department")}
             title="Department Notices"
           >
-            {departmentUser} Notices
+            {departmentUser} Department Notices
           </button>
           <button
             className={`flex-1 py-2 rounded-full font-semibold text-base transition-all ${
@@ -231,7 +231,7 @@ export default function NoticesPopup({
                   className="rounded-xl border border-green-400 shadow max-h-[400px] w-auto"
                 />
                 <button
-                  className="absolute bottom-2 right-2 px-3 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors flex items-center gap-2 shadow"
+                  className="bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors flex items-center gap-2 shadow absolute bottom-2 right-2 px-3 py-2 rounded-full"
                   onClick={() => setEnlargeBus(true)}
                   title="Enlarge"
                 >

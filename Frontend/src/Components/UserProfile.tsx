@@ -1465,7 +1465,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               <div className="text-xl font-bold text-white">Achievements</div>
               {isMe && (
                 <button
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-700 text-white font-semibold hover:bg-blue-800 transition-colors shadow"
+                  className="flex items-center gap-2 px-4 py-2 rounded-fullbg-gradient-to-r from-gray-900/80 to-gray-800/80 rounded-br-3xl hover:bg-blue-900/20 transition-color text-white font-semibold shadow"
                   onClick={() => setShowAddAchievement(true)}
                 >
                   <FaPlus /> Add
@@ -1902,7 +1902,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
               <div className="text-xl font-bold text-white">Social Links</div>
               {isMe && (
                 <button
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-700 text-white font-semibold hover:bg-blue-800 transition-colors shadow"
+                  className="gap-2 px-4 py-2 rounded-full bg-blue-700 text-white font-semibold hover:bg-blue-800 transition-colors shadow flex items-center"
                   onClick={() => setShowAddSocial(true)}
                 >
                   <FaPlus /> Add

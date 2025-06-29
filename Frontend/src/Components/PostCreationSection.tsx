@@ -37,13 +37,15 @@ export default function PostCreationSection() {
   const [postImage, setPostImage] = useState<string | null>(null);
 
   // Event states
-  const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventTime, setEventTime] = useState("");
   const [eventLink, setEventLink] = useState("");
+  const [eventName, setEventName] = useState("");
   const [eventTags, setEventTags] = useState<string[]>([]);
   const [eventImage, setEventImage] = useState<string | null>(null);
+
+  
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const eventFileInputRef = useRef<HTMLInputElement>(null);

@@ -1,6 +1,6 @@
 # 🌐 SUSTverse – A Unified Campus Communication Platform
 
-![SUSTverse Banner](Frontend\src\assets\sust_gate.jpg)
+![SUSTverse Banner](sust_gate.jpg)
 
 ># Bringing students, alumni, and administrators together on one platform to streamline communication, manage events, and foster collaboration at SUST.
 
@@ -44,6 +44,8 @@ Currently, communication at SUST is fragmented across social media, printed noti
 
 # ✅ Proposed Solution
 
+![SUSTverse Homepage](Homepage.png)
+
 SUSTverse addresses these challenges through:
 
 - Seamless communication between all university stakeholders
@@ -63,7 +65,12 @@ SUSTverse addresses these challenges through:
 - Filter and search content easily
 <br>
 
-![Home Page](Frontend\src\assets\Homepage.png)
+## Update of the Bus Schedule
+![Bus Schedule](<Bus Schedule.png>)
+
+## Profile page of the user
+![Profile](Profile.png)
+
 <br>
 
 ## 🎉 Event Page
@@ -71,9 +78,16 @@ SUSTverse addresses these challenges through:
 - Support for paid promotions and admin approvals
 - Calendar link integration
 
+## New Post Creation
+![alt text](<New Post.png>)
+
+## New Event Creation
+![alt text](<New Event.png>)
+
 ## 📢 Notice Board
 - Department-specific boards with admin-only publishing
 - Real-time notifications and searchable archive
+![Notice Board](Notices.png)
 
 ## 🎓 Alumni Section
 - Alumni directory with search and connection tools
@@ -85,10 +99,14 @@ SUSTverse addresses these challenges through:
 - Track progress of submitted issues
 - Admin tools for analytics and reporting
 
+![Complaint Box](ComplaintBox.png)
+
 ## 🤖 AI Chatbot (24/7 Support)
 - Natural language answers to FAQs and queries
 - Multilingual support (English & Bangla)
 - Personalized suggestions and policy updates
+
+![alt text](<Landing Page Features.png>)
 
 ---
 <br><br>
@@ -105,9 +123,8 @@ SUSTverse addresses these challenges through:
 | AI Integration | OpenAI GPT / Custom LLM (via REST API)  | Smart chatbot with contextual responses     |
 <br>
 
+![alt text](<Landing Page Tech Stack.png>)
 
-![Technology Stack](Frontend\src\assets\TechnologyStack.png)
-<br><br>
 ---
 
 
@@ -163,15 +180,16 @@ npm run dev
 
 
 
-# 🖼️ Screenshots
+# 🖼️ Other screenshots of the platform
 
-### Home Page
-![Home Page](Frontend\src\assets\Homepage.png)
+## Contact with us through SUSTverse
+![alt text](<Landing Page Contact.png>)
 
+## Admin Page Notice Creation
+![alt text](<Admin Create Notice.png>)
 
-### Technology Stack
-![Technology Stack](Frontend\src\assets\TechnologyStack.png)
-
+## Admin Page Notice View
+![alt text](<Admin Notice View.png>)
 
 
 

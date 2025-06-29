@@ -99,7 +99,7 @@ export default function Sidebar({
 
         {/* Alumni Button */}
         <button
-          className="w-full px-4 py-3 rounded-xl flex items-center gap-3 text-lg font-semibold text-blue-300 hover:bg-blue-900/40 transition"
+          className="flex items-center gap-3 px-6 py-4 border-b border-blue-400/10 hover:bg-red-500/10 transition-colors text-white text-base font-medium w-full text-left"
           onClick={onAlumni}
         >
           <FaUserGraduate className="text-pink-400" /> {/* <-- colorful icon */}
@@ -125,7 +125,7 @@ export default function Sidebar({
         </button>
 
         {/* Need Help */}
-        <button className="flex items-center gap-3 px-6 py-4 hover:bg-blue-400/10 transition-colors text-white text-base font-medium w-full text-left">
+        <button className="px-6 py-4 flex items-center gap-3 hover:bg-blue-400/10 transition-colors text-white text-base font-medium w-full text-left">
           <FaQuestionCircle className="text-blue-400" />
           Need Help?
         </button>
