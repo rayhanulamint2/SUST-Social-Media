@@ -1569,7 +1569,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                           className="w-32 h-32 object-cover rounded-xl border border-blue-400 mt-2"
                         />
                       )}
-                      {isMe && (
+                      {/* {isMe && (
                         <div className="flex gap-3 mt-2">
                           <button
                             className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-700 text-white text-xs font-semibold hover:bg-blue-800 transition-colors"
@@ -1596,7 +1596,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                             <FaTrash /> Remove
                           </button>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   )
                 )
@@ -1733,7 +1733,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         <div className="text-gray-400 text-xs">
                           {work.start} - {work.end}
                         </div>
-                        {isMe && (
+                        {/* {isMe && (
                           <div className="flex gap-3 mt-2">
                             <button
                               className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-700 text-white text-xs font-semibold hover:bg-blue-800 transition-colors"
@@ -1760,7 +1760,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                               <FaTrash /> Remove
                             </button>
                           </div>
-                        )}
+                        )} */}
                       </div>
                     )
                   )
@@ -1858,7 +1858,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                           View Paper
                         </a>
                       )}
-                      {isMe && (
+                      {/* {isMe && (
                         <div className="flex gap-3 mt-2">
                           <button
                             className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-700 text-white text-xs font-semibold hover:bg-blue-800 transition-colors"
@@ -1885,7 +1885,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                             <FaTrash /> Remove
                           </button>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   )
                 )
@@ -1990,9 +1990,9 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                         rel="noopener noreferrer"
                         className="text-blue-400 hover:underline text-sm"
                       >
-                        {sl.link}
+                        Link
                       </a>
-                      {isMe && (
+                      {/* {isMe && (
                         <div className="flex gap-3 mt-2">
                           <button
                             className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-700 text-white text-xs font-semibold hover:bg-blue-800 transition-colors"
@@ -2018,7 +2018,7 @@ export default function UserProfile({ onBack }: { onBack?: () => void }) {
                             <FaTrash /> Remove
                           </button>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   )
                 )

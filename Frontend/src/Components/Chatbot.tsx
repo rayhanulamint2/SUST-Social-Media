@@ -13,51 +13,54 @@ export default function Chatbot() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-  
+
   const [answer, setAnswer] = useState("");
   const http = axios.create({
-    baseURL: "https://9865-34-53-3-62.ngrok-free.app", // Adjust the base URL as needed
+    baseURL: "https://ef2e-35-237-121-234.ngrok-free.app", // Adjust the base URL as needed
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`, // Use token from localStorage
     },
   });
-  
 
 
-  const handleSend = async(e?: React.FormEvent) => {
 
+  const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!input.trim()) return;
+
+    const userInput = input.trim();
+    setMessages((msgs) => [...msgs, { sender: "user", text: userInput }]);
+    setInput(""); // Clear the input immediately
+
     const fetchAnswer = async (input: string) => {
-      const question = {
-        "question": input,
-      }
-      console.log("message sent:", input.trim());
+      const question = { question: input };
+      console.log("message sent:", input);
       console.log("question object:", question);
       try {
-      const response = await http.post("/ask", question); // Adjust endpoint if necessary
+        const response = await http.post("/ask", question);
         console.log("message get successfully:", response.data);
-        setAnswer(response.data.answer);
         console.log("answer:", response.data.answer);
         return response.data.answer;
       } catch (error) {
         console.error("message fetching failed:", error);
-        alert("Failed to get the answer Please check your inputs.");
+        alert("Failed to get the answer. Please check your inputs.");
+        return "Sorry, there was an error fetching the response.";
       }
-    }
-    const answer1 = await fetchAnswer(input.trim());
+    };
+
+    const answer = await fetchAnswer(userInput);
+
+    setAnswer(answer);
     setMessages((msgs) => [
       ...msgs,
-      { sender: "user", text: input.trim() },
-      // Simulate bot reply
       {
         sender: "bot",
-        text: answer1 || "I'm an AI assistant. (This is a demo response.)",
+        text: answer || "I'm an AI assistant. (This is a demo response.)",
       },
     ]);
-    setInput("");
   };
+
 
   return (
     <aside className="fixed top-16 right-0 h-[calc(100vh-4rem)] w-full max-w-sm z-20 hidden lg:flex flex-col bg-gray-900/90 border-l border-blue-400/10 shadow-2xl backdrop-blur-xl rounded-l-3xl">
@@ -75,10 +78,9 @@ export default function Chatbot() {
           >
             <div
               className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm shadow
-                ${
-                  msg.sender === "user"
-                    ? "bg-blue-600 text-white rounded-br-sm"
-                    : "bg-gray-800/80 text-blue-200 rounded-bl-sm"
+                ${msg.sender === "user"
+                  ? "bg-blue-600 text-white rounded-br-sm"
+                  : "bg-gray-800/80 text-blue-200 rounded-bl-sm"
                 }`}
             >
               {msg.text}

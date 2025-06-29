@@ -1,5 +1,6 @@
 import {
   FaUserCircle,
+  FaTimesCircle,
   FaLeaf,
   FaGlobe,
   FaSuitcase,
@@ -22,6 +23,8 @@ const topics = [
     icon: <FaChalkboardTeacher className="text-purple-400" />,
   },
   { name: "Paper Publication", icon: <FaFileAlt className="text-pink-400" /> },
+  { name: "Clear Tag", icon: <FaTimesCircle className="text-red-400" /> }
+
 ];
 
 interface SidebarProps {
@@ -45,6 +48,11 @@ export default function Sidebar({
     avatar:
       mainUser[0].avatar || "https://randomuser.me/api/portraits/men/32.jpg",
   };
+
+  const topicSelection = (tag: string)=>{
+    console.log('tag = ', tag);
+    localStorage.setItem('tag',tag);
+  }
 
   return (
     <aside className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-full max-w-xs z-20 hidden lg:flex flex-col justify-between bg-gray-900/90 border-r border-blue-400/10 shadow-2xl backdrop-blur-xl rounded-r-3xl">
@@ -79,6 +87,7 @@ export default function Sidebar({
             {topics.map((topic) => (
               <button
                 key={topic.name}
+                onClick={()=>topicSelection(topic.name)}
                 className="flex items-center gap-3 w-full px-3 py-2 mb-1 rounded-xl bg-gray-800/70 hover:bg-blue-500/20 text-white text-sm font-medium transition-colors"
               >
                 {topic.icon}
